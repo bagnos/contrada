@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
+	<jsp:directive.page contentType="text/html;charset=utf-8" />
+	<f:view>
+		<ice:portlet>
+
+			<ice:form>
+				<ice:outputStyle href="#{styleBean.activeCss}" />
+
+				<ice:panelGroup>
+					<ice:panelGroup styleClass="portletContainer">
+						<ice:outputText value="#{msgs.listeVotanti}"
+							styleClass="labelPortletContainer"></ice:outputText>
+					</ice:panelGroup>
+					<ice:panelGroup style="margin-bottom:10px;">
+					<ice:outputText value="#{msgs.votazioni}" style="font-style: italic;font-weight: bold;"></ice:outputText>
+					</ice:panelGroup>
+					<!-- TIPO TESSERA -->
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="#{msgs.tipoTessera}" styleClass="label140"></ice:outputText>
+						<ice:selectOneMenu value="#{listaVotanti.idTipoTessera}">
+							<f:selectItems value="#{listaVotanti.tessereItems}" />
+						</ice:selectOneMenu>
+					</ice:panelGroup>
+					<!-- DATA ASSEMBLEA -->
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="#{msgs.dataElezione}" styleClass="label140"></ice:outputText>
+						<ice:selectInputDate id="dtAssemblea" renderAsPopup="true"
+							partialSubmit="false" popupDateFormat="dd/MM/yyyy"
+							required="true" value="#{listaVotanti.dtElezione}" tabindex="5"
+							style="width: 262px;display:inline-block;">
+							<f:convertDateTime type="date"
+								timeZone="#{styleBean.generalTimeZone}" />
+						</ice:selectInputDate>
+						<ice:message id="lblErrDtAssemblea" for="dtAssemblea" />
+					</ice:panelGroup>
+
+					<!-- PAGANTI ALMENO UN ANNO DA -->
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="#{msgs.annoDaVotazioni}"
+							styleClass="label140"></ice:outputText>
+						<ice:selectOneMenu value="#{listaVotanti.annoDa}">
+							<f:selectItems value="#{listaVotanti.annoItems}" />
+						</ice:selectOneMenu>
+					</ice:panelGroup>
+
+
+					<!-- ANAGRAFICA -->
+					<ice:panelGroup styleClass="bottonieraContainer">
+						<ice:panelGroup>
+							<ice:commandButton value="#{msgs.conferma}"
+								actionListener="#{listaVotanti.confermaOnClick}"></ice:commandButton>
+
+
+
+						</ice:panelGroup>
+					</ice:panelGroup>
+					<ice:panelGroup>
+						<ice:outputText value="#{listaVotanti.note}"></ice:outputText>
+					</ice:panelGroup>
+					<ice:panelGroup rendered="#{listaVotanti.visibleAnagrafiche}">
+						<ice:panelGrid columns="3">
+
+							<ice:dataExporter for="tessere" image="#{styleBean.imgExcel}"
+								label="#{styleBean.labelExcel}" type="excel"
+								ignorePagination="true" />
+							<ice:panelGroup>
+								<ice:outputText style="margin-left:10px"
+									value="Nr. Anagrafiche:" />
+								<ice:outputText value="#{listaVotanti.nrAnagrafiche}" />
+							</ice:panelGroup>
+
+						</ice:panelGrid>
+
+						<ice:dataTable rows="#{styleBean.maxRowsTables}"
+							value="#{listaVotanti.anags}" var="tessera" id="tessere">
+
+
+
+							<ice:column id="id causale">
+								<f:facet name="header">
+									<ice:outputText value="Id Anag."></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.idAnagrafica}" />
+							</ice:column>
+							<ice:column id="cognome">
+								<f:facet name="header">
+									<ice:outputText value="Intestatario"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.intestatario}" />
+							</ice:column>
+
+							<ice:column id="carica">
+								<f:facet name="header">
+									<ice:outputText value="Carica"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.carica}" />
+							</ice:column>
+
+							<ice:column id="quota">
+								<f:facet name="header">
+									<ice:outputText value="Quota"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.quota}"
+									converter="ImportoConverter">
+
+								</ice:outputText>
+							</ice:column>
+
+							<ice:column id="pagamento">
+								<f:facet name="header">
+									<ice:outputText value="Pagamento"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.incasso}">
+
+								</ice:outputText>
+							</ice:column>
+							<ice:column id="dtNascita">
+								<f:facet name="header">
+									<ice:outputText value="Data Nascita"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.dtNascita}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</ice:outputText>
+							</ice:column>
+							<ice:column id="Indirizzo">
+								<f:facet name="header">
+									<ice:outputText value="Indirizzo"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.indirizzo}">
+
+								</ice:outputText>
+							</ice:column>
+							<ice:column id="capProv">
+								<f:facet name="header">
+									<ice:outputText value="Città"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.capProvincia}">
+
+								</ice:outputText>
+							</ice:column>
+							<ice:column id="mail">
+								<f:facet name="header">
+									<ice:outputText value="Mail"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.txMail}">
+
+								</ice:outputText>
+							</ice:column>
+							<ice:column id="cell">
+								<f:facet name="header">
+									<ice:outputText value="Cell"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.txCell}">
+
+								</ice:outputText>
+							</ice:column>
+							<ice:column id="fisso">
+								<f:facet name="header">
+									<ice:outputText value="Fisso"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.txFisso}">
+
+								</ice:outputText>
+							</ice:column>
+
+
+
+
+
+
+						</ice:dataTable>
+						<ice:dataPaginator id="tabAnag" for="tessere" paginator="true"
+							fastStep="#{styleBean.fastStep}"
+							paginatorMaxPages="#{StyleBean.paginatorMaxPages}">
+							<f:facet name="first">
+								<ice:graphicImage url="#{styleBean.first}" style="border:none;"
+									title="First Page" />
+							</f:facet>
+
+							<f:facet name="last">
+								<ice:graphicImage url="#{styleBean.last}" style="border:none;"
+									title="Last Page" />
+							</f:facet>
+							<f:facet name="previous">
+								<ice:graphicImage url="#{styleBean.previous}"
+									style="border:none;" title="Previous Page" />
+							</f:facet>
+							<f:facet name="fastforward">
+								<ice:graphicImage url="#{styleBean.fastforward}"
+									style="border:none;" title="Fast Forward" />
+							</f:facet>
+							<f:facet name="fastrewind">
+								<ice:graphicImage url="#{styleBean.fastrewind}"
+									style="border:none;" title="Fast Backwards" />
+							</f:facet>
+							<f:facet name="next">
+								<ice:graphicImage url="#{styleBean.next}" style="border:none;"
+									title="Next Page" />
+							</f:facet>
+
+
+						</ice:dataPaginator>
+					</ice:panelGroup>
+
+				</ice:panelGroup>
+
+
+			</ice:form>
+		</ice:portlet>
+	</f:view>
+
+</jsp:root>

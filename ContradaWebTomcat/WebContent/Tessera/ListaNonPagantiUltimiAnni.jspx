@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
+	<jsp:directive.page contentType="text/html;charset=utf-8" />
+	<f:view>
+		<ice:portlet>
+			<ice:outputStyle href="#{styleBean.activeCss}" />
+			<ice:form>
+				<ice:panelGroup>
+					<ice:panelGroup styleClass="portletContainer">
+						<ice:outputText value="#{msgs.listaNonPaganti}"
+							styleClass="labelPortletContainer"></ice:outputText>
+					</ice:panelGroup>
+					<!-- ANNO -->
+					<ice:panelGroup styleClass="elementContainer">
+						<!-- ANNO DA -->
+						<ice:outputText value="#{msgs.annoDa}" styleClass="label140"></ice:outputText>
+						<ice:selectOneMenu value="#{ricercaTessereNonPaganti.annoDa}">
+							<f:selectItems value="#{ricercaTessereNonPaganti.anni}" />
+						</ice:selectOneMenu>
+						<!-- ANNO A -->
+						<ice:outputText value="#{msgs.annoA}"></ice:outputText>
+						<ice:selectOneMenu value="#{ricercaTessereNonPaganti.annoA}">
+							<f:selectItems value="#{ricercaTessereNonPaganti.anni}" />
+						</ice:selectOneMenu>
+					</ice:panelGroup>
+					<!-- TIPO TESSERA -->
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="#{msgs.tipoTessera}" styleClass="label140"></ice:outputText>
+						<ice:selectOneMenu value="#{ricercaTessereNonPaganti.tipoTessera}">
+							<f:selectItems value="#{ricercaTessereNonPaganti.tipoTessere}" />
+						</ice:selectOneMenu>
+					</ice:panelGroup>
+
+					<!-- TIPO INCASSO  -->
+
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="#{msgs.tipoIncasso}" styleClass="label140" />
+						<ice:setEventPhase phase="INVOKE_APPLICATION"
+							events="ValueChangeEvent">
+							<ice:selectOneMenu partialSubmit="true" valueChangeListener="#{ricercaTessereNonPaganti.tipoIncassoValueChange}"
+								value="#{ricercaTessereNonPaganti.tipoIncasso}">
+								<f:selectItems value="#{ricercaTessereNonPaganti.tipoIncassi}" />
+							</ice:selectOneMenu>
+						</ice:setEventPhase>
+					</ice:panelGroup>
+
+					<!-- ESATTORE -->
+					<ice:panelGroup styleClass="elementContainer"
+						rendered="#{ricercaTessereNonPaganti.renderEsattori}">
+						<ice:outputText value="#{msgs.esattori}" styleClass="label140"></ice:outputText>
+						<ice:selectOneMenu value="#{ricercaTessereNonPaganti.idEsattore}">
+							<f:selectItems value="#{ricercaTessereNonPaganti.esattori}" />
+						</ice:selectOneMenu>
+					</ice:panelGroup>
+
+					<!-- TESSERE -->
+
+
+
+					<ice:panelGroup
+						rendered="#{ricercaTessereNonPaganti.visibleAnagrafiche}">
+						<ice:panelGrid columns="3" style="margin:10px;">
+							<a href="../StampaPDFLetteraInsoluti" target="_blank"> <h:graphicImage
+								style="border:none;margin-left:9px"
+								title="#{msgs.stampaLettera}" url="#{styleBean.imgLetter}"></h:graphicImage>
+							</a>
+
+							<ice:dataExporter for="tessere" image="#{styleBean.imgExcel}"
+								label="#{styleBean.labelExcel}" type="excel"
+								ignorePagination="true" />
+							<ice:panelGroup>
+								<ice:outputText style="margin-left:10px" value="Nr. Tessere:" />
+								<ice:outputText value="#{ricercaTessereNonPaganti.nrTessere}" />
+								<ice:outputText style="margin-left:40px" value="Totale:" />
+								<ice:outputText value="#{ricercaTessereNonPaganti.impTotale}" converter="ImportoConverter" />
+							</ice:panelGroup>
+
+						</ice:panelGrid>
+
+
+						<ice:dataTable rows="#{styleBean.maxRowsTables}"
+							value="#{ricercaTessereNonPaganti.tessere}" var="tessera"
+							id="tessere">
+							<ice:column id="sel">
+								<f:facet name="header">
+
+									<ice:selectBooleanCheckbox partialSubmit="true"
+										title="seleziona turri"
+										valueChangeListener="#{ricercaTessereNonPaganti.selectAll}"
+										value="#{ricercaTessereNonPaganti.selTutti}"></ice:selectBooleanCheckbox>
+
+								</f:facet>
+								<ice:selectBooleanCheckbox value="#{tessera.modificata}"></ice:selectBooleanCheckbox>
+							</ice:column>
+
+
+							<ice:column id="idAnagrafica">
+								<f:facet name="header">
+									<ice:outputText value="Anagrafica" />
+								</f:facet>
+								<ice:outputText value="#{tessera.idAnag}" />
+							</ice:column>
+							<ice:column id="cognome">
+								<f:facet name="header">
+									<ice:outputText value="Cognome" />
+								</f:facet>
+								<ice:outputText value="#{tessera.cognome}" />
+							</ice:column>
+							<ice:column id="nome">
+								<f:facet name="header">
+									<ice:outputText value="Nome" />
+								</f:facet>
+								<ice:outputText value="#{tessera.nome}" />
+							</ice:column>
+							<ice:column id="idFamiglia">
+								<f:facet name="header">
+									<ice:outputText value="Famiglia" />
+								</f:facet>
+								<ice:outputText value="#{tessera.idFamiglia}" />
+							</ice:column>
+							<ice:column id="dsIncasso">
+								<f:facet name="header">
+									<ice:outputText value="Incasso" />
+								</f:facet>
+								<ice:outputText value="#{tessera.dsIncasso}">
+								</ice:outputText>
+							</ice:column>
+							<ice:column id="quota">
+								<f:facet name="header">
+									<ice:outputText value="Quota" />
+								</f:facet>
+								<ice:outputText value="#{tessera.quota}" converter="ImportoConverter">
+								</ice:outputText>
+							</ice:column>
+							<ice:column id="carica">
+								<f:facet name="header">
+									<ice:outputText value="Carica" />
+								</f:facet>
+								<ice:outputText value="#{tessera.dsTipoCarica}">
+								</ice:outputText>
+							</ice:column>
+							<ice:column id="Nr. Rid">
+								<f:facet name="header">
+									<ice:outputText value="Rid" />
+								</f:facet>
+								<ice:outputText value="#{tessera.idRid}">
+								</ice:outputText>
+							</ice:column>
+							<ice:column id="dsEsattore">
+								<f:facet name="header">
+									<ice:outputText value="Esattore" />
+								</f:facet>
+								<ice:outputText value="#{tessera.dsEsattore}">
+								</ice:outputText>
+							</ice:column>
+						</ice:dataTable>
+
+						<ice:dataPaginator for="tessere" paginator="true"
+							fastStep="#{styleBean.fastStep}"
+							paginatorMaxPages="#{StyleBean.paginatorMaxPages}">
+							<f:facet name="first">
+								<ice:graphicImage url="#{styleBean.first}" style="border:none;"
+									title="First Page" />
+							</f:facet>
+
+							<f:facet name="last">
+								<ice:graphicImage url="#{styleBean.last}" style="border:none;"
+									title="Last Page" />
+							</f:facet>
+							<f:facet name="previous">
+								<ice:graphicImage url="#{styleBean.previous}"
+									style="border:none;" title="Previous Page" />
+							</f:facet>
+							<f:facet name="fastforward">
+								<ice:graphicImage url="#{styleBean.fastforward}"
+									style="border:none;" title="Fast Forward" />
+							</f:facet>
+							<f:facet name="fastrewind">
+								<ice:graphicImage url="#{styleBean.fastrewind}"
+									style="border:none;" title="Fast Backwards" />
+							</f:facet>
+							<f:facet name="next">
+								<ice:graphicImage url="#{styleBean.next}" style="border:none;"
+									title="Next Page" />
+							</f:facet>
+
+
+						</ice:dataPaginator>
+
+
+
+
+					</ice:panelGroup>
+					<!--NOTE -->
+					<ice:panelGroup>
+						<ice:outputText value="#{ricercaTessereNonPaganti.note}"></ice:outputText>
+					</ice:panelGroup>
+
+					<!-- BOTTONOIERA -->
+					<ice:panelGroup styleClass="bottonieraContainer">
+
+						<ice:commandButton value="Ricerca"
+							actionListener="#{ricercaTessereNonPaganti.ricercaListaNonPaganti}"></ice:commandButton>
+
+
+						<ice:commandButton value="Elimina Selezionati"
+							style="margin-left:10px;"
+							rendered="#{ricercaTessereNonPaganti.visibleAnagrafiche}"
+							panelConfirmation="delAll"
+							actionListener="#{ricercaTessereNonPaganti.eliminaSelezionati}"></ice:commandButton>
+
+						<ice:panelConfirmation cancelLabel="No"
+							title="Anagrafiche Cessate" acceptLabel="Si" id="delAll"
+							message="Tutti le anagrafiche selezionate saranno cessate, vuoi procedere?"></ice:panelConfirmation>
+
+					</ice:panelGroup>
+				</ice:panelGroup>
+			</ice:form>
+		</ice:portlet>
+
+	</f:view>
+</jsp:root>

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
+	<jsp:directive.page contentType="text/html;charset=utf-8" />
+	<f:view>
+		<ice:portlet>
+			<ice:form>
+				<ice:outputStyle href="#{styleBean.activeCss}" />
+
+				<ice:panelGroup>
+					<!-- TITOLO PORTLET -->
+					<ice:panelGroup styleClass="portletContainer">
+						<ice:outputText value="Ricerca flusso postale "
+							styleClass="labelPortletContainer"></ice:outputText>
+					</ice:panelGroup>
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="Anno:" styleClass="cnd-label60"></ice:outputText>
+						<ice:selectOneMenu value="#{ricercaIncassoPoste.anno}"
+							required="true" id="anno">
+							<f:selectItems value="#{ricercaIncassoPoste.anni}" />
+						</ice:selectOneMenu>
+						<ice:message for="anno"></ice:message>
+						<ice:commandButton value="Cerca" 
+								actionListener="#{ricercaIncassoPoste.cercaClick}" alt="cerca"></ice:commandButton>
+						
+						<!-- 
+						<ice:outputText value="Data Da:" styleClass="cnd-label60"></ice:outputText>
+						<ice:selectInputDate id="dtDa" required="true"
+							renderAsPopup="true" partialSubmit="false"
+							popupDateFormat="dd/MM/yyyy" value="#{ricercaIncassoPoste.dtDa}"
+							tabindex="5" style="width: 194px;display:inline;">
+							
+
+						</ice:selectInputDate>
+						<ice:message for="dtDa"></ice:message>
+
+						<ice:outputText value="Data  A:" styleClass="cnd-label60"></ice:outputText>
+						<ice:selectInputDate required="true" id="dtA" renderAsPopup="true"
+							partialSubmit="false" popupDateFormat="dd/MM/yyyy"
+							value="#{ricercaIncassoPoste.dtA}" tabindex="5"
+							style="width: 194px;display:inline;">
+
+
+						</ice:selectInputDate>
+						<ice:message for="dtA"></ice:message>
+						-->
+					</ice:panelGroup>
+
+					<!--tabella flusso  -->
+					<ice:panelGroup rendered="#{ricercaIncassoPoste.renderFlussi}">
+
+
+
+						<ice:panelSeries value="#{ricercaIncassoPoste.flussi}"
+							var="flusso">
+							<ice:panelGrid columns="9" styleClass="iceDatTblMaster">
+
+
+								<ice:outputText value="" />
+
+								<ice:outputText styleClass="iceHeaderColHrTblMaster"
+									value="Id Flusso" />
+								<ice:outputText styleClass="iceHeaderColHrTblMaster"
+									value="Anno" />
+								<ice:outputText styleClass="iceHeaderColHrTblMaster"
+									value="Data Invio" />
+								<ice:outputText styleClass="iceHeaderColHrTblMaster"
+									value="Data Scadenza" />
+								<ice:outputText styleClass="iceHeaderColHrTblMaster"
+									value="Nome Flusso" />
+								<ice:outputText styleClass="iceHeaderColHrTblMaster"
+									value="Nr.Bollettini" />
+								<ice:outputText styleClass="iceHeaderColHrTblMaster"
+									value="Importo" />
+								<ice:outputText styleClass="iceHeaderColHrTblMaster"
+									value="Importo Incassato" />
+
+
+								<ice:panelGroup>
+									<ice:commandButton partialSubmit="true"
+										title="nascondi incassi"
+										actionListener="#{ricercaIncassoPoste.showHideRateClick}"
+										image="#{styleBean.imgCloseTree}"
+										rendered="#{flusso.showRate}">
+										<f:attribute name="flusso" value="#{flusso}" />
+									</ice:commandButton>
+									<ice:commandButton partialSubmit="true" title="mostra incassi"
+										actionListener="#{ricercaIncassoPoste.showHideRateClick}"
+										image="#{styleBean.imgOpenTree}"
+										rendered="#{flusso.showRate==false}">
+										<f:attribute name="flusso" value="#{flusso}" />
+									</ice:commandButton>
+								</ice:panelGroup>
+								<ice:outputText styleClass="iceDatTblColMaster"
+									value="#{flusso.idFlusso}" />
+								<ice:outputText styleClass="iceDatTblColMaster"
+									value="#{flusso.anno}" />
+								<ice:outputText styleClass="iceDatTblColMaster"
+									value="#{flusso.tsProduzione}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</ice:outputText>
+								<ice:outputText styleClass="iceDatTblColMaster"
+									value="#{flusso.dtScadenza}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</ice:outputText>
+								<ice:outputText styleClass="iceDatTblColMaster"
+									value="#{flusso.txNomeFile}" />
+
+								<ice:outputText styleClass="iceDatTblColMaster"
+									value="#{flusso.nrIndirizziDaFlusso}" />
+								<ice:outputText styleClass="iceDatTblColMaster"
+									value="#{flusso.impFlusso}">
+									<f:convertNumber type="currency" />
+								</ice:outputText>
+								<ice:outputText styleClass="iceDatTblColMaster"
+									value="#{flusso.impFlussoIncassato}" converter="ImportoConverter">
+									
+								</ice:outputText>
+
+
+							</ice:panelGrid>
+							<ice:dataTable border="1" styleClass="iceDatTblDetails"
+								value="#{flusso.rate}" var="rata" rendered="#{flusso.showRate}">
+								<ice:column id="nrBollettino">
+									<f:facet name="header">
+										<ice:outputText value="Bollettino" />
+									</f:facet>
+									<ice:outputText value="#{rata.idFlussoPoste}">
+
+									</ice:outputText>
+								</ice:column>
+								<ice:column id="Famiglia">
+									<f:facet name="header">
+										<ice:outputText value="Famiglia" />
+									</f:facet>
+									<ice:outputText value="#{rata.idFamiglia}">
+
+									</ice:outputText>
+								</ice:column>
+
+								<ice:column id="Anagrafica">
+									<f:facet name="header">
+										<ice:outputText value="Anagrafica" />
+									</f:facet>
+									<ice:outputText value="#{rata.anagrafica}">
+
+									</ice:outputText>
+								</ice:column>
+								<ice:column id="Importo">
+									<f:facet name="header">
+										<ice:outputText value="Importo" />
+									</f:facet>
+									<ice:outputText value="#{rata.imRata}" converter="ImportoConverter">
+
+									</ice:outputText>
+								</ice:column>
+								<ice:column id="Stato Rata">
+									<f:facet name="header">
+										<ice:outputText value="Stata Rata" />
+									</f:facet>
+									<ice:outputText value="#{rata.dsStatoRata}">
+
+									</ice:outputText>
+								</ice:column>
+								<ice:column id="Tessera">
+									<f:facet name="header">
+										<ice:outputText value="Tessera" />
+									</f:facet>
+									<ice:outputText value="#{rata.dsTessera}">
+
+									</ice:outputText>
+								</ice:column>
+							</ice:dataTable>
+
+
+						</ice:panelSeries>
+					</ice:panelGroup>
+
+				</ice:panelGroup>
+
+			</ice:form>
+
+		</ice:portlet>
+	</f:view>
+</jsp:root>

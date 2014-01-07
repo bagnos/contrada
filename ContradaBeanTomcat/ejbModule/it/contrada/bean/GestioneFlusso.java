@@ -1,0 +1,1026 @@
+package it.contrada.bean;
+
+import it.contrada.dao.interfaces.IFlussoEsitiDAO;
+import it.contrada.dao.interfaces.IFlussoPreautorizzazioniRidDAO;
+import it.contrada.dao.interfaces.IFlussoRidIncassoDAO;
+import it.contrada.dao.interfaces.IParametriContradaDAO;
+import it.contrada.dao.interfaces.IRateizzazioneDAO;
+import it.contrada.dao.interfaces.IRidDAO;
+import it.contrada.dominio.dto.TipoCasualiIncassoRidDTO;
+import it.contrada.dominio.dto.TipoCasualiPreautDTO;
+import it.contrada.dto.FlussoEsitoDTO;
+import it.contrada.dto.OperazioneDTO;
+import it.contrada.dto.ParametriContradaDTO;
+import it.contrada.dto.RidDTO;
+import it.contrada.enumcontrada.TipoCausaleIncasso;
+import it.contrada.enumcontrada.TipoFlusso;
+import it.contrada.enumcontrada.TipoIncassoRid;
+import it.contrada.enumcontrada.TipoStatoRata;
+import it.contrada.enumcontrada.TipoStatoRid;
+import it.contrada.exceptions.ContradaExceptionBloccante;
+import it.contrada.exceptions.ContradaExceptionNonBloccante;
+import it.contrada.incassorid.dto.DisposizioneIncassoRidRicezioneDTO;
+import it.contrada.incassorid.dto.FlussoIncassoRidDTO;
+import it.contrada.incassorid.dto.IncassoRidDTO;
+import it.contrada.incassorid.dto.RicezioneFlussoIncassoRidDTO;
+import it.contrada.interfaces.IGestioneFlusso;
+import it.contrada.pojo.FlussoPreautorizzazioneRid;
+import it.contrada.pojo.FlussoRid;
+import it.contrada.pojo.FlussoUtil;
+import it.contrada.pojo.Operazione;
+import it.contrada.pojo.RicezioneFlussoIncassiRid;
+import it.contrada.pojo.RicezioneFlussoPreautorizzazioneRid;
+import it.contrada.preautrid.dto.DisposizionePreautRicezioneDTO;
+import it.contrada.preautrid.dto.FlussoPreautInviatoDTO;
+import it.contrada.preautrid.dto.RicezioneFlussoPreautorizzazioneDTO;
+import it.contrada.util.Constanti;
+import it.contrada.util.DecodificaErrore;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.faces.context.FacesContext;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+/**
+ * Session Bean implementation class GestioneFlusso
+ */
+
+public class GestioneFlusso implements IGestioneFlusso {
+
+	/**
+	 * @uml.property  name="rateizzazioneDAO"
+	 * @uml.associationEnd  
+	 */
+	@Autowired
+	IRateizzazioneDAO rateizzazioneDAO;
+
+	/**
+	 * @uml.property  name="flussoRidAddebitoDAO"
+	 * @uml.associationEnd  
+	 */
+	@Autowired
+	IFlussoRidIncassoDAO flussoRidAddebitoDAO;
+
+	/**
+	 * @uml.property  name="parametriContradaDAO"
+	 * @uml.associationEnd  
+	 */
+	@Autowired
+	IParametriContradaDAO parametriContradaDAO;
+
+	/**
+	 * @uml.property  name="ridDAO"
+	 * @uml.associationEnd  
+	 */
+	@Autowired
+	IRidDAO ridDAO;
+
+	/**
+	 * @uml.property  name="flussoPreautorizzazioniRidDAO"
+	 * @uml.associationEnd  
+	 */
+	@Autowired
+	IFlussoPreautorizzazioniRidDAO flussoPreautorizzazioniRidDAO;
+
+	/**
+	 * @uml.property  name="flussoEsitoDAO"
+	 * @uml.associationEnd  
+	 */
+	@Autowired
+	IFlussoEsitiDAO flussoEsitoDAO;
+
+	/**
+	 * @uml.property  name="ricezionePreaut"
+	 * @uml.associationEnd  
+	 */
+	@Autowired
+	RicezioneFlussoPreautorizzazioneRid ricezionePreaut;
+
+	/**
+	 * @uml.property  name="ricezioneIncassiRid"
+	 * @uml.associationEnd  
+	 */
+	@Autowired
+	RicezioneFlussoIncassiRid ricezioneIncassiRid;
+
+	/**
+	 * @uml.property  name="operazioneBO"
+	 * @uml.associationEnd  
+	 */
+	@Autowired
+	private Operazione operazioneBO;
+
+	private static Log log = LogFactory.getLog(GestioneFlusso.class);
+
+	/**
+	 * @param operazioneBO
+	 * @uml.property  name="operazioneBO"
+	 */
+	public void setOperazioneBO(Operazione operazioneBO) {
+		this.operazioneBO = operazioneBO;
+	}
+
+	/**
+	 * @return
+	 * @uml.property  name="rateizzazioneDAO"
+	 */
+	public IRateizzazioneDAO getRateizzazioneDAO() {
+		return rateizzazioneDAO;
+	}
+
+	/**
+	 * @param rateizzazioneDAO
+	 * @uml.property  name="rateizzazioneDAO"
+	 */
+	public void setRateizzazioneDAO(IRateizzazioneDAO rateizzazioneDAO) {
+		this.rateizzazioneDAO = rateizzazioneDAO;
+	}
+
+	/**
+	 * @return
+	 * @uml.property  name="flussoRidAddebitoDAO"
+	 */
+	public IFlussoRidIncassoDAO getFlussoRidAddebitoDAO() {
+		return flussoRidAddebitoDAO;
+	}
+
+	/**
+	 * @param flussoRidAddebitoDAO
+	 * @uml.property  name="flussoRidAddebitoDAO"
+	 */
+	public void setFlussoRidAddebitoDAO(
+			IFlussoRidIncassoDAO flussoRidAddebitoDAO) {
+		this.flussoRidAddebitoDAO = flussoRidAddebitoDAO;
+	}
+
+	/**
+	 * @return
+	 * @uml.property  name="parametriContradaDAO"
+	 */
+	public IParametriContradaDAO getParametriContradaDAO() {
+		return parametriContradaDAO;
+	}
+
+	/**
+	 * @param parametriContradaDAO
+	 * @uml.property  name="parametriContradaDAO"
+	 */
+	public void setParametriContradaDAO(
+			IParametriContradaDAO parametriContradaDAO) {
+		this.parametriContradaDAO = parametriContradaDAO;
+	}
+
+	/**
+	 * @return
+	 * @uml.property  name="ridDAO"
+	 */
+	public IRidDAO getRidDAO() {
+		return ridDAO;
+	}
+
+	/**
+	 * @param ridDAO
+	 * @uml.property  name="ridDAO"
+	 */
+	public void setRidDAO(IRidDAO ridDAO) {
+		this.ridDAO = ridDAO;
+	}
+
+	/**
+	 * @return
+	 * @uml.property  name="flussoPreautorizzazioniRidDAO"
+	 */
+	public IFlussoPreautorizzazioniRidDAO getFlussoPreautorizzazioniRidDAO() {
+		return flussoPreautorizzazioniRidDAO;
+	}
+
+	/**
+	 * @param flussoPreautorizzazioniRidDAO
+	 * @uml.property  name="flussoPreautorizzazioniRidDAO"
+	 */
+	public void setFlussoPreautorizzazioniRidDAO(
+			IFlussoPreautorizzazioniRidDAO flussoPreautorizzazioniRidDAO) {
+		this.flussoPreautorizzazioniRidDAO = flussoPreautorizzazioniRidDAO;
+	}
+
+	/**
+	 * @return
+	 * @uml.property  name="flussoEsitoDAO"
+	 */
+	public IFlussoEsitiDAO getFlussoEsitoDAO() {
+		return flussoEsitoDAO;
+	}
+
+	/**
+	 * @param flussoEsitoDAO
+	 * @uml.property  name="flussoEsitoDAO"
+	 */
+	public void setFlussoEsitoDAO(IFlussoEsitiDAO flussoEsitoDAO) {
+		this.flussoEsitoDAO = flussoEsitoDAO;
+	}
+
+	/**
+	 * @return
+	 * @uml.property  name="ricezionePreaut"
+	 */
+	public RicezioneFlussoPreautorizzazioneRid getRicezionePreaut() {
+		return ricezionePreaut;
+	}
+
+	/**
+	 * @param ricezionePreaut
+	 * @uml.property  name="ricezionePreaut"
+	 */
+	public void setRicezionePreaut(
+			RicezioneFlussoPreautorizzazioneRid ricezionePreaut) {
+		this.ricezionePreaut = ricezionePreaut;
+	}
+
+	/**
+	 * @return
+	 * @uml.property  name="ricezioneIncassiRid"
+	 */
+	public RicezioneFlussoIncassiRid getRicezioneIncassiRid() {
+		return ricezioneIncassiRid;
+	}
+
+	/**
+	 * @param ricezioneIncassiRid
+	 * @uml.property  name="ricezioneIncassiRid"
+	 */
+	public void setRicezioneIncassiRid(
+			RicezioneFlussoIncassiRid ricezioneIncassiRid) {
+		this.ricezioneIncassiRid = ricezioneIncassiRid;
+	}
+
+	/**
+	 * Default constructor.
+	 */
+	public GestioneFlusso() {
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see IGestioneFlussi#preparaFlussoIncassi(int, int, TipoIncassoRid)
+	 */
+	public FlussoIncassoRidDTO preparaFlussoIncassiRid(int anno, int mese,
+			int tipoIncassoRid, java.sql.Date dtValuta)
+			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
+		// TODO Auto-generated method stub
+		try {
+
+			// si verifica esistenza del flusso per anno, mese e tipo incasso
+			int rows = flussoRidAddebitoDAO.existFlusso(anno, mese,
+					tipoIncassoRid);
+			if (rows > 0) {
+				throw new ContradaExceptionNonBloccante(DecodificaErrore
+						.getError("11"));
+			}
+
+			// inserisce tutte le tessere in tabella rateizzazione per anno,
+			// mese e tipo incasso rid
+			int nrRowsRate = rateizzazioneDAO.insertRateizzazioniPerFlusso(
+					anno, mese, tipoIncassoRid);
+			if (nrRowsRate == 0) {
+				FlussoIncassoRidDTO flussoRidDTO = new FlussoIncassoRidDTO();
+				flussoRidDTO.setImFlusso(0);
+				flussoRidDTO.setNrIncassi(0);
+				return flussoRidDTO;
+			}
+
+			// si produce le informazioni elementari per creare il flusso, lo
+			// stato rid è null
+			OperazioneDTO operazioneDTO = operazioneBO.inserisciOperazione(
+					FacesContext.getCurrentInstance().getExternalContext()
+							.getUserPrincipal().getName(), String.format(
+							Constanti.OPERAZIONE_INVIO_RID, TipoIncassoRid
+									.valueOf(tipoIncassoRid).toString(), anno
+									+ "/" + mese));
+
+			int nrRowsFlusso = flussoRidAddebitoDAO.insertFlussoRid(anno, mese,
+					dtValuta, tipoIncassoRid, FlussoRid
+							.getNomeFileConDirectoryRidIncasso(anno, mese),
+					operazioneDTO.getIdOperazione());
+
+			if (nrRowsFlusso == 0) {
+				throw new ContradaExceptionNonBloccante(DecodificaErrore
+						.getError("9"));
+			}
+
+			nrRowsFlusso = flussoRidAddebitoDAO.insertIncassoRid(anno, mese,
+					tipoIncassoRid, dtValuta);
+			if (nrRowsFlusso == 0) {
+				throw new ContradaExceptionNonBloccante(DecodificaErrore
+						.getError("9"));
+			}
+
+			// si aggiorna l'identificativo dell'incasso presente nel flusso su
+			// tutte le rateizzazione inserite precedentemente
+			int nrRowsRid = rateizzazioneDAO.aggiornaRidFlussoAddebito(anno,
+					mese);
+			if (nrRowsRid != nrRowsRate) {
+				throw new ContradaExceptionNonBloccante(DecodificaErrore
+						.getError("10"));
+			}
+
+			// genera il flusso;
+			FlussoIncassoRidDTO flussoRidDto = generaFlussoIncassiRid(anno,
+					mese, tipoIncassoRid);
+
+			/*
+			 * // si recupera le informazioni sui parametri della contrada
+			 * ParametriContradaDTO params =
+			 * parametriContradaDAO.getParametri(); if (params == null ||
+			 * params.getCdSia() == null || params.getCdSia().trim().equals(""))
+			 * { throw new ContradaExceptionBloccante(DecodificaErrore
+			 * .getError("12")); }
+			 * 
+			 * // si recupera quelli i rid da invuare List<IncassoRidDTO>
+			 * incassi = flussoRidAddebitoDAO .getIncassiDaInviare(anno, mese,
+			 * tipoIncassoRid); if (incassi.isEmpty()) { return null; }
+			 * 
+			 * // si crea il file FlussoRid flusso = new FlussoRid();
+			 * FlussoIncassoRidDTO flussoRidDto = flusso.creaFlussoRid(mese,
+			 * anno, incassi, params);
+			 */
+
+			return flussoRidDto;
+		}
+
+		catch (ContradaExceptionBloccante ex) {
+			log.error(ex);
+			throw ex;
+		}
+
+		catch (Throwable ex) {
+			log.error(ex);
+			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
+		}
+
+	}
+
+	public void eliminaFlussoIncassiRid(int anno, int mese, int incasso)
+			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
+		// TODO Auto-generated method stub
+		try {
+			String nomeFile = flussoRidAddebitoDAO.getNomeFileFlusso(anno,
+					mese, incasso);
+			if (nomeFile == null || nomeFile.trim() == "")
+				throw new ContradaExceptionBloccante(DecodificaErrore
+						.getError("13"));
+
+			File file = new File(nomeFile);
+			file.deleteOnExit();
+			/*
+			 * if (!file.exists()) throw new
+			 * ContradaExceptionBloccante(DecodificaErrore.getError("14"));
+			 */
+
+			int nrRows = 0;
+			nrRows = rateizzazioneDAO.eliminaRateizzazioniDaFlusso(anno, mese,
+					incasso);
+
+			if (nrRows == 0) {
+				throw new ContradaExceptionBloccante(DecodificaErrore
+						.getError("15"));
+			}
+
+			nrRows = flussoRidAddebitoDAO
+					.eliminaIncassoRid(anno, mese, incasso);
+			if (nrRows == 0) {
+				throw new ContradaExceptionBloccante(DecodificaErrore
+						.getError("16"));
+			}
+
+			nrRows = flussoRidAddebitoDAO.eliminaFlussoRid(anno, mese, incasso);
+			if (nrRows == 0) {
+				throw new ContradaExceptionBloccante(DecodificaErrore
+						.getError("15"));
+			}
+
+		} catch (ContradaExceptionBloccante ex) {
+			log.error(ex);
+			throw ex;
+		}
+
+		catch (Exception ex) {
+			log.error(ex);
+			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
+		}
+	}
+
+	public List<DisposizionePreautRicezioneDTO> riceviFlussoPreautorizzazioniRid(
+			String nomeFile) throws ContradaExceptionBloccante {
+		// TODO Auto-generated method stub
+		try {
+			int causale;
+			int idRid;
+			int rowsAgg;
+			java.sql.Date dtEsito;
+			java.sql.Date dtInvio;
+			int abi;
+			int cab;
+			String conto;
+			String paese;
+			int cinEuropeo;
+			String dsCausale;
+			String note;
+			String intestazione;
+			String cin;
+			List<TipoCasualiPreautDTO> causali;
+			TipoCasualiPreautDTO causaleDisp = null;
+			TipoStatoRid tipoStatoRid = null;
+			List<DisposizionePreautRicezioneDTO> disps = new ArrayList<DisposizionePreautRicezioneDTO>();
+
+			SimpleDateFormat formatddMMyy = new SimpleDateFormat("ddMMyy");
+			SimpleDateFormat formatddMMyyyy = new SimpleDateFormat("dd/MM/yyyy");
+
+			File file = new File(nomeFile);
+
+			if (!file.exists()) {
+				throw new ContradaExceptionBloccante(DecodificaErrore
+						.getError("18"));
+
+			}
+			
+			if (isFileEmpty(file))
+			{
+				//lista vuota
+				return new ArrayList<DisposizionePreautRicezioneDTO>();
+			}
+
+			// inserisco il file nella tabella flussi esito
+			FlussoEsitoDTO flussoEsito = inserisciFlussoEsito(file,
+					TipoFlusso.PREAUTORIZZAZIONE);
+
+			ParametriContradaDTO params = parametriContradaDAO.getParametri();
+			if (params == null || params.getCdSia() == null
+					|| params.getCdSia().trim().equals("")) {
+				throw new ContradaExceptionBloccante(DecodificaErrore
+						.getError("12"));
+			}
+
+			causali = flussoPreautorizzazioniRidDAO.elencoCausaliPreaut();
+			if (causali.isEmpty()) {
+				throw new ContradaExceptionBloccante(DecodificaErrore
+						.getError("22"));
+			}
+
+			List<RicezioneFlussoPreautorizzazioneDTO> flussi = ricezionePreaut
+					.decodificaFlessoEsitiPreautorizzazioneRid(nomeFile, params);
+			for (RicezioneFlussoPreautorizzazioneDTO flusso : flussi) {
+
+				for (DisposizionePreautRicezioneDTO disp : flusso
+						.getDisposizioni()) {
+					causale = Integer.parseInt(disp.getRecords12().getCausale()
+							.trim());
+					dsCausale = "";
+					intestazione = null;
+					disp.setIdCausale(causale);
+					disp.setTipoStatoRid(null);
+
+					for (TipoCasualiPreautDTO causaleDto : causali) {
+						if (causaleDto.getCdCausale() == causale) {
+							dsCausale = causaleDto.getDsCausale();
+							causaleDisp = causaleDto;
+							break;
+						}
+					}
+
+					disp.setDsCausale(dsCausale);
+
+					idRid = Integer.parseInt(disp.getRecords12()
+							.getCodiceIndividuale());
+
+					paese = disp.getRecords12().getCodicePaese();
+					cinEuropeo = disp.getRecords12().getCheckDigit().trim()
+							.isEmpty() ? 0 : Integer.parseInt(disp
+							.getRecords12().getCheckDigit());
+					abi = disp.getRecords12().getAbi().trim().isEmpty() ? 0
+							: Integer.parseInt(disp.getRecords12().getAbi());
+					cab = disp.getRecords12().getCab().trim().isEmpty() ? 0
+							: Integer.parseInt(disp.getRecords12().getCab());
+					conto = disp.getRecords12().getConto().trim();
+
+					cin = disp.getRecords12().getCin().trim().isEmpty() ? "0"
+							: disp.getRecords12().getCin();
+					if (disp.getRecords40() != null
+							&& disp.getRecords40().getIntestetarioConto() != null) {
+						intestazione = disp.getRecords40()
+								.getIntestetarioConto();
+					}
+					// si aggiorna il record nel flusso di ricezione
+					dtEsito = flusso.getRecordAL().getDtCreazioneDisposizione()
+							.trim().isEmpty() ? null : new Date(formatddMMyy
+							.parse(
+									flusso.getRecordAL()
+											.getDtCreazioneDisposizione())
+							.getTime());
+
+					dtInvio = disp.getRecords12().getDataCreazioneFlusso()
+							.trim().isEmpty() ? null : new Date(
+							formatddMMyy.parse(
+									disp.getRecords12()
+											.getDataCreazioneFlusso())
+									.getTime());
+
+					note = String
+							.format(
+									"flusso ricevuto il %s, inviato il %s, causale %s, %s",
+									dtEsito != null ? formatddMMyyyy
+											.format(dtEsito) : "",
+									dtInvio != null ? formatddMMyyyy
+											.format(dtInvio) : "", causale,
+									dsCausale);
+
+					// aggiorno l'esito dellla disposizione ricevuta
+					flussoPreautorizzazioniRidDAO.aggiornaRicezioneFlusso(
+							idRid, dtInvio, dtEsito, causale, flussoEsito
+									.getIdFlussoEsito());
+
+					// verifica aggiornamento stato rid
+					if (causaleDisp.getIdStatoRidSucc() != null) {
+						tipoStatoRid = TipoStatoRid
+								.lookUpMeseByOrdinal(causaleDisp
+										.getIdStatoRidSucc());
+						rowsAgg = ridDAO.aggiornaStatoRidPerIdRid(idRid,
+								tipoStatoRid, null);
+						disp.setStato(tipoStatoRid.toString());
+
+						if (rowsAgg == 0) {
+							throw new ContradaExceptionBloccante(
+									DecodificaErrore.getError("21"));
+						}
+						disp.setTipoStatoRid(tipoStatoRid);
+
+					}
+
+					// verifica aggiornamento coordinate
+					if (causaleDisp.isAggiornaCoordinate()) {
+
+						rowsAgg = ridDAO.aggiornaCoordinateBancarie(idRid, abi,
+								cab, conto, paese, cinEuropeo, cin, note,
+								intestazione);
+
+					}
+					// aggiorno cmq le note
+					else {
+						rowsAgg = ridDAO.aggiornaNote(idRid, note);
+					}
+
+					if (rowsAgg == 0) {
+						throw new ContradaExceptionBloccante(DecodificaErrore
+								.getError("21"));
+					}
+
+					// recupero alcune informazioni legate al rid
+					RidDTO rid = ridDAO.getSchedaRid(idRid);
+					disp.setIntestatario(rid.getIntestatarioRid());
+					disp.setStato(rid.getDsStatoRid());
+
+					disps.add(disp);
+
+				}
+			}
+
+			flussoEsito.setNrDisp(disps.size());
+			if (flussoEsitoDAO.aggiornaFlussoEsito(flussoEsito) == 0) {
+				throw new ContradaExceptionBloccante(DecodificaErrore
+						.getError("26"));
+			}
+			return disps;
+
+		}
+
+		catch (Exception ex) {
+			log.error(ex);
+			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
+		}
+	}
+
+	private boolean isFileEmpty(File file) throws IOException {
+
+		FileReader reader = null;
+		BufferedReader bReader = null;
+		try
+		{
+		reader = new FileReader(file);
+
+		 bReader = new BufferedReader(reader);
+
+		if (bReader.readLine().contains("Nessun oggetto trovato")) {
+			return true;
+		}
+		return false;
+		}
+		finally
+		{
+			if (bReader!=null)
+			{
+				bReader.close();
+			}
+			if (reader!=null)
+			{
+				reader.close();
+			}
+		}
+	}
+
+	public List<RicezioneFlussoIncassoRidDTO> riceviFlussoIncassiRid(
+			String nomeFile) throws ContradaExceptionBloccante {
+		// TODO Auto-generated method stub
+		try {
+			File file = new File(nomeFile);
+			List<TipoCasualiIncassoRidDTO> causali;
+			int causale;
+			String dsCausale;
+			TipoCasualiIncassoRidDTO causaleDisp = null;
+			SimpleDateFormat formatddMMyy = new SimpleDateFormat("ddMMyy");
+			// long idFlussoAddebito;
+			Long idRid;
+			java.sql.Date dtEsito;
+
+			String note;
+			TipoStatoRid tipoStatoRid;
+			int rowRids;
+			int rowsAgg;
+			java.sql.Date dtValuta;
+
+			if (!file.exists()) {
+				throw new ContradaExceptionBloccante(DecodificaErrore
+						.getError("18"));
+
+			}
+			
+			if (isFileEmpty(file))
+			{
+				//lista vuota
+				return new ArrayList<RicezioneFlussoIncassoRidDTO>();
+			}
+
+			// inserisco il file nella tabella flussi esito
+			FlussoEsitoDTO flussoEsito = inserisciFlussoEsito(file,
+					TipoFlusso.RID);
+
+			ParametriContradaDTO params = parametriContradaDAO.getParametri();
+			if (params == null || params.getCdSia() == null
+					|| params.getCdSia().trim().equals("")) {
+				throw new ContradaExceptionBloccante(DecodificaErrore
+						.getError("12"));
+			}
+
+			causali = flussoRidAddebitoDAO.elencoCausaliIncassoRid();
+			if (causali.isEmpty()) {
+				throw new ContradaExceptionBloccante(DecodificaErrore
+						.getError("22"));
+			}
+
+			List<RicezioneFlussoIncassoRidDTO> flussi = ricezioneIncassiRid
+					.decodificaFlessoEsitiIncassiRid(nomeFile, params);
+
+			for (RicezioneFlussoIncassoRidDTO flusso : flussi) {
+
+				for (DisposizioneIncassoRidRicezioneDTO disp : flusso
+						.getDisposizioni()) {
+
+					causale = Integer.parseInt(disp.getRec10().getCausale());
+
+					dsCausale = "";
+					disp.setCdCausale(causale);
+					disp.setTipoStatoRid(null);
+
+					// cerco la descrizione della causale
+					causaleDisp = null;
+					for (TipoCasualiIncassoRidDTO causaleDto : causali) {
+						if (causaleDto.getCdCausale() == causale) {
+							dsCausale = causaleDto.getDsCausale();
+							causaleDisp = causaleDto;
+							break;
+						}
+					}
+					disp.setDsCausale(dsCausale);
+
+					idRid = Long.parseLong(disp.getRec10()
+							.getCodiceClienteDebitore());
+
+					disp.setIdRid(idRid.intValue());
+
+					/*
+					 * dtValuta = new java.sql.Date(formatddMMyy.parse(
+					 * disp.getRec10().getDtScadenzaOriginaria()) .getTime());
+					 */
+
+					dtValuta = new java.sql.Date(formatddMMyy.parse(
+							disp.getRec10().getDtScadenzaEffettiva()).getTime());
+
+					// si aggiorna il record nel flusso di ricezione
+					dtEsito = flusso.getRecIR().getDtCreazioneFlusso().trim()
+							.isEmpty() ? null
+							: new Date(formatddMMyy.parse(
+									flusso.getRecIR().getDtCreazioneFlusso())
+									.getTime());
+
+					note = String.format("%s, %s - %s", disp.getRec50()
+							.getSegmento2(), causale, dsCausale);
+					note = note.trim();
+
+					// si aggiorna lo stato dell'incasso accedendo per idRid e
+					// data valuta
+					rowRids = flussoRidAddebitoDAO.aggiornaEsitoRid(idRid,
+							dtValuta, dtEsito, causale, flussoEsito
+									.getIdFlussoEsito());
+
+					if (rowRids == 0) {
+						// numero flusso addebito non presente
+						disp.setStato("Non Elaborata");
+						continue;
+					}
+					disp.setStato("Elaborata");
+
+					// inserisco l'id rid nella disposizione
+					// disp.setIdRid(rateizzazioneDAO
+					// .getIdRidFromIdFlusso(idFlussoAddebito));
+					// recupero l'idAddebito dall'id rid e dalla data valuta
+					long idFlussoAddebito = flussoRidAddebitoDAO
+							.getIdFlussoAddebito(idRid, dtValuta);
+
+					// aggiornamento stato rid
+					tipoStatoRid = TipoStatoRid.Attiva;
+					if (causaleDisp != null
+							&& causaleDisp.getIdStatoRidSucc() != null) {
+						tipoStatoRid = TipoStatoRid
+								.lookUpMeseByOrdinal(causaleDisp
+										.getIdStatoRidSucc());
+						rowsAgg = ridDAO.aggiornaStatoRidPerIdFlussoAddebito(
+								causaleDisp.getIdStatoRidSucc(),
+								idFlussoAddebito, note);
+						if (rowsAgg == 0) {
+							throw new ContradaExceptionBloccante(
+									DecodificaErrore.getError("21"));
+						}
+
+					} else if (causaleDisp != null
+							&& causaleDisp.getCdCausale() != TipoCausaleIncasso.CAUSALE_50010
+									.getTipoCausaleIncasso()) {
+						// aggiorno le note
+						ridDAO.aggiornaNoteRidPerIdFlussoAddebito(
+								idFlussoAddebito, note);
+					}
+					disp.setTipoStatoRid(tipoStatoRid);
+					// aggiorno lo stato della rate in base all'esito
+					if (causaleDisp != null) {
+						rateizzazioneDAO.aggiornaStatoRata(causaleDisp
+								.getIdStatoRataSucc(), idFlussoAddebito);
+					} else {
+						rateizzazioneDAO.aggiornaStatoRata(
+								TipoStatoRata.Insoluta.getStatoRata(),
+								idFlussoAddebito);
+					}
+
+				}
+			}
+			return flussi;
+
+		}
+
+		catch (Exception ex) {
+			log.error(ex);
+			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
+		}
+	}
+
+	public List<RidDTO> elencaRidDaAllineare()
+			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
+		// TODO Auto-generated method stub
+		List<RidDTO> rids = new ArrayList<RidDTO>();
+		try {
+			rids = ridDAO.getRidCensiti();
+
+			return rids;
+		} catch (ContradaExceptionBloccante ex) {
+			log.error(ex);
+			throw ex;
+		}
+
+		catch (Exception ex) {
+			log.error(ex);
+			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
+		}
+	}
+
+	public FlussoPreautInviatoDTO preparaFlussoPreautorizzazioniRid(
+			List<RidDTO> rids) throws ContradaExceptionBloccante,
+			ContradaExceptionNonBloccante {
+		// TODO Auto-generated method stub
+		List<RidDTO> ridsOK = new ArrayList<RidDTO>();
+
+		try {
+			// List<RidDTO> rids = elencaRidDaAllineare();
+			if (flussoPreautorizzazioniRidDAO.getNrPreautorizzazioniToday() > 0) {
+				throw new ContradaExceptionNonBloccante(
+						"FLUSSO PREAUTORIZZAZIONI GIA' INVIATO NELLA DATA ODIERNA");
+			}
+
+			if (rids == null || rids.isEmpty()) {
+				return null;
+			}
+
+			for (RidDTO rid : rids) {
+				if (rid.isInvioPreaut()) {
+
+					ridsOK.add(rid);
+				}
+			}
+			rids = ridsOK;
+			if (!rids.isEmpty()) {
+				// recupero l'idrid da ogni oggetto rid
+				List<Integer> idRids = new ArrayList<Integer>();
+				for (RidDTO rid : rids) {
+
+					idRids.add(rid.getNrRid());
+
+				}
+
+				// inserisco il rid nella tabella del flusso di
+				// preautorizzazione
+				int nrRowsIns = flussoPreautorizzazioniRidDAO
+						.insertFlussoPreaut(idRids);
+
+				// aggiorno lo stato dei rid in spedito in banca
+				int nrRowsAgg = ridDAO.aggiornaStatoRidPerListRid(idRids,
+						TipoStatoRid.Spedita_in_Banca, TipoStatoRid.Censita);
+
+				if (nrRowsAgg != nrRowsIns) {
+					throw new ContradaExceptionBloccante(DecodificaErrore
+							.getError("17"));
+				}
+
+				// si crea il flusso .crm
+				return generaFlussoPreautRid(rids);
+
+			} else {
+				return null;
+			}
+
+		} catch (ContradaExceptionBloccante ex) {
+			log.error(ex);
+			throw ex;
+		}
+
+		catch (Throwable ex) {
+			log.error(ex);
+			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
+		}
+
+	}
+
+	public FlussoEsitoDTO inserisciFlussoEsito(File file, TipoFlusso tipoFlusso)
+			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
+		// TODO Auto-generated method stub
+		try {
+			FlussoEsitoDTO flussoEsito = FlussoUtil.getFromNomeFile(file
+					.getName(), tipoFlusso);
+
+			// verifica se alcuni esiti sono già stati scaricati
+			/*
+			 * java.sql.Date maxData =
+			 * flussoEsitoDAO.getMaxDataFlusso(tipoFlusso);
+			 * 
+			 * if (maxData != null && maxData.after(flussoEsito.getDtDa())) {
+			 * throw new ContradaExceptionNonBloccante(DecodificaErrore
+			 * .getError("30")); }
+			 */
+			flussoEsito = flussoEsitoDAO.insertFlussoEsito(flussoEsito);
+
+			return flussoEsito;
+		} catch (ContradaExceptionNonBloccante ex) {
+			log.error(ex);
+			throw ex;
+		} catch (Exception ex) {
+			log.error(ex);
+			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
+		}
+
+	}
+
+	public FlussoIncassoRidDTO generaFlussoIncassiRid(int anno, int mese,
+			int tipoIncassoRid) throws ContradaExceptionNonBloccante,
+			ContradaExceptionBloccante {
+		// TODO Auto-generated method stub
+		// si recupera le informazioni sui parametri della contrada
+		try {
+			ParametriContradaDTO params = parametriContradaDAO.getParametri();
+			if (params == null || params.getCdSia() == null
+					|| params.getCdSia().trim().equals("")) {
+				throw new ContradaExceptionBloccante(DecodificaErrore
+						.getError("12"));
+			}
+
+			// si recupera quelli i rid da invuare
+			List<IncassoRidDTO> incassi = flussoRidAddebitoDAO
+					.getIncassiDaInviare(anno, mese, tipoIncassoRid);
+			if (incassi.isEmpty()) {
+				return null;
+			}
+
+			// si crea il file
+			FlussoRid flusso = new FlussoRid();
+			FlussoIncassoRidDTO flussoRidDto = flusso.creaFlussoRid(mese, anno,
+					incassi, params);
+			return flussoRidDto;
+		} catch (Throwable ex) {
+			log.error(ex);
+			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
+		}
+
+	}
+
+	public FlussoPreautInviatoDTO generaFlussoPreautInviati(
+			java.util.Date dtInvio) throws ContradaExceptionNonBloccante,
+			ContradaExceptionBloccante {
+		// TODO Auto-generated method stub
+
+		try {
+			FlussoPreautInviatoDTO flusso = new FlussoPreautInviatoDTO();
+
+			// si recuperano i rid inviati
+			List<RidDTO> rids = flussoPreautorizzazioniRidDAO
+					.gerRidPreautorizzatiInviati(dtInvio);
+
+			// si genera il flusso
+			flusso = generaFlussoPreautRid(rids);
+
+			return flusso;
+
+		} catch (Throwable ex) {
+			log.error(ex);
+			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
+		}
+	}
+
+	private FlussoPreautInviatoDTO generaFlussoPreautRid(List<RidDTO> rids)
+			throws Exception {
+
+		FlussoPreautInviatoDTO flusso = new FlussoPreautInviatoDTO();
+
+		if (!rids.isEmpty()) {
+			flusso.setRids(rids);
+			ParametriContradaDTO params = parametriContradaDAO.getParametri();
+			if (params == null) {
+				throw new ContradaExceptionBloccante(DecodificaErrore
+						.getError("12"));
+			}
+
+			FlussoPreautorizzazioneRid preRid = new FlussoPreautorizzazioneRid();
+			flusso = preRid.creaFlussoRid(rids, params);
+		}
+		return flusso;
+
+	}
+
+	public List<FlussoPreautInviatoDTO> getFlussoPreautorizzati(int anno)
+			throws ContradaExceptionNonBloccante, ContradaExceptionBloccante {
+		// TODO Auto-generated method stub
+		try {
+			return flussoPreautorizzazioniRidDAO.getFlussoPreautorizzati(anno);
+		} catch (Throwable ex) {
+			log.error(ex);
+			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
+		}
+	}
+
+	public FlussoPreautInviatoDTO generaFlussoPreautInviati(List<RidDTO> rids)
+			throws ContradaExceptionNonBloccante, ContradaExceptionBloccante {
+		// TODO Auto-generated method stub
+		try {
+			return generaFlussoPreautRid(rids);
+		} catch (Throwable ex) {
+			log.error(ex);
+			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
+		}
+	}
+
+	public int eliminaFlussoPreautorizzazioni(java.util.Date dtInvio)
+			throws ContradaExceptionNonBloccante, ContradaExceptionBloccante {
+		// TODO Auto-generated method stub
+		try {
+			return flussoPreautorizzazioniRidDAO
+					.eliminaFlussoPreautorizzazioni(dtInvio);
+		} catch (Throwable ex) {
+			log.error(ex);
+			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
+		}
+	}
+
+}

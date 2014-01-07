@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="ejbModule"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ContradaBeanInterface"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ContradaCommon"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ContradaInterface"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ContradaDAO"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ContradaUtil"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v6.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ContradaUserLibrary"/>
+	<classpathentry kind="con" path="com.soyatec.uml.CONTAINER"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

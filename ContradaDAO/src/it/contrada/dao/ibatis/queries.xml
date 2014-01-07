@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.contrada.queries">
+
+	<select id="getNazione" resultType="it.contrada.dto.NazioneDTO">
+		SELECT cd_iso_stato as
+		cdNazione, ds_stato as dsNazione FROM
+		${database.schema}STATO
+</select>
+
+
+	<select id="getProvincia" resultType="it.contrada.dto.ProvinciaDTO">
+		SELECT p.cd_provincia as
+		cdProvincia, p.ds_provincia as dsProvincia,
+		p.cd_sigla_prov as
+		cdSiglaProv
+		FROM ${database.schema}PROVINCIA as P
+		ORDER BY
+		p.ds_provincia
+</select>
+
+	<select id="getAllProvincia" resultType="it.contrada.dto.ProvinciaDTO">
+		SELECT p.cd_provincia as
+		cdProvincia, p.ds_provincia as dsProvincia,
+		p.cd_sigla_prov as
+		cdSiglaProv
+		FROM ${database.schema}PROVINCIA as
+		P,${database.schema}STATO S
+		WHERE P.CD_ISO_STATO=S.CD_ISO_STATO
+		AND
+		S.CD_ISO_STATO='IT'
+		ORDER BY p.ds_provincia
+</select>
+
+
+	<select id="getProvinciaPerStato" resultType="it.contrada.dto.ProvinciaDTO">
+		SELECT
+		p.cd_provincia as cdProvincia, p.ds_provincia as dsProvincia,
+		P.cd_sigla_prov as cdSiglaProv
+		FROM ${database.schema}STATO S,
+		${database.schema}PROVINCIA P
+		WHERE S.cd_iso_stato=#{cdIsoStato}
+		AND
+		S.cd_iso_stato=P.cd_iso_stato
+		ORDER BY p.ds_provincia
+
+</select>
+
+	<select id="getComune" resultType="it.contrada.dto.ComuneDTO">
+		SELECT C.cd_comune as
+		cdComune, C.ds_comune as dsComune, C.cd_provincia as
+		cdProvincia
+		FROM
+		${database.schema}COMUNE C
+		WHERE C.cd_provincia=#{cdProvincia}
+		ORDER BY
+		C.ds_comune
+</select>
+
+	<select id="getCap" resultType="it.contrada.dto.CapDTO">
+		SELECT cd_cap_post as cdCap
+		FROM
+		${database.schema}CAP_POST
+		WHERE cd_provincia=#{cdProvincia}
+		AND
+		cd_comune=#{cdComune}
+</select>
+
+
+
+	<select id="getComuneByStato" resultType="it.contrada.dto.ComuneDTO">
+		SELECT c.cd_comune as
+		cdComune, c.ds_comune as dsComune, P.cd_provincia as
+		cdProvincia
+		FROM
+		${database.schema}COMUNE C,
+		${database.schema}STATO S,
+		${database.schema}PROVINCIA P
+		WHERE S.cd_iso_stato=#{cdStato}
+		AND
+		S.cd_iso_stato=P.cd_iso_stato
+		AND P.cd_provincia=C.cd_provincia
+		ORDER BY c.ds_comune
+</select>
+
+	
+
+
+
+
+	<!--
+		private long idAnag; private int idTessera; private int
+		idTipoRateizzazione; private String dsTipoRateizzazione; private
+		String dsTipoTessera; private int quota;
+	-->
+
+
+
+
+	<select id="getTipoIncasso" resultType="it.contrada.dominio.dto.TipoIncassoDTO">
+		SELECT id_tipo_incasso as
+		idTipoIncasso, ds_tipo_incasso as dsTipoIncasso
+		FROM
+		${database.schema}TIPO_INCASSO; 
+</select>
+
+
+	<!--
+		<select id="getTipoRateizzazionePerTesseraIncasso"
+		resultType="it.contrada.dominio.dto.TipoRateizzazioneDTO"> SELECT
+		TR.id_tipo_rateizzazione as idTipoRateizzazione, ds_tipo_rateizzazione
+		as dsTipoRateizzazione FROM
+		${database.schema}TIPO_RATEIZZAZIONE_TESSERA TRT,
+		${database.schema}TIPO_RATEIZZAZIONE TR WHERE
+		TRT.id_tipo_rateizzazione=TR.id_tipo_rateizzazione AND
+		TRT.id_tipo_tessera=#{idTessera} AND TRT.id_tipo_incasso=#{idIncasso}
+		</select>
+	-->
+	<select id="getEsattore" resultType="it.contrada.dto.EsattoreDTO">
+		SELECT id_esattore as
+		idEsattore, ds_esattore as dsEsattore
+		FROM ${database.schema}ESATTORE
+		ORDER BY dsEsattore 
+	</select>
+
+
+
+	<select id="existContradaiolotByCdFisc" resultType="int">
+		SELECT
+		count(*)
+		FROM ${database.schema}ANAGRAFICA A
+		WHERE A.CD_FISC=#{cdFisc}
+	</select>
+
+
+
+</mapper>

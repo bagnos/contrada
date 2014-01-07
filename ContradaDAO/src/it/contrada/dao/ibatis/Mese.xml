@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.contrada.mese.queries">
+
+
+	<select id="getMesiIncassoPerTipORid" resultType="it.contrada.dominio.dto.TipoMeseDTO">
+		SELECT TM.id_tipo_mese as idMese,
+		TM.ds_tipo_mese as dsMese
+		FROM ${database.schema}TIPO_MESE TM
+		JOIN
+		${database.schema}TIPO_MESE_INCASSO_RID TI
+		ON TM.ID_TIPO_MESE=TI.ID_TIPO_MESE
+		WHERE TI.ID_TIPO_INCASSO_RID=#{idTipoRid}
+		 
+</select>
+
+<select id="elencaMesi" resultType="it.contrada.dominio.dto.TipoMeseDTO">
+		SELECT TM.id_tipo_mese as idMese,
+		TM.ds_tipo_mese as dsMese
+		FROM ${database.schema}TIPO_MESE TM		
+		 
+</select>
+
+
+
+
+
+</mapper>
+
+

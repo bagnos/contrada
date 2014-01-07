@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.contrada.famiglia.queries">
+
+
+	<update id="updateFamiglia" parameterType="it.contrada.dto.FamigliaDTO">
+		UPDATE
+		${database.schema}FAMIGLIA
+		SET
+		ID_CAPO_FAMIGLIA=#{idCapoFamiglia}
+		WHERE
+		ID_FAMIGLIA=#{idFamiglia}
+	</update>
+
+	<select id="getFamiglieParzialePerCognome" parameterType="java.util.HashMap"
+		resultType="it.contrada.dto.MembroFamigliaDTO">
+		SELECT A.id_famiglia as idFamiglia,concat(TRIM(a.tx_cognome),' ', TRIM(a.tx_nome)) as nominativo, a.dt_nascita as dtNascita,
+		A.NR_CIVICO AS 	nrCivico,S.ID_STRADA as idStrada, S.DS_STRADA as dsStrada,
+		S.ID_LOCALITA as idLocalita, S.CD_PROVINCIA AS cdProvincia, S.CD_COMUNE AS cdComune, S.CD_CAP_POST as cdCap,P.CD_ISO_STATO AS cdIsoStato
+		FROM
+		${database.schema}ANAGRAFICA A
+		JOIN ${database.schema}STRADA S
+		ON
+		A.ID_STRADA=S.ID_STRADA
+		JOIN ${database.schema}PROVINCIA P
+		ON P.CD_PROVINCIA=S.CD_PROVINCIA
+		where
+		UPPER(tx_cognome) like UPPER(#{matchCognome})
+		AND A.ID_STATO_ANAGRAFICA NOT IN(2)
+		<if test="nome!=null">
+			and UPPER(A.TX_NOME) LIKE
+			UPPER(#{nome})
+		</if>
+		order by tx_cognome;
+	</select>
+
+
+
+	<select id="getMembroFamiglia" resultType="it.contrada.dto.MembroFamigliaDTO">
+		SELECT A.id_anagrafica as idAnag,A.id_famiglia as idFamiglia, tx_nome
+		as nome,tx_cognome as cognome,
+		if(A.ID_ANAGRAFICA=F.ID_CAPO_FAMIGLIA,'true','false') as capoFamiglia,
+		if(A.ID_ANAGRAFICA=F.ID_CAPO_FAMIGLIA,'Si','No') as dsCapoFamiglia
+		FROM ${database.schema}ANAGRAFICA A
+		JOIN
+		${database.schema}FAMIGLIA F
+		ON
+		A.ID_FAMIGLIA=F.ID_FAMIGLIA
+		<choose>
+			<when test="cdFamiglia != null">
+				AND A.ID_FAMIGLIA=#{cdFamiglia}
+		</when>
+
+			<when test="cognome!= null and nome!=null">
+				AND A.TX_COGNOME LIKE #{cognome} AND
+				A.TX_NOME LIKE
+				#{nome} AND
+		</when>
+			<when test="cognome != null">
+				AND A.TX_COGNOME LIKE #{cognome} 
+		</when>
+			<otherwise>
+				AND A.ID_FAMIGLIA=NULL
+			</otherwise>
+		</choose>
+
+	</select>
+
+	<insert id="insertFamiglia" useGeneratedKeys="true" keyProperty="idFamiglia"
+		parameterType="it.contrada.dto.FamigliaDTO">
+		INSERT INTO ${database.schema}FAMIGLIA
+		(ID_CAPO_FAMIGLIA)
+		VALUES(#{idCapoFamiglia})  
+</insert>
+
+	<select id="getFamigliePerMatchCognome" resultType="it.contrada.dto.MembroFamigliaDTO"
+		parameterType="java.util.HashMap">
+		SELECT A.id_famiglia as idFamiglia,concat(a.tx_cognome,'
+		', a.tx_nome) as nominativo, a.dt_nascita as dtNascita
+		FROM
+		${database.schema}ANAGRAFICA A
+		where tx_cognome like #{matchCognome}
+		AND A.ID_STATO_ANAGRAFICA NOT IN(2)
+		order by tx_cognome;
+	</select>
+
+</mapper>

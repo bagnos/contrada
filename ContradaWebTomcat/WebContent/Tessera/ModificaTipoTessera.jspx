@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
+	
+	<f:view>
+		<ice:form>		
+			<ice:outputStyle href="#{styleBean.activeCss}" />
+			<ice:panelGroup styleClass="portletContainer">
+						<ice:outputText value="Modifica Tipo Tessera"
+							styleClass="labelPortletContainer"></ice:outputText>
+					</ice:panelGroup>
+			<ice:panelGrid columns="1">
+
+				<ice:dataTable value="#{modificaTipoTessera.tipoTessere}"
+					var="tessera">
+					<ice:column id="aggiornamento">
+						<f:facet name="header">
+						</f:facet>
+						<ice:commandButton value="modifica" partialSubmit="true"
+							title="modifica" image="#{styleBean.modifica}"
+							actionListener="#{modificaTipoTessera.modificaTesseraOnClick}">
+							<f:attribute name="tessera" value="#{tessera}" />
+						</ice:commandButton>
+					</ice:column>
+					<ice:column id="col0">
+						<f:facet name="header">
+							<ice:outputText value="Tessera"></ice:outputText>
+						</f:facet>
+						<ice:outputText value="#{tessera.dsTipoTessera}"></ice:outputText>
+					</ice:column>					
+					<ice:column id="col2">
+						<f:facet name="header">
+							<ice:outputText value="Quota"></ice:outputText>
+						</f:facet>
+						<ice:outputText value="#{tessera.imTessera}"
+							rendered="#{tessera.edit==false}" converter="ImportoConverter"></ice:outputText>
+						<ice:panelGroup rendered="#{tessera.edit}">
+							<ice:inputText value="#{tessera.imTesseraNew}"
+								converter="ImportoConverter" style="width: 86px" />
+						</ice:panelGroup>
+					</ice:column>
+					<ice:column id="modifica"
+						rendered="#{modificaTipoTessera.visibleColonnaModifica}">
+
+						<ice:panelGrid columns="2" width="100%"
+							rendered="#{tessera.edit==true}">
+							<ice:commandButton value="Conferma" partialSubmit="true"
+								actionListener="#{modificaTipoTessera.commit}">
+								<f:attribute name="tessera" value="#{tessera}" />
+							</ice:commandButton>
+							<ice:commandButton value="Annulla" partialSubmit="true"
+								actionListener="#{modificaTipoTessera.cancel}">
+								<f:attribute name="tessera" value="#{tessera}" />
+							</ice:commandButton>
+						</ice:panelGrid>
+					</ice:column>
+				</ice:dataTable>
+			</ice:panelGrid>
+			<ice:panelGrid columns="1">
+				<ice:outputText value="#{modificaTipoTessera.note}"></ice:outputText>
+				<ice:panelGroup>
+					<ice:selectBooleanCheckbox
+						value="#{modificaTipoTessera.applicaTessereInCorso}" id="check"></ice:selectBooleanCheckbox>
+					<ice:outputLabel value="Aggiorna tessere in corso" for="check" />
+				</ice:panelGroup>
+				<ice:commandButton value="Conferma"
+					action="#{modificaTipoTessera.confermaOnClick}"></ice:commandButton>
+			</ice:panelGrid>
+		</ice:form>
+	</f:view>
+</jsp:root>

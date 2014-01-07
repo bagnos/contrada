@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.contrada.spinoff.queries">
+
+
+	<select id="getProtettori" resultType="it.contrada.spinoff.dto.ProtettoreDTO">
+		SELECT
+		CodProtettore,
+		Cognome,
+		Nome,
+		DataNasc,
+		Sesso,
+		CodFisc,
+		CodFamiglia,
+		CodVia,
+		NumCivico,
+		CodCap,
+		CodCapProg,
+		Telefono,
+		Email,
+		CodCarica,
+		Quota,
+		CodTipoPag,
+		CodEsattore,
+		CodRid,
+		CodMav,
+		DataIns,
+		DataFazz,
+		Note,
+		Utente,
+		DtTime,
+		Giornalino,
+		Presso
+		FROM ${database.schema}protettori
+		where CodCarica not
+		in ('05')
+ 
+</select>
+
+	<select id="getVia" resultType="it.contrada.spinoff.dto.ViaDTO"
+		parameterType="java.lang.Integer">
+		select
+		CodVia,
+		TipoVia,
+		Descrizione
+		FROM
+		${database.schema}vie
+		where CodVia=#{cdVia}
+	</select>
+
+	<select id="getIdProvincia" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select cd_provincia
+		from ${database.schema}provincia
+		where
+		cd_sigla_prov=#{sigla}
+	</select>
+
+	<select id="getIdComune" parameterType="java.util.HashMap"
+		resultType="it.contrada.spinoff.dto.ComuneNewDTO">
+		select comune.cd_comune as idComune, cd_cap_post as cdCap
+		from ${database.schema}comune join ${database.schema}cap_post on
+		comune.cd_provincia=cap_post.cd_provincia
+		and
+		comune.cd_comune=cap_post.cd_comune
+		where
+		comune.CD_PROVINCIA=#{provincia}
+		and DS_COMUNE=#{dsComune}
+		
+	</select>
+
+	<select id="getStrada" parameterType="java.util.HashMap"
+		resultType="java.lang.Integer">
+		select id_strada
+		from ${database.schema}strada
+		where
+		ds_strada like
+		#{dsStrada}
+
+
+		and
+		cd_cap_post=#{capPost}
+		and
+		cd_provincia=#{cdProvincia}
+		and
+		cd_comune=#{cdComune}
+	</select>
+
+	<select id="getComune" parameterType="java.util.HashMap"
+		resultType="it.contrada.spinoff.dto.ComuneDTO">
+		SELECT
+		Cap,
+		ProgCap,
+		Localita,
+		Comune,
+		Provincia,
+		Note,
+		Utente,
+		DtTime
+		FROM ${database.schema}comuni
+		WHERE Cap=#{Cap}
+		AND
+		ProgCap=#{ProgCap}
+		</select>
+
+	<select id="getCapProv" resultType="Integer">
+		select count(*)
+		FROM
+		${database.schema}cap_post
+		where cd_cap_post=#{cdCap}
+		and
+		id_provincia=#{idProvincia}
+</select>
+
+	<select id="getCapByComProvCap" parameterType="java.util.HashMap"
+		resultType="java.lang.Integer">
+		select count(*)
+		FROM ${database.schema}cap_post
+		where
+		cd_comune=#{idComune}
+		and cd_provincia=#{idProvincia}
+		and
+		cd_cap_post=#{cdCap}
+</select>
+
+	<select id="getMaxCapByComProvCap" parameterType="java.util.HashMap"
+		resultType="java.lang.String">
+		select max(cd_cap_post)
+		FROM ${database.schema}cap_post
+		where cd_comune=#{idComune}
+		and cd_provincia=#{idProvincia}		
+</select>
+
+	<update id="updateCapProt" parameterType="java.util.HashMap">
+		UPDATE
+		${database.schema}PROTETTORI
+		SET CODCAP=#{cdCapNew},
+		CODCAPPROG=#{capProgNew}
+		WHERE
+		CODCAP=#{cdCapOld} AND CODCAPPROG = #{capProg};
+		</update>
+
+	<update id="updateCapComune" parameterType="java.util.HashMap">
+		UPDATE
+		${database.schema}COMUNI
+		SET CAP=#{cdCapNew},
+		ProgCap=#{capProg}
+		WHERE
+		CAP=#{cdCapOld} AND PROGCAP = #{capProg};
+		</update>
+
+
+	<insert id="insertCapOld" parameterType="java.util.HashMap">
+		INSERT INTO ${database.schema}COMUNI
+		(Cap,ProgCap,Localita,Comune,Provincia)
+		VALUES (#{Cap},#{ProgCap},#{Localita},#{Comune},#{Provincia})
+	
+	</insert>
+
+	<select id="getMaxCapProg" parameterType="java.util.HashMap" resultType="java.lang.Integer" >
+		select(max(coalesce(progcap,0))+1)
+		from ${database.schema}comuni
+		where Cap=#{Cap} 
+	</select>
+
+	<insert id="insertAnagrafica" parameterType="it.contrada.dto.AnagraficaDTO">
+		INSERT INTO
+		${database.schema}ANAGRAFICA
+		(ID_ANAGRAFICA,TX_NOME,TX_COGNOME,TX_SESSO,
+		DT_NASCITA,DT_MORTE,CD_FISC,ID_FAMIGLIA,DT_ULT_CENS,
+		TX_NOTE,NR_CIVICO,ID_STRADA,DT_FAZZOLETTO,ID_STATO_ANAGRAFICA,TX_UTENTE,COD_PROTETTORE)
+		VALUES(#{idAnagrafica},#{nome},
+		#{cognome},
+		#{sesso},
+		#{dtNascita},
+		#{dtMorte},
+		#{cdFiscale},
+		#{idFamiglia},
+		#{dtUltCens},
+		#{note},
+		#{nrCivico},
+		#{idStrada},
+		#{dtFazzoletto},
+		#{idStatoAnagrafica},
+		#{utente},
+		#{codProtettore})
+	</insert>
+
+
+
+
+
+</mapper>
+

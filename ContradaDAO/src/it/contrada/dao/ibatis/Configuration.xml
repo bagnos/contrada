@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+
+
+<configuration> 
+
+<properties resource="it/contrada/dao/ibatis/database.properties" />
+
+<typeHandlers>
+<typeHandler handler="it.contrada.dao.typehandlers.GregorianTypeHandler" javaType="java.util.GregorianCalendar"/> 	
+<typeHandler handler="it.contrada.dao.typehandlers.UtilDateTypeHandler" javaType="java.util.Date"/>
+</typeHandlers>
+
+
+
+
+
+<mappers>  
+	<mapper resource="it/contrada/dao/ibatis/queries.xml" />
+	<mapper resource="it/contrada/dao/ibatis/insert.xml" />
+	<mapper resource="it/contrada/dao/ibatis/Anagrafica.xml" />
+	<mapper resource="it/contrada/dao/ibatis/Tessera.xml" />	
+	<mapper resource="it/contrada/dao/ibatis/Rid.xml" />
+	<mapper resource="it/contrada/dao/ibatis/Famiglia.xml" />
+	<mapper resource="it/contrada/dao/ibatis/Carica.xml" />
+	<mapper resource="it/contrada/dao/ibatis/Rateizzazione.xml" />
+	<mapper resource="it/contrada/dao/ibatis/Distinta.xml" />
+	<mapper resource="it/contrada/dao/ibatis/FlussoIncassiRid.xml" />
+	<mapper resource="it/contrada/dao/ibatis/ParametriContrada.xml" />
+	<mapper resource="it/contrada/dao/ibatis/FlussoPreautorizzazioniRid.xml" />	
+	<mapper resource="it/contrada/dao/ibatis/FlussoEsito.xml" />
+	<mapper resource="it/contrada/dao/ibatis/Mese.xml" />
+	<mapper resource="it/contrada/dao/ibatis/FlussoIncassiPoste.xml" />
+	<mapper resource="it/contrada/dao/ibatis/SpinOff.xml" />
+	<mapper resource="it/contrada/dao/ibatis/Strada.xml" />
+	<mapper resource="it/contrada/dao/ibatis/Cap.xml" />
+	<mapper resource="it/contrada/dao/ibatis/Gestore.xml" />
+	<mapper resource="it/contrada/dao/ibatis/Utente.xml" />
+	<mapper resource="it/contrada/dao/ibatis/Operazione.xml" />
+	
+	
+	
+</mappers>
+
+
+
+</configuration>

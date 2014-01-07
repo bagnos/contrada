@@ -1,0 +1,808 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.contrada.tessera.queries">
+
+	<select id="getTipoTessera" resultType="it.contrada.dominio.dto.TipoTesseraDTO">
+		SELECT id_tipo_tessera as
+		idTipoTessera, ds_tipo_tessera as dsTipoTessera, TT.im_tessera as
+		imTessera
+		FROM ${database.schema}TIPO_TESSERA TT
+		WHERE TT.FG_ATTIVA=1
+	</select>
+	
+	<select id="getAnnoInCorso" resultType="java.lang.Integer">
+		SELECT max(NR_ANNO)		
+		FROM ${database.schema}TESSERA_STORICO T		
+	</select>
+
+	<select id="getTipoTesseraPerIncasso" resultType="it.contrada.dominio.dto.TipoTesseraDTO">
+		SELECT DISTINCT
+		TT.id_tipo_tessera as idTipoTessera, TT.ds_tipo_tessera
+		as
+		dsTipoTessera,TT.im_tessera as imTessera
+		FROM
+		${database.schema}TIPO_TESSERA
+		TT,${database.schema}TIPO_INCASSO_TESSERA_RATEIZZAZIONE TITR
+		WHERE
+		TT.id_tipo_tessera=TITR.id_tipo_tessera
+		AND
+		TITR.id_tipo_incasso=#{idTipoIncasso}
+		AND TT.FG_ATTIVA=1
+</select>
+
+	<select id="getTipoTesseraPerAnagIncasso" resultType="it.contrada.dto.TesseraDTO">
+		SELECT
+		A.ID_ANAGRAFICA as idAnag, TT.id_tipo_tessera as
+		idTipoTessera,TT.im_tessera as imTessera
+		TT.ds_tipo_tessera as
+		dsTipoTessera
+		FROM ${database.schema}ANAGRAFICA
+		A,${database.schema}TIPO_TESSERA
+		TT,${database.schema}TIPO_INCASSO_TESSERA TI
+		WHERE
+		TT.id_tipo_tessera=TI.id_tipo_tessera
+		AND
+		TI.id_tipo_incasso=#{idTipoIncasso}
+		AND TT.FG_ATTIVA=1
+</select>
+
+	<insert id="insertTessera" useGeneratedKeys="true" keyProperty="idTessera"
+		parameterType="it.contrada.dto.TesseraDTO">
+
+		INSERT INTO ${database.schema}TESSERA
+		(ID_ANAGRAFICA,ID_TIPO_TESSERA,ID_TIPO_CARICA,
+		ID_TIPO_RATEIZZAZIONE,IM_TESSERA,ID_RID,ID_TIPO_INCASSO,ID_ESATTORE,ID_MAV,
+		TX_NOTE_ESAZIONE)
+		VALUES(#{idAnag},
+		#{idTipoTessera},
+		#{idTipoCarica},
+		#{idTipoRateizzazione},
+		#{quota},
+		#{idRid},
+		#{idTipoIncasso},
+		#{idTipoEsattore},
+		#{idMav},
+		#{dsNote})  
+</insert>
+
+	<delete id="eliminaTessere">
+		DELETE
+		FROM ${database.schema}TESSERA
+		WHERE
+		ID_ANAGRAFICA=#{idAnag}
+	</delete>
+
+	<delete id="disattivaTessere">
+		UPDATE ${database.schema}TESSERA
+		SET FG_ATTIVA=0
+		WHERE
+		ID_TESSERA IN
+		<foreach item="item" index="index" collection="idTessere"
+			open="(" separator="," close=")">
+			#{item}
+				</foreach>
+	</delete>
+
+	<update id="aggiornaTipoTessera" parameterType="it.contrada.dominio.dto.TipoTesseraDTO">
+		UPDATE
+		${database.schema}TIPO_TESSERA
+		SET IM_TESSERA=#{imTessera}
+		WHERE
+		ID_TIPO_TESSERA=#{idTipoTessera}
+	</update>
+
+	<update id="aggiornaImportoTessera" parameterType="it.contrada.dominio.dto.TipoTesseraDTO">
+		UPDATE ${database.schema}TESSERA
+		SET IM_TESSERA=#{imTessera}
+		WHERE
+		ID_TIPO_TESSERA=#{idTipoTessera}
+		<if test="idCarica!=null">
+			AND ID_TIPO_CARICA=#{idCarica}
+	</if>
+		AND IM_TESSERA=#{imTesseraPrec}
+	</update>
+
+	<update id="aggiornaImportoTesseraStorico" parameterType="it.contrada.dominio.dto.TipoTesseraDTO">
+		UPDATE ${database.schema}TESSERA_STORICO,(SELECT MAX(NR_ANNO) AS ANNO
+		FROM
+		${database.schema}TESSERA_STORICO) T2
+		SET IM_TESSERA=#{imTessera}
+		WHERE ID_TIPO_TESSERA=#{idTipoTessera}
+		<if test="idCarica!=null">
+			AND ID_TIPO_CARICA=#{idCarica}
+	</if>
+		AND IM_TESSERA=#{imTesseraPrec}
+		AND NR_ANNO =T2.ANNO
+	</update>
+
+	<update id="updateRid">
+		UPDATE ${database.schema}TESSERA
+		SET
+		ID_RID=#{idRid}
+		WHERE
+		ID_TESSERA IN (#{idTessera})
+	</update>
+
+	<update id="annullaRid">
+		UPDATE ${database.schema}TESSERA
+		SET
+		ID_RID=NULL
+		WHERE
+		ID_RID=#{idRID}
+	</update>
+
+	<delete id="deleteStorico" parameterType="java.util.HashMap">
+		delete from
+		${database.schema}TESSERA_STORICO
+		where
+		NR_ANNO=#{anno}
+		<if test="idTessera !=null">
+		and  ID_TESSERA=#{idTessera}
+		</if>
+	</delete>
+
+	<insert id="insertStorico" parameterType="java.util.HashMap">
+		INSERT INTO
+		${database.schema}TESSERA_STORICO
+		(NR_ANNO,
+		ID_TESSERA,
+		ID_ANAGRAFICA,
+		ID_TIPO_CARICA,
+		ID_TIPO_INCASSO,
+		ID_ESATTORE,
+		ID_MAV,
+		ID_RID,
+		IM_TESSERA,
+		TX_NOTE_ESAZIONE,
+		ID_TIPO_RATEIZZAZIONE,
+		ID_TIPO_TESSERA)
+
+		SELECT
+		#{anno},
+		T.ID_TESSERA,
+		T.ID_ANAGRAFICA,
+		T.ID_TIPO_CARICA,
+		T.ID_TIPO_INCASSO,
+		T.ID_ESATTORE,
+		T.ID_MAV,
+		T.ID_RID,
+		T.IM_TESSERA,
+		T.TX_NOTE_ESAZIONE,
+		T.ID_TIPO_RATEIZZAZIONE,
+		T.ID_TIPO_TESSERA
+		FROM
+		TESSERA T
+		<if test="idTessera !=null">
+			WHERE ID_TESSERA=#{idTessera}
+		</if>
+	</insert>
+	
+	<select id="getTessereDaAllineare" resultType="it.contrada.dto.TesseraDTO" parameterType="java.util.HashMap">
+	SELECT A.ID_ANAGRAFICA as idAnag,a.tx_nome as Nome, a.tx_cognome as Cognome,a.dt_nascita as dtNascita,TC.DS_TIPO_CARICA as dsTipoCarica,
+		  TSUCC.Ds_TIPO_CARICA as dsTipoCaricaSucc,TSUCC.IM_MINIMO AS quota
+		FROM ${database.schema}ANAGRAFICA A 
+    	JOIN ${database.schema}TESSERA T
+		ON A.ID_ANAGRAFICA=T.ID_ANAGRAFICA
+		JOIN ${database.schema}TIPO_CARICA TC
+		ON TC.ID_TIPO_CARICA=T.ID_TIPO_CARICA
+    	JOIN ${database.schema}TIPO_CARICA TSUCC
+    	ON
+    	TSUCC.ID_TIPO_CARICA=TC.ID_TIPO_CARICA_SUCC
+		WHERE
+		TC.ID_TIPO_CARICA_SUCC IS NOT NULL
+		AND A.ID_STATO_ANAGRAFICA =1
+		AND
+		year(#{dataRif})-year(A.DT_NASCITA)>=TC.NR_ETA_MAX
+		order by a.tx_cognome,a.tx_nome
+	</select>
+
+	<update id="aggiornaQuotaCarica" parameterType="java.util.HashMap">
+		<!-- 
+		UPDATE
+		${database.schema}TESSERA AS T1, (SELECT T.ID_TESSERA
+		FROM
+		${database.schema}ANAGRAFICA A JOIN ${database.schema}TESSERA T
+		ON
+		A.ID_ANAGRAFICA=T.ID_ANAGRAFICA
+		JOIN ${database.schema}TIPO_CARICA TC
+		ON TC.ID_TIPO_CARICA=T.ID_TIPO_CARICA
+		WHERE
+		T.ID_TIPO_CARICA=#{idCarica}
+		AND A.ID_STATO_ANAGRAFICA =1
+		AND
+		DATEDIFF(#{dataRif},A.DT_NASCITA)>=TC.NR_ETA_MAX) TES_CAR
+		SET
+		T1.IM_TESSERA=#{quota},
+		T1.ID_TIPO_CARICA=#{caricaSucc}
+		WHERE
+		T1.ID_TESSERA= TES_CAR.ID_TESSERA
+		AND IM_TESSERA&lt;#{quota}-->
+		UPDATE
+		${database.schema}TESSERA AS T
+		JOIN		
+		(SELECT A.ID_ANAGRAFICA,ID_TESSERA,TC.ID_TIPO_CARICA,TC.ID_TIPO_CARICA_SUCC,TSUCC.IM_MINIMO
+		FROM ${database.schema}ANAGRAFICA A 
+    	JOIN ${database.schema}TESSERA T
+		ON A.ID_ANAGRAFICA=T.ID_ANAGRAFICA
+		JOIN ${database.schema}TIPO_CARICA TC
+		ON TC.ID_TIPO_CARICA=T.ID_TIPO_CARICA
+    	JOIN ${database.schema}TIPO_CARICA TSUCC
+    	ON
+    	TSUCC.ID_TIPO_CARICA=TC.ID_TIPO_CARICA_SUCC
+		WHERE
+		TC.ID_TIPO_CARICA_SUCC IS NOT NULL
+		AND A.ID_STATO_ANAGRAFICA =1
+		AND
+		year(#{dataRif})-year(A.DT_NASCITA)>=TC.NR_ETA_MAX)TESS_QUOTE		
+		ON T.ID_TESSERA=TESS_QUOTE.ID_TESSERA
+		
+		SET
+		T.IM_TESSERA=TESS_QUOTE.IM_MINIMO,
+		T.ID_TIPO_CARICA=TESS_QUOTE.ID_TIPO_CARICA_SUCC
+	</update>
+
+	<select id="getTessereNonRendicontateManuali" resultType="it.contrada.dto.TesseraDTO"
+		parameterType="java.util.HashMap">
+		SELECT A.ID_ANAGRAFICA as idAnag,A.tx_Nome AS
+		nome,A.tx_Cognome as cognome, TT.id_tipo_tessera as
+		idTipoTessera,TS.im_tessera as quota, TT.ds_tipo_tessera as
+		dsTipoTessera,TS.id_tessera as idTessera,
+		TS.id_tipo_incasso as
+		idTipoIncasso,TI.ds_tipo_incasso as dsIncasso
+		FROM
+		${database.schema}ANAGRAFICA A
+		JOIN ${database.schema}TESSERA_STORICO
+		TS
+		ON
+		TS.ID_ANAGRAFICA=A.ID_ANAGRAFICA
+		JOIN
+		${database.schema}TIPO_TESSERA TT
+		ON
+		TT.ID_TIPO_TESSERA=TS.ID_TIPO_TESSERA
+		JOIN
+		${database.schema}TIPO_INCASSO TI
+		ON
+		TI.ID_TIPO_INCASSO=TS.ID_TIPO_INCASSO
+		WHERE
+		TS.id_tipo_rateizzazione=22
+		AND A.ID_ANAGRAFICA=#{idAnagrafica}
+		AND
+		TS.ID_TESSERA NOT IN(
+		SELECT
+		R.ID_TESSERA
+		FROM ${database.schema}RATEIZZAZIONE R
+		JOIN
+		${database.schema}TESSERA_STORICO T
+		ON R.ID_TESSERA=T.ID_TESSERA
+		WHERE
+		T.ID_ANAGRAFICA=#{idAnagrafica}
+		AND R.NR_ANNO=#{anno}
+		AND
+		R.ID_TIPO_STATO_RATA=2
+		AND
+		T.ID_TIPO_RATEIZZAZIONE=22)
+		
+</select>
+
+
+	<select id="getTessereRendicontabiliManualmente" resultType="it.contrada.dto.TesseraDTO"
+		parameterType="java.util.HashMap">
+		SELECT A.ID_ANAGRAFICA as idAnag,A.tx_Nome AS
+		nome,A.tx_Cognome as
+		cognome, TT.id_tipo_tessera as
+		idTipoTessera,T.im_tessera as quota,
+		TT.ds_tipo_tessera as
+		dsTipoTessera,T.id_tessera as idTessera,
+		T.id_tipo_incasso as
+		idTipoIncasso,TI.ds_tipo_incasso as dsIncasso,
+		COALESCE(R.quotaIncassata,0) AS quotaIncassata,
+		#{anno} as anno
+		FROM
+		${database.schema}ANAGRAFICA A
+		JOIN ${database.schema}TESSERA_STORICO T
+		ON
+		(T.ID_ANAGRAFICA=A.ID_ANAGRAFICA AND T.NR_ANNO=#{anno})
+		JOIN
+		${database.schema}TIPO_TESSERA TT
+		ON
+		TT.ID_TIPO_TESSERA=T.ID_TIPO_TESSERA
+		JOIN
+		${database.schema}TIPO_INCASSO TI
+		ON
+		TI.ID_TIPO_INCASSO=T.ID_TIPO_INCASSO
+		LEFT JOIN (SELECT R1.ID_TESSERA,
+		SUM(IM_RATA) AS quotaIncassata
+		FROM ${database.schema}RATEIZZAZIONE R1
+		JOIN
+		${database.schema}TESSERA T1 ON T1.ID_TESSERA=R1.ID_TESSERA
+		WHERE
+		T1.ID_ANAGRAFICA=#{idAnagrafica} AND
+		R1.NR_ANNO=#{anno}
+		AND
+		R1.ID_TIPO_STATO_RATA IN (1)
+
+		GROUP BY
+		R1.ID_TESSERA) R
+		ON
+		R.ID_TESSERA=T.ID_TESSERA
+		WHERE
+		A.ID_ANAGRAFICA=#{idAnagrafica}
+		AND
+		T.FG_ATTIVA=1
+		<if test="idTipoTessera !=null">
+			and TT.ID_TIPO_TESSERA=#{idTipoTessera}
+		</if>
+
+	</select>
+
+
+
+	<update id="aggiornaTesseraStorico">
+		UPDATE
+		${database.schema}tessera_storico TS , (SELECT
+		* FROM
+		${database.schema}TESSERA WHERE
+		ID_TESSERA=#{idTessera})TP,(SELECT MAX(NR_ANNO) AS NR_ANNO FROM
+		${database.schema}TESSERA_STORICO)MAX
+		SET
+		TS.ID_TIPO_CARICA =
+		TP.ID_TIPO_CARICA,
+		TS.ID_TIPO_INCASSO
+		=TP.ID_TIPO_INCASSO,
+		TS.ID_ESATTORE = TP.ID_ESATTORE,
+		TS.ID_MAV =
+		TP.ID_MAV,
+		TS.ID_RID =
+		TP.ID_RID,
+		TS.IM_TESSERA = TP.IM_TESSERA,
+		TS.TX_NOTE_ESAZIONE
+		=TP.TX_NOTE_ESAZIONE,
+		TS.ID_TIPO_RATEIZZAZIONE =
+		TP.ID_TIPO_RATEIZZAZIONE,
+		TS.ID_TIPO_TESSERA = TP.ID_TIPO_TESSERA,
+		TS.FG_ATTIVA=TP.FG_ATTIVA
+		WHERE
+		TS.ID_TESSERA=TP.ID_TESSERA AND
+		TS.NR_ANNO=MAX.NR_ANNO 
+	</update>
+
+	<update id="aggiornaTesseraStoricoByCdAnag">
+		UPDATE
+		${database.schema}tessera_storico TS , (SELECT
+		* FROM
+		${database.schema}TESSERA WHERE
+		ID_ANAGRAFICA=#{idAnagrafica})TP,
+
+		(SELECT MAX(NR_ANNO) AS NR_ANNO FROM
+		${database.schema}TESSERA_STORICO)MAX
+		SET
+		TS.ID_TIPO_CARICA =
+		TP.ID_TIPO_CARICA,
+		TS.ID_TIPO_INCASSO
+		=TP.ID_TIPO_INCASSO,
+		TS.ID_ESATTORE = TP.ID_ESATTORE,
+		TS.ID_MAV =
+		TP.ID_MAV,
+		TS.ID_RID =
+		TP.ID_RID,
+		TS.IM_TESSERA = TP.IM_TESSERA,
+		TS.TX_NOTE_ESAZIONE
+		=TP.TX_NOTE_ESAZIONE,
+		TS.ID_TIPO_RATEIZZAZIONE =
+		TP.ID_TIPO_RATEIZZAZIONE,
+		TS.ID_TIPO_TESSERA = TP.ID_TIPO_TESSERA,
+		TS.FG_ATTIVA=TP.FG_ATTIVA
+		WHERE
+		TS.ID_TESSERA=TP.ID_TESSERA AND
+		TS.NR_ANNO=MAX.NR_ANNO 
+	</update>
+
+
+	<select id="getTesserePerAnagrafica" resultType="it.contrada.dto.TesseraDTO">
+		SELECT
+		ID_TESSERA as idTessera,
+		ID_ANAGRAFICA as idAnagrafica,
+		ID_TIPO_RATEIZZAZIONE as idTipoRateizzazione,
+		ID_TIPO_TESSERA as
+		idTipoTessera,
+		ID_TIPO_CARICA as idTipoCarica,
+		ID_RID as idRid,
+		ID_TIPO_INCASSO as idTipoIncasso,
+		ID_ESATTORE as idEsattore,
+		ID_MAV as
+		IdMav,
+		IM_TESSERA as imTessera,
+		TX_NOTE_ESAZIONE as dsNote,
+		FG_ATTIVA as
+		fgAttiva
+		FROM ${database.schema}TESSERA
+		WHERE
+		ID_ANAGRAFICA=#{idAnagrafica}
+	</select>
+
+	<select id="getTesserePerDistinta" resultType="it.contrada.dto.TesseraDTO"
+		parameterType="java.util.HashMap">
+
+		SELECT A.ID_ANAGRAFICA as idAnag,A.tx_Nome AS
+		nome,A.tx_Cognome as cognome,
+		TT.id_tipo_tessera as
+		idTipoTessera,TS.im_tessera as quota,
+		R.IM_RATA as quotaIncassata,
+		TT.ds_tipo_tessera as
+		dsTipoTessera,TS.id_tessera as
+		idTessera,
+		TS.id_tipo_incasso as
+		idTipoIncasso,TI.ds_tipo_incasso as
+		dsIncasso,
+		R.NR_ANNO as anno
+		FROM
+		${database.schema}ANAGRAFICA A
+		JOIN
+		${database.schema}TESSERA_STORICO
+		TS
+		ON
+		(TS.ID_ANAGRAFICA=A.ID_ANAGRAFICA and ts.NR_ANNO=#{anno})
+		JOIN
+		${database.schema}TIPO_TESSERA TT
+		ON
+		TT.ID_TIPO_TESSERA=TS.ID_TIPO_TESSERA
+		JOIN
+		${database.schema}TIPO_INCASSO TI
+		ON
+		TI.ID_TIPO_INCASSO=TS.ID_TIPO_INCASSO
+		JOIN
+		${database.schema}RATEIZZAZIONE R
+		ON (R.ID_TESSERA=TS.ID_TESSERA and
+		R.NR_ANNO_DISTINTA=#{anno} and R.NR_DISTINTA=#{distinta})
+		
+	</select>
+
+	<delete id="eliminaTesseraStorico">
+		DELETE
+		FROM
+		${database.schema}TESSERA_STORICO
+		WHERE
+		ID_TESSERA=#{idTessera}
+				
+	</delete>
+
+	<delete id="eliminaTessera">
+		DELETE
+		FROM
+		${database.schema}TESSERA
+		WHERE
+		ID_TESSERA=#{idTessera}		
+	</delete>
+
+	<update id="aggiornaTessera" parameterType="it.contrada.dto.TesseraDTO">
+		UPDATE
+		${database.schema}TESSERA
+		SET
+
+		ID_TIPO_RATEIZZAZIONE =
+		#{idTipoRateizzazione},
+		ID_TIPO_CARICA = #{idTipoCarica},
+		ID_RID =
+		#{idRid},
+		ID_TIPO_INCASSO = #{idTipoIncasso},
+		ID_ESATTORE =
+		#{idTipoEsattore},
+		ID_MAV = #{idMav},
+		IM_TESSERA = #{quota},
+		ID_TIPO_TESSERA=#{idTipoTessera},
+		TX_NOTE_ESAZIONE = #{dsNote},
+		FG_ATTIVA = #{fgAttiva}
+		WHERE
+		ID_TESSERA=#{idTessera};
+	
+	</update>
+
+	<update id="disattivaTessera">
+		UPDATE ${database.schema}TESSERA
+		SET
+		FG_ATTIVA = 0
+		WHERE ID_TESSERA=#{idTessera};	
+	</update>
+
+	<update id="disattivaTesseraByCdAnag">
+		UPDATE ${database.schema}TESSERA
+		SET
+		FG_ATTIVA = 0
+		WHERE ID_ANAGRAFICA=#{idAnagrafica}
+	</update>
+
+	<select id="getTesseraRendicontata">
+		SELECT COUNT(ID_TESSERA)
+		FROM
+		${database.schema}RATEIZZAZIONE
+		WHERE ID_TESSERA=#{idTessera} 
+	</select>
+
+	<select id="getTessereNonPagantiUltimiAnni" resultType="it.contrada.dto.TesseraDTO">
+		SELECT
+		T.ID_TESSERA AS idTessera,A.ID_ANAGRAFICA as
+		idAnag,A.ID_FAMIGLIA as
+		idFamiglia,A.TX_COGNOME as
+		cognome,A.TX_NOME as
+		nome,TI.DS_TIPO_INCASSO
+		dsIncasso,T.IM_TESSERA AS
+		quota,T.ID_RID
+		idRid,E.DS_ESATTORE
+		dsEsattore,TCA.DS_TIPO_CARICA AS dsTipoCarica,
+		inf.indirizzo as indirizzo,UPPER(inf.capProvincia) as
+		capProvincia,
+		inf.intestatario as intestatario,
+		t.im_tessera as quota
+		FROM
+		${database.schema}ANAGRAFICA A		
+		join
+		${database.schema}indirizzo_famiglia inf
+		on
+		a.id_famiglia=inf.idfamiglia
+		JOIN
+		${database.schema}TESSERA T ON
+		A.ID_ANAGRAFICA=T.ID_ANAGRAFICA
+		JOIN ${database.schema}TIPO_INCASSO TI
+		ON
+		TI.ID_TIPO_INCASSO=T.ID_TIPO_INCASSO
+		LEFT JOIN
+		${database.schema}ESATTORE E
+		ON
+		T.ID_ESATTORE=E.ID_ESATTORE
+		LEFT JOIN
+		${database.schema}TIPO_CARICA TCA
+		ON
+		T.ID_TIPO_CARICA=TCA.ID_TIPO_CARICA
+		LEFT JOIN
+		(SELECT ID_TESSERA
+		FROM
+		${database.schema}RATEIZZAZIONE
+		WHERE IM_RATA>0
+		AND ID_TIPO_STATO_RATA=1
+		AND (NR_ANNO&gt;=#{annoDa}
+		AND
+		NR_ANNO&lt;=#{annoA})
+		GROUP BY
+		ID_TESSERA
+		HAVING SUM(IM_RATA)!=0) P
+		ON T.ID_TESSERA=P.ID_TESSERA
+		LEFT
+		JOIN (SELECT ID_TESSERA,COUNT(*) AS NR_ANNI
+		FROM
+		${database.schema}TESSERA_STORICO
+		WHERE NR_ANNO&gt;=#{annoDa} AND
+		NR_ANNO&lt;=#{annoA}
+		AND ID_TIPO_TESSERA=#{tipoTessera}
+		AND IM_TESSERA>0
+		GROUP BY(ID_TESSERA)) ANNI_T
+		ON
+		ANNI_T.ID_TESSERA=T.ID_TESSERA
+		WHERE T.ID_TIPO_TESSERA=#{tipoTessera}
+		AND T.FG_ATTIVA=1
+		<if test="tipoIncasso!=null">
+			AND T.ID_TIPO_INCASSO=#{tipoIncasso}
+		</if>
+		<if test="tipoEsattore!=null">
+			AND T.ID_ESATTORE=#{tipoEsattore}
+		</if>
+		AND ANNI_T.NR_ANNI=#{annoA}-#{annoDa}+1
+		AND P.ID_TESSERA IS NULL
+		AND	A.ID_STATO_ANAGRAFICA IN (1,3)		
+		AND T.IM_TESSERA>0
+		order by a.id_famiglia,a.tx_cognome,a.tx_nome
+
+
+	</select>
+
+	<select id="getStampaTessere" parameterType="java.util.HashMap"
+		resultType="it.contrada.dto.TesseraStampataDTO">
+		select #{anno} as anno,a.id_anagrafica as idAnagrafica
+		,a.id_famiglia as idFamiglia,a.tx_cognome as cognome ,a.tx_nome as nome,a.dt_nascita as dtNascita,
+		inf.indirizzo as indirizzo,UPPER(inf.capProvincia) as capProvincia,inf.intestatario as intestatario,a.tx_note as note,
+		a.tx_mail as mail, a.tx_fisso as fisso,	a.tx_cell as cell,
+		trim(concat(coalesce(a.tx_mail,''),' ',coalesce(a.tx_fisso,''),' ',coalesce(a.tx_cell,''))) as recapito,
+		tc.ds_tipo_carica as carica,
+		t.im_tessera as quota,
+		e.ds_esattore as esattore,
+		t.id_tessera as idTessera,
+		ti.ds_tipo_incasso as dsPagamento,
+		ts.ds_tipo_tessera as dsTipoTessera
+		from ${database.schema}anagrafica a
+		join
+		${database.schema}indirizzo_famiglia inf
+		on
+		a.id_famiglia=inf.idfamiglia
+		join ${database.schema}tessera_storico t
+		on
+		(t.id_anagrafica=a.id_anagrafica)
+		
+		<if test="fineAnno!=null">
+		 join
+		 (select id_tessera as id_tessera,nr_anno,sum(im_rata) as riscosso
+		 from ${database.schema}rateizzazione
+		 where id_tipo_stato_rata=1
+		 and nr_anno=#{anno}
+		group by id_tessera,nr_anno)as quota
+		on
+		(quota.id_tessera=t.id_tessera and quota.nr_anno=t.nr_anno)
+		</if>
+		
+		join ${database.schema}tipo_incasso
+		ti
+		on ti.id_tipo_incasso=t.id_tipo_incasso
+		join
+		${database.schema}tipo_carica tc
+		on
+		tc.id_tipo_carica=t.id_tipo_carica
+		join
+		${database.schema}tipo_tessera ts
+		on
+		ts.id_tipo_tessera=t.id_tipo_tessera
+		left join esattore e
+		on
+		t.id_esattore=e.id_esattore
+		where
+		t.id_tipo_tessera=#{idTipoTessera}
+		and
+		tc.fg_stampa_tessera=1
+		and
+		t.nr_anno=#{anno}
+		and a.id_stato_anagrafica not in(2,4)
+		and t.fg_attiva
+		in (1)
+		<if test="idTipoIncasso!=null">
+			and t.id_tipo_incasso=#{idTipoIncasso}
+		</if>
+
+		<if test="idTipoIncassi!=null">
+			and t.id_tipo_incasso in
+			<foreach item="item" index="index" collection="idTipoIncassi"
+				open="(" separator="," close=")">
+				#{item}
+				</foreach>
+
+		</if>
+
+		<if test="idTipoCarica!=null">
+			and t.id_tipo_carica=#{idTipoCarica}
+		</if>
+
+
+		<if test="idAnagrafica!=null">
+			and t.id_anagrafica in
+			<foreach item="item" index="index" collection="idAnagrafica"
+				open="(" separator="," close=")">
+				#{item}
+				</foreach>
+
+		</if>
+
+
+		<if test="idEsattori!=null">
+			and t.id_esattore in
+			<foreach item="item" index="index" collection="idEsattori"
+				open="(" separator="," close=")">
+				#{item}
+				</foreach>
+		</if>
+
+
+		<if test="idEsattori!=null">
+			order by capProvincia,indirizzo,a.id_famiglia
+		</if>
+		<if test="idEsattori==null and tabulato!=null">
+			order by a.tx_cognome,a.tx_nome
+		</if>
+		<if test="idEsattori==null and tabulato==null">
+			order by a.id_famiglia
+		</if>
+	</select>
+	
+	
+	<select id="getStampaTessereFineAnno" parameterType="java.util.HashMap"
+		resultType="it.contrada.dto.TesseraStampataDTO">
+		select #{anno} as anno, a.id_anagrafica as idAnagrafica
+		,a.id_famiglia as
+		idFamiglia,a.tx_cognome as cognome ,a.tx_nome as nome,a.dt_nascita as
+		dtNascita,
+		inf.indirizzo as indirizzo,inf.capProvincia as
+		capProvincia,a.tx_note as note,
+		a.tx_mail as mail,
+		a.tx_fisso as fisso,
+		a.tx_cell as cell,
+		trim(concat(coalesce(a.tx_mail,''),'
+		',coalesce(a.tx_fisso,''),' ',coalesce(a.tx_cell,''))) as recapito,
+		tc.ds_tipo_carica
+		as carica,
+		t.im_tessera as quota,
+		e.ds_esattore as
+		esattore,
+		t.id_tessera as idTessera,
+		ti.ds_tipo_incasso as dsPagamento,
+		ts.ds_tipo_tessera as dsTipoTessera
+		from ${database.schema}anagrafica a
+
+		join
+		${database.schema}indirizzo_famiglia inf
+		on
+		a.id_famiglia=inf.idfamiglia
+		join ${database.schema}tessera_storico t
+		on
+		(t.id_anagrafica=a.id_anagrafica)
+		join ${database.schema}tipo_incasso
+		ti
+		on ti.id_tipo_incasso=t.id_tipo_incasso
+		join
+		${database.schema}tipo_carica tc
+		on
+		tc.id_tipo_carica=t.id_tipo_carica
+		join
+		${database.schema}tipo_tessera ts
+		on
+		ts.id_tipo_tessera=t.id_tipo_tessera
+		
+		left join esattore e
+		on
+		t.id_esattore=e.id_esattore
+		where
+		t.id_tipo_tessera=#{idTipoTessera}
+		and
+		tc.fg_stampa_tessera=1
+		and
+		t.nr_anno=#{anno}
+		and a.id_stato_anagrafica not in(2,4)
+		and t.fg_attiva
+		in (1)
+		<if test="idTipoIncasso!=null">
+			and t.id_tipo_incasso=#{idTipoIncasso}
+		</if>
+
+		<if test="idTipoIncassi!=null">
+			and t.id_tipo_incasso in
+			<foreach item="item" index="index" collection="idTipoIncassi"
+				open="(" separator="," close=")">
+				#{item}
+				</foreach>
+
+		</if>
+
+		<if test="idTipoCarica!=null">
+			and t.id_tipo_carica=#{idTipoCarica}
+		</if>
+
+
+		<if test="idAnagrafica!=null">
+			and t.id_anagrafica in
+			<foreach item="item" index="index" collection="idAnagrafica"
+				open="(" separator="," close=")">
+				#{item}
+				</foreach>
+
+		</if>
+
+
+		<if test="idEsattori!=null">
+			and t.id_esattore in
+			<foreach item="item" index="index" collection="idEsattori"
+				open="(" separator="," close=")">
+				#{item}
+				</foreach>
+		</if>
+
+
+		<if test="idEsattori!=null">
+			order by capProvincia,indirizzo,a.id_famiglia
+		</if>
+		<if test="idEsattori==null and tabulato!=null">
+			order by a.tx_cognome,a.tx_nome
+		</if>
+		<if test="idEsattori==null and tabulato==null">
+			order by a.id_famiglia
+		</if>
+	</select>
+	
+
+</mapper>
+

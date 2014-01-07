@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.contrada.flussoposte.queries">
+
+	<!-- Very Complex Result Map -->
+	<resultMap id="flussoConRateResultMap" type="it.contrada.poste.FlussoIncassoPostaDTO">
+
+		<result property="idFlusso" column="idFlusso" />
+		<result property="dtScadenza" column="dtScadenza" />
+		<result property="impFlusso" column="impFlusso" />
+		<result property="impFlussoIncassato" column="impFlussoIncassato" />
+		<result property="tsProduzione" column="tsProduzione" />
+		<result property="txNomeFile" column="txNomeFile" />
+		<result property="anno" column="anno" />
+		<result property="nrIndirizziDaFlusso" column="nrIndirizziDaFlusso" />
+
+		<collection property="rate" ofType="it.contrada.dto.RateizzazioneDTO">
+			<id property="idAnagrafica" column="idAnagrafica" />
+			<id property="idFamiglia" column="idFamiglia" />
+			<id property="idFlussoPoste" column="idFlussoPoste" />
+			<id property="anagrafica" column="anagrafica" />
+			<id property="imRata" column="imRata" />
+			<id property="dsStatoRata" column="dsStatoRata" />
+			<id property="dsTessera" column="dsTessera" />
+		</collection>
+	</resultMap>
+
+	<select id="getFlussoIncassoPoste" resultType="it.contrada.poste.IncassoPostaDTO">
+		SELECT
+		a.id_famiglia as idFamiglia, a.id_anagrafica as
+		idAnagrafica,'Spett.le sig' AS RIGADESTINATARIO1,
+		CONCAT(A.TX_COGNOME,' ',A.TX_NOME) as NOME, ip.intestatario AS
+		RIGADESTINATARIO2,
+		ip.indirizzo AS RIGADESTINATARIO3,
+		capProvincia AS
+		RIGADESTINATARIO4,
+		ip.intestatario AS NOME1,
+		ip.indirizzo AS INDIRIZZO,
+		CD_CAP_POST AS CAP,
+		DS_COMUNE AS DEST,
+		CD_SIGLA_PROV AS PROV,
+		CONCAT("Protettorato anno ", CAST(YEAR(CURRENT_DATE()) AS CHAR),
+		" famiglia ",
+		cast(A.ID_Famiglia as char)) AS Var01d,
+		"Protettorato " AS
+		Var01s,
+		CONCAT("anno ", CAST(YEAR(CURRENT_DATE())
+		AS
+		CHAR), " famiglia ",cast(A.ID_Famiglia as char)) AS Var02s,
+		concat(DATE_FORMAT(CURDATE(), '%d%m%Y') ,lpad(cast(a.id_Famiglia as
+		char),8,'0')) AS VCAMPOT, t.im_tessera AS XRATAT, #{dtScadenza} AS
+		SCADET, 'N' AS IBAN,
+		a.id_Famiglia AS VAR01A, concat(a.tx_nome, ' ',
+		a.tx_cognome) AS VAR02A,
+		t.im_tessera AS VAR03A,
+		t.im_tessera as quota,
+		t.id_tessera as idTessera
+		FROM
+		${database.schema}anagrafica a,
+		${database.schema}tessera t,
+		${database.schema}indirizzo_famiglia IP
+		where
+		a.id_anagrafica=t.id_anagrafica
+		and t.id_tipo_incasso in (3,4)
+		and
+		t.id_tipo_carica not in (4,5,7,8,17,18)
+		And ip.idFamiglia=a.id_Famiglia
+		and t.id_tipo_tessera in (1)
+		and a.id_stato_anagrafica in (1,3)
+		and
+		t.id_tessera not in (select
+		r.id_tessera
+		from
+		${database.schema}rateizzazione r,
+		${database.schema}tipo_tessera
+		tt,${database.schema}tessera t
+		where
+		r.id_tessera =t.id_tessera
+		and
+		t.id_tipo_tessera=tt.id_tipo_tessera
+		and
+		tt.id_tipo_tessera in
+		<foreach collection="tipoTessere" item="tipoTessera" open="("
+			separator="," close=")">
+			#{tipoTessera}
+		</foreach>
+
+		and t.id_tipo_incasso in (3,4)
+		and r.id_tipo_stato_rata in (1)
+		and
+		nr_anno
+		=#{anno}
+		and r.im_rata>0)
+
+
+		ORDER BY a.id_famiglia
+
+	</select>
+
+	<select id="getFlussoPostale" parameterType="java.util.HashMap"
+		resultMap="flussoConRateResultMap">
+		select fip.id_Flusso as idFlusso, fip.ts_produzione as
+		tsProduzione,
+		fip.TX_NOME_FLUSSO_FILE as txNomeFile,
+		fip.dt_scadenza as
+		dtScadenza,fip.nr_indirizzi as nrIndirizziDaFlusso,
+		fip.nr_anno as
+		anno,ip.tot as impFlusso,rata.impIncassato as
+		impFlussoIncassato,ir.idFlussoPoste,
+		ir.idAnagrafica,ir.idFamiglia,ir.anagrafica,ir.imRata,ir.dsStatoRata,ir.dsTessera
+		from
+		${database.schema}flusso_incasso_poste
+		fip, (select
+		fip1.id_flusso,sum(tx_xratat) as tot
+		from
+		${database.schema}incasso_poste ip1 join
+		${database.schema}flusso_incasso_poste fip1
+		on
+		ip1.id_flusso=fip1.id_flusso
+		where fip1.nr_anno=#{anno}
+		group by
+		id_flusso)
+		ip,
+
+		(SELECT fip.id_flusso,coalesce(sum(im_rata),0) as
+		impIncassato
+		FROM
+		${database.schema}flusso_incasso_poste fip
+		join
+		${database.schema}incasso_poste ip
+		on fip.id_flusso=ip.id_flusso
+		left
+		join ${database.schema}rateizzazione r
+		on (r.id_flusso_incasso_poste =
+		ip.id_flusso_incasso_poste and
+		r.id_tipo_stato_rata=1)
+		where
+		fip.nr_anno=#{anno}
+		group by fip.id_flusso) rata,
+
+		(select
+		concat(a.tx_cognome,' ',a.tx_nome) as anagrafica, a.id_anagrafica
+		as
+		idAnagrafica,
+		a.id_famiglia as idfamiglia,
+		r.im_rata as
+		imRata,tsr.ds_tipo_stato_rata
+		dsStatoRata,tt.ds_tipo_tessera as
+		dsTessera,r.id_flusso_incasso_poste
+		as idFlussoPoste, fip.id_flusso
+		from
+		${database.schema}flusso_incasso_poste fip
+		join
+		${database.schema}incasso_poste ip
+		on ip.id_flusso=fip.id_flusso
+		join
+		${database.schema}rateizzazione r
+		on
+		r.id_flusso_incasso_poste=ip.id_flusso_incasso_poste
+		join
+		${database.schema}tessera t
+		on t.id_tessera=r.id_tessera
+		join
+		${database.schema}tipo_tessera tt
+		on
+		t.id_tipo_tessera=tt.id_tipo_tessera
+		join ${database.schema}anagrafica
+		a
+		on a.id_anagrafica=t.id_anagrafica
+		join
+		${database.schema}tipo_stato_rata tsr
+		on
+		r.id_tipo_stato_rata=tsr.id_tipo_stato_rata
+		where fip.nr_anno=#{anno}) ir
+
+		where
+		fip.nr_anno=#{anno}
+		and
+		ip.id_flusso=fip.id_flusso
+		and
+		fip.id_flusso=rata.id_flusso
+		and
+		ip.id_flusso=ir.id_Flusso
+		order by
+		fip.dt_scadenza,idFlussoPoste;
+	</select>
+
+	<select id="getRateDaFlussoPostale" parameterType="java.util.HashMap"
+		resultType="it.contrada.dto.RateizzazioneDTO">
+		select concat(a.tx_cognome,' ',a.tx_nome) as dsAnagrafica,
+		r.im_rata as imRata,tsr.ds_tipo_stato_rata
+		dsStatoRata,tt.ds_tipo_tessera as
+		dsTessera,r.id_flusso_incasso_poste
+		as idFlussoPoste
+		from ${database.schema}flusso_incasso_poste fip
+		join
+		${database.schema}incasso_poste ip
+		on ip.id_flusso=fip.id_flusso
+		join
+		${database.schema}rateizzazione r
+		on
+		r.id_flusso_incasso_poste=ip.id_flusso_incasso_poste
+		join
+		${database.schema}tessera t
+		on t.id_tessera=r.id_tessera
+		join
+		${database.schema}tipo_tessera tt
+		on
+		t.id_tipo_tessera=tt.id_tipo_tessera
+		join ${database.schema}anagrafica
+		a
+		on a.id_anagrafica=t.id_anagrafica
+		join
+		${database.schema}tipo_stato_rata tsr
+		on
+		r.id_tipo_stato_rata=tsr.id_tipo_stato_rata
+		where
+		fip.id_flusso=#{idFlusso}
+		order by idFlussoPoste
+	</select>
+
+	<insert id="insertFlussoIncassoPoste" parameterType="it.contrada.poste.FlussoIncassoPostaDTO"
+		useGeneratedKeys="true" keyProperty="idFlusso">
+		INSERT INTO
+		${database.schema}flusso_incasso_poste
+		(TS_PRODUZIONE,TX_NOME_FLUSSO_FILE,DT_SCADENZA,NR_INDIRIZZI,NR_ANNO,ID_OPERAZIONE)
+		VALUES
+		(CURRENT_TIMESTAMP,#{txNomeFile},#{dtScadenza},#{nrIndirizzi},#{anno},#{operazione.idOperazione})
+
+	</insert>
+	
+		
+	
+	
+	
+	
+
+	<delete id="eliminaFlussoIncassoPoste" parameterType="java.lang.Long">
+		DELETE
+		FROM
+		${database.schema}flusso_incasso_poste
+		WHERE ID_FLUSSO=#{idFlusso}
+
+	</delete>
+
+	<delete id="eliminaIncassoPoste" parameterType="java.lang.Long">
+		DELETE
+		FROM
+		${database.schema}incasso_poste
+		WHERE ID_FLUSSO=#{idFlusso}
+	</delete>
+
+	<insert id="insertIncassoPoste" parameterType="it.contrada.poste.IncassoPostaDTO">
+		INSERT INTO
+		${database.schema}incasso_poste
+		(ID_FLUSSO_INCASSO_POSTE,
+		TX_RIGA_DESTINATARIO1,
+		TX_RIGA_DESTINATARIO2,
+		TX_RIGA_DESTINATARIO3,
+		TX_RIGA_DESTINATARIO4,
+		TX_NOME1,
+		TX_INDIRIZZO,
+		TX_CAP,
+		TX_DEST,
+		TX_PROV,
+		TX_VAR01D,
+		TX_VAR01S,
+		TX_VAR02S,
+		TX_VAR01A,
+		TX_VAR02A,
+		TX_VAR03A,
+		TX_VAR04A,
+		TX_VAR05A,
+		TX_VAR06A,
+		TX_VAR07A,
+		TX_VAR08A,
+		TX_VAR09A,
+		TX_VAR10A,
+		TX_VAR11A,
+		TX_VAR12A,
+		TX_VAR13A,
+		TX_XRATAT,
+		TX_SCADET,
+		TX_IBAN,
+		ID_FLUSSO)
+		VALUES
+		(
+		#{VCAMPOT},
+		#{RIGADESTINATARIO1},
+		#{RIGADESTINATARIO2},
+		#{RIGADESTINATARIO3},
+		#{RIGADESTINATARIO4},
+		#{NOME1},
+		#{INDIRIZZO},
+		#{CAP},
+		#{DEST},
+		#{PROV},
+		trim(#{VAR01D}),
+		#{VAR01S},
+		#{VAR02S},
+		#{VAR01A},
+		#{VAR02A},
+		#{VAR03A},
+		#{VAR04A},
+		#{VAR05A},
+		#{VAR06A},
+		#{VAR07A},
+		#{VAR08A},
+		#{VAR09A},
+		#{VAR10A},
+		#{VAR11A},
+		#{VAR12A},
+		#{VAR13A},
+		#{XRATAT},
+		#{SCADET},
+		#{IBAN},
+		#{idFlusso})
+
+		
+	</insert>
+
+	<insert id="insertRendicontazione" parameterType="it.contrada.poste.RendicontazioneIncassoPostaDTO">
+		INSERT INTO
+		${database.schema}rendicontazione_incasso_poste
+		(ID_INCASSO_POSTE,
+		IM_BOLLETTINO,
+		DT_OPERAZIONE,
+		DT_VALUTA,
+		TY_DOCUMENTO,
+		TX_SPORTELLO,
+		TY_ACCETTAZIONE,
+		TY_SOSTITUTIVO,
+		ID_FLUSSO_ESITO)
+		VALUES
+		(
+		#{idIncassoPoste},
+		#{imBollettino},
+		#{dtOperazione},
+		#{dtValuta},
+		#{tyDocumento},
+		#{txSportello},
+		#{tyAccettazione},
+		#{tySostitutivo},
+		#{idFlussoEsito}
+		)
+	</insert>
+	
+	<update id="updateRendicontazione" parameterType="it.contrada.poste.RendicontazioneIncassoPostaDTO">
+		UPDATE
+		${database.schema}rendicontazione_incasso_poste
+		SET IM_BOLLETTINO=#{imBollettino},
+		DT_OPERAZIONE=#{dtOperazione},
+		DT_VALUTA=#{dtValuta},
+		TY_DOCUMENTO=#{tyDocumento},
+		TX_SPORTELLO=#{txSportello},
+		TY_ACCETTAZIONE=#{tyAccettazione},
+		TY_SOSTITUTIVO=#{tySostitutivo},
+		ID_FLUSSO_ESITO=#{idFlussoEsito}
+		WHERE 
+		ID_INCASSO_POSTE=#{idIncassoPoste}
+	</update>
+	
+	
+	
+
+
+
+
+
+
+</mapper>
+

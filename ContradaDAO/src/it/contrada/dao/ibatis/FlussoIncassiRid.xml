@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.contrada.flussoincassirid.queries">
+
+	<insert id="insertIncassoRid" parameterType="java.util.HashMap">
+		INSERT INTO
+
+		<!-- ${database.schema}incasso_rid
+		(NR_ANNO,NR_MESE,ID_RID,TX_INTESTATARIO,IM_RICHIESTO,CD_ABI,CD_CAB,NR_CONTO,
+		CD_FISC,TX_INDIRIZZO,CD_CAP,TX_COMUNE,CD_PROV,ID_TIPO_INCASSO_RID,ID_RID_ESITO,DT_VALUTA)-->
+		${database.schema}incasso_rid
+		(NR_ANNO,NR_MESE,ID_RID,TX_INTESTATARIO,IM_RICHIESTO,CD_ABI,CD_CAB,NR_CONTO,
+		CD_FISC,ID_TIPO_INCASSO_RID,ID_RID_ESITO,DT_VALUTA)
+
+		SELECT
+		#{anno},#{mese},RID.ID_RID,RID.TX_INTESTATARIO,SUM(IM_RATA)	AS IMPORTO,RID.CD_ABI,RID.CD_CAB,RID.NR_CONTO,
+		RID.CD_FISC,#{idTipoIncassoRid},50010,#{dtValuta}
+		<!-- CONCAT(S.DS_STRADA,",",RID.NR_CIVICO),S.CD_CAP_POST,C.DS_COMUNE,PROV.CD_SIGLA_PROV,-->
+	
+		FROM
+		${database.schema}RATEIZZAZIONE R
+		JOIN ${database.schema}TESSERA T
+		ON
+		T.ID_TESSERA=R.ID_TESSERA
+		JOIN ${database.schema}RID ON
+		RID.ID_RID=T.ID_RID
+		<!-- 
+		JOIN ${database.schema}STRADA S ON
+		S.ID_STRADA=RID.ID_STRADA
+		JOIN
+		${database.schema}COMUNE C ON
+		(C.CD_COMUNE=S.CD_COMUNE AND
+		S.CD_PROVINCIA=C.CD_PROVINCIA)
+		JOIN
+		${database.schema}PROVINCIA PROV ON
+		PROV.CD_PROVINCIA=C.CD_PROVINCIA
+		 -->
+		WHERE
+		R.ID_FLUSSO_ADDEBITO IS NULL
+		AND R.NR_ANNO=#{anno}
+		AND R.ID_RATA IN (SELECT ID_RATA FROM RATA WHERE ID_TIPO_MESE=#{mese})
+		
+		GROUP BY
+		RID.ID_RID,RID.TX_INTESTATARIO,RID.CD_ABI,RID.CD_CAB,RID.NR_CONTO
+	</insert>
+
+	<insert id="insertFlussoRid" parameterType="java.util.HashMap">
+		INSERT INTO
+		${database.schema}FLUSSO_INCASSO_RID
+		(NR_ANNO,NR_MESE,ID_TIPO_INCASSO_RID,DT_VALUTA,TX_NOME_FLUSSO_FILE,ID_OPERAZIONE)
+		VAlUES
+		(#{nrAnno},#{nrMese},#{idTipoIncassoRid},#{dtValuta},#{nomeFileFlusso},#{idOperazione})
+	</insert>
+
+	<select id="existFlusso" parameterType="java.util.HashMap"
+		resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM ${database.schema}FLUSSO_INCASSO_RID
+		WHERE NR_ANNO=#{anno}
+		AND NR_MESE=#{mese}
+		AND
+		ID_TIPO_INCASSO_RID=#{idTipoIncassoRid}
+
+	</select>
+	<select id="getIncassiDaInviare" resultType="it.contrada.incassorid.dto.IncassoRidDTO"
+		parameterType="java.util.HashMap">
+		SELECT
+		ID_FLUSSO_ADDEBITO as idFlussoAddebito,
+		FR.NR_ANNO
+		as nrAnno,
+		FR.NR_MESE as
+		nrMese,
+		ID_RID as idRid,
+		TX_INTESTATARIO as
+		txIntestatario,
+		fr.DT_VALUTA as
+		dtValuta,
+		DT_ESITO as dtEsito,
+		IM_RICHIESTO
+		as imRichiesto,
+		CD_IBAN as
+		cdIban,
+		CD_ABI as cdAbi,
+		CD_CAB as cdCab,
+		NR_CONTO as nrConto,
+		ID_RID_ESITO as idRidEsito,
+		CD_FISC as cdFisc,
+		TX_INDIRIZZO as
+		txIndirizzo,
+		CD_CAP as cdCap,
+		TX_COMUNE as dsComune,
+		CD_PROV as cdProv,
+		FR.ID_TIPO_INCASSO_RID as idTipoIncassoRid,
+		TX_RIF_DEBITO as txRifDebito,
+		DS_CAUSALE AS dsCausaleRid
+		FROM
+		${database.schema}incasso_rid IR
+		JOIN
+		${database.schema}flusso_incasso_rid
+		FR
+		ON
+		(FR.ID_TIPO_INCASSO_RID=IR.ID_TIPO_INCASSO_RID AND
+		FR.NR_MESE=IR.NR_MESE AND
+		FR.NR_ANNO=IR.NR_ANNO)
+		JOIN
+		${database.schema}tipo_incasso_rid TI
+		ON
+		FR.ID_TIPO_INCASSO_RID=TI.ID_TIPO_INCASSO_RID
+		AND
+		FR.ID_TIPO_INCASSO_RID= #{idTipoIncassoRid}
+		AND FR.NR_MESE= #{mese}
+		AND
+		FR.NR_ANNO= #{anno}
+	</select>
+	<update id="aggiornaStatoPagatoRidInviati">
+		UPDATE ${database.schema}inncasso_rid
+		SET
+		ID_TIPO_INCASSO_RID=50010
+		WHERE ID_TIPO_INCASSO_RID IS NULL
+	
+	</update>
+	<delete id="eliminaIncassoRid" parameterType="java.util.HashMap">
+
+		delete from
+		${database.schema}incasso_rid
+		where nr_anno=#{anno} and nr_mese=#{mese}
+		and
+		id_tipo_incasso_rid=#{idTipoIncassoRid}
+</delete>
+	<delete id="eliminaFlussoIncassoRid" parameterType="java.util.HashMap">
+
+		delete from
+		${database.schema}flusso_incasso_rid
+		where nr_anno=#{anno} and
+		nr_mese=#{mese} and
+		id_tipo_incasso_rid=#{idTipoIncassoRid}
+</delete>
+
+	<select id="getNomeFileFlusso" parameterType="java.util.HashMap"
+		resultType="String">
+		select tx_nome_flusso_file
+		from
+		${database.schema}flusso_incasso_rid
+		where nr_anno=#{anno} and
+		nr_mese=#{mese} and
+		id_tipo_incasso_rid=#{idTipoIncassoRid}
+</select>
+
+	<select id="getTipoCausaliIncassiRid" resultType="it.contrada.dominio.dto.TipoCasualiIncassoRidDTO">
+		SELECT
+		ID_RID_ESITO as cdCausale,
+		DS_RID_ESITO as dsCausale,
+		ID_STATO_RID_SUCC
+		as idStatoRidSucc,
+		ID_TIPO_STATO_RATA_SUCC as idStatoRataSucc
+		FROM
+		${database.schema}tipo_rid_esito
+</select>
+
+	<update id="aggiornaRidEsito" parameterType="java.util.HashMap">
+		UPDATE ${database.schema}incasso_rid
+		SET DT_ESITO=#{dtEsito},
+		ID_RID_ESITO=#{idRidEsito},
+		ID_FLUSSO_ESITI=#{idFlussoEsito}
+		WHERE ID_FLUSSO_ADDEBITO=#{idFlussoAddebito} 
+</update>
+
+<update id="aggiornaRidEsitoPerRidValuta" parameterType="java.util.HashMap">
+		UPDATE ${database.schema}incasso_rid
+		SET DT_ESITO=#{dtEsito},
+		ID_RID_ESITO=#{idRidEsito},
+		ID_FLUSSO_ESITI=#{idFlussoEsito}
+		WHERE ID_RID=#{idRid} 
+		AND DT_VALUTA=#{dtValuta}
+</update>
+
+<select id="getIdFlussoAddebito" parameterType="java.util.HashMap" 
+		resultType="java.lang.Long">
+		SELECT ID_FLUSSO_ADDEBITO
+		FROM ${database.schema}INCASSO_RID
+		WHERE ID_RID=#{idRid} 
+		AND DT_VALUTA=#{dtValuta}
+
+	</select>
+
+
+
+
+
+</mapper>
+
+
+

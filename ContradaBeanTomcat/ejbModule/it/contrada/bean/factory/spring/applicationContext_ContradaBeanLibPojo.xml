@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+
+
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:it/contrada/dao/ibatis/database.properties</value>
+			</list>
+		</property>
+	</bean>
+
+
+
+	<!--
+		the transactional advice (i.e. what 'happens'; see the <aop:advisor/>
+		bean below)
+	-->
+
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<!-- the transactional semantics... -->
+		<tx:attributes>
+			<!-- all methods starting with 'get' are read-only -->
+			<!-- <tx:method name="get*" read-only="true"/>-->
+			<!-- other methods use the default transaction settings (see below) -->
+			<tx:method name="*" rollback-for="Throwable" />
+
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config>
+		<aop:pointcut id="txBeanMethods" expression="execution(* it.contrada.bean.*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txBeanMethods" />
+	</aop:config>
+
+
+
+
+
+	<!--
+		<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close"> <property name="driverClassName"
+		value="com.mysql.jdbc.Driver" /> <property name="url"
+		value="jdbc:mysql://localhost:3306/contrada" /> <property
+		name="username" value="root" /> <property name="password"
+		value="DIDONE" /> </bean>
+	-->
+
+	<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/contrada" />
+
+	<!--
+		JTA CONFIGURATION </jee:jndi-lookup> <bean
+		id="atomikosTransactionManager"
+		class="com.atomikos.icatch.jta.UserTransactionManager"
+		init-method="init" destroy-method="close"> <property
+		name="forceShutdown" value="false" /> </bean> <bean
+		id="atomikosUserTransaction"
+		class="com.atomikos.icatch.jta.UserTransactionImp"> <property
+		name="transactionTimeout" value="300" /> </bean> <bean id="txManager"
+		class="org.springframework.transaction.jta.JtaTransactionManager">
+		<property name="transactionManager" ref="atomikosTransactionManager"
+		/> <property name="userTransaction" ref="atomikosUserTransaction" />
+		</bean>
+	-->
+
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+
+	<bean id="SqlMapClient" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation">
+			<value>it/contrada/dao/ibatis/Configuration.xml</value>
+		</property>
+	</bean>
+
+	<!-- INIZIO INJECTION BEAN COME POJO -->
+	<!-- INIZIO INJECTION BEAN COME POJO -->
+	<bean id="gestioneAnagrafica" class="it.contrada.bean.GestioneAnagrafica"
+		autowire="byType" />
+	<bean id="gestioneCarica" class="it.contrada.bean.GestioneCarica"
+		autowire="byType" />
+
+	<bean id="gestioneDistinta" class="it.contrada.bean.GestioneDistinta"
+		autowire="byType" />
+
+	<bean id="gestioneFamiglia" class="it.contrada.bean.GestioneFamiglia"
+		autowire="byType" />
+
+	<bean id="gestioneFlusso" class="it.contrada.bean.GestioneFlusso"
+		autowire="byType" />
+
+	<bean id="gestioneGestore" class="it.contrada.bean.GestioneGestore"
+		autowire="byType" />
+
+	<bean id="gestionePoste" class="it.contrada.bean.GestionePoste"
+		autowire="byType" />
+
+	<bean id="gestioneRateizzazione" class="it.contrada.bean.GestioneRateizzazione"
+		autowire="byType" />
+
+	<bean id="gestioneRid" class="it.contrada.bean.GestioneRid"
+		autowire="byType" />
+
+	<bean id="gestioneStradario" class="it.contrada.bean.GestioneStradario"
+		autowire="byType" />
+
+	<bean id="gestioneTessera" class="it.contrada.bean.GestioneTessera"
+		autowire="byType" />
+
+	<bean id="gestioneUtente" class="it.contrada.bean.GestioneUtente"
+		autowire="byType" />
+
+	<bean id="ricercaAnagrafica" class="it.contrada.bean.RicercaAnagrafica"
+		autowire="byType" />
+
+	<bean id="ricercaCap" class="it.contrada.bean.RicercaCap"
+		autowire="byType" />
+
+	<bean id="ricercaCarica" class="it.contrada.bean.RicercaCarica"
+		autowire="byType" />
+
+	<bean id="ricercaComune" class="it.contrada.bean.RicercaComune"
+		autowire="byType" />
+
+	<bean id="ricercaEsattore" class="it.contrada.bean.RicercaEsattore"
+		autowire="byType" />
+
+	<bean id="ricercaFamiglia" class="it.contrada.bean.RicercaFamiglia"
+		autowire="byType" />
+		
+	
+	<bean id="ricercaFlusso" class="it.contrada.bean.RicercaFlusso"
+		autowire="byType" />
+
+	<bean id="ricercaIncasso" class="it.contrada.bean.RicercaIncasso"
+		autowire="byType" />
+
+	<bean id="ricercaMese" class="it.contrada.bean.RicercaMese"
+		autowire="byType" />
+
+	<bean id="ricercaNazione" class="it.contrada.bean.RicercaNazione"
+		autowire="byType" />
+
+	<bean id="ricercaProvincia" class="it.contrada.bean.RicercaProvincia"
+		autowire="byType" />
+
+	<bean id="ricercaOperazione" class="it.contrada.bean.RicercaOperazione"
+		autowire="byType" />
+
+	<bean id="ricercaRateizzazione" class="it.contrada.bean.RicercaRateizzazione"
+		autowire="byType" />
+
+	<bean id="ricercaRegione" class="it.contrada.bean.RicercaOperazione"
+		autowire="byType" />
+
+	<bean id="ricercaRid" class="it.contrada.bean.RicercaRid"
+		autowire="byType" />
+
+	<bean id="ricercaTessera" class="it.contrada.bean.RicercaTessera"
+		autowire="byType" />
+	<bean id="ricercaStrada" class="it.contrada.bean.RicercaStrada"
+		autowire="byType" />
+	<!-- FINE INJECTION BEAN COME POJO -->
+
+
+	<bean id="anagrafeDAO" class="it.contrada.dao.AnagrafeDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="capDAO" class="it.contrada.dao.CapDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="famigliaDAO" class="it.contrada.dao.FamigliaDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+
+
+	<bean id="tesseraDAO" class="it.contrada.dao.TesseraDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+
+
+	<bean id="caricaDAO" class="it.contrada.dao.CaricaDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="comuneDAO" class="it.contrada.dao.ComuneDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="esattoreDAO" class="it.contrada.dao.EsattoreDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="incassoDAO" class="it.contrada.dao.IncassoDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="nazioneDAO" class="it.contrada.dao.NazioneDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="provinciaDAO" class="it.contrada.dao.ProvinciaDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="regioneDAO" class="it.contrada.dao.RegioneDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="stradaDAO" class="it.contrada.dao.StradaDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="ridDAO" class="it.contrada.dao.RidDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="rateizzazioneDAO" class="it.contrada.dao.RateizzazioneDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="distintaDao" class="it.contrada.dao.DistintaDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="flussoRidIncassoDao" class="it.contrada.dao.FlussoRidIncassoDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="parametriContradaDao" class="it.contrada.dao.ParametriContradaDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="flussoPreautorizzazioniRidDAO" class="it.contrada.dao.FlussoPreautorizzazioniRidDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="flussoEsitoDAO" class="it.contrada.dao.FlussoEsitoDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="meseDAO" class="it.contrada.dao.MeseDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="postaDAO" class="it.contrada.dao.FlussoIncassoPosteDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="spinoffDAO" class="it.contrada.dao.SpinOffDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="gestoreDAO" class="it.contrada.dao.GestoreDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="utenteDAO" class="it.contrada.dao.UtenteDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="operazioneDAO" class="it.contrada.dao.OperazioneDAO" >
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+
+
+	<!--
+		<bean id="famigliaBO" class="it.contrada.bean.GestioneFamiglia">
+		<property name="famigliaDao" ref="famigliaDAO" /> </bean> <bean
+		id="flussoBO" class="it.contrada.bean.GestioneFlusso"> <property
+		name="rateizzazioneDAO" ref="rateizzazioneDAO" /> <property
+		name="flussoRidAddebitoDAO" ref="flussoRidIncassoDao" /> <property
+		name="parametriContradaDAO" ref="parametriContradaDao" /> <property
+		name="ridDAO" ref="ridDAO" /> <property
+		name="flussoPreautorizzazioniRidDAO"
+		ref="flussoPreautorizzazioniRidDAO" /> <property name="flussoEsitoDAO"
+		ref="flussoEsitoDAO" /> <property name="ricezionePreaut"
+		ref="ricFlussoPreaut" /> <property name="ricezioneIncassiRid"
+		ref="ricFlussoIncassiRid" /> </bean> <bean id="tesseraBO"
+		class="it.contrada.bean.GestioneTessera"> <property name="tesseraDao"
+		ref="tesseraDAO" /> </bean>
+	-->
+
+	<bean id="operazioneBO" class="it.contrada.pojo.Operazione">
+		<property name="operazioneDao" ref="operazioneDAO" />
+
+	</bean>
+
+
+
+	<bean id="ricFlussoPreaut" class="it.contrada.pojo.RicezioneFlussoPreautorizzazioneRid">
+
+	</bean>
+
+	<bean id="ricFlussoIncassiRid" class="it.contrada.pojo.RicezioneFlussoIncassiRid">
+
+	</bean>
+
+
+
+
+	<!--
+		<jee:local-slsb id="scarica_ValoreInBianco"
+		jndi-name="ejb/HDDepositiaRisparmioEAR/Scarica_ValoreInBianco/local-it.copergmps.vb.valoriinbianco.interfaces.IScarica_ValoreInBianco"
+		business-interface="it.copergmps.vb.valoriinbianco.interfaces.IScarica_ValoreInBianco"></jee:local-slsb>
+	-->
+
+</beans>

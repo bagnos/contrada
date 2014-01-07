@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
+
+	<f:view>
+		<ice:outputDeclaration doctypeRoot="HTML"
+			doctypePublic="-//W3C//DTD HTML 4.01 Transitional//EN"
+			doctypeSystem="http://www.w3.org/TR/html4/loose.dtd" />
+		<!-- 
+		<html>
+		<head>
+		<title><ice:outputText value="Inserimento RID" /></title>
+
+
+		<ice:outputStyle href="../css/xp/xp-portlet.css" />
+		</head>
+		<body>
+		 -->
+		<ice:portlet id="idPortlet">
+
+			<ice:form id="idForm">
+				<ice:outputStyle href="#{styleBean.activeCss}" />
+				<ice:panelGroup styleClass="portletContainer">
+					<ice:outputText value="Inserimento Rid"
+						styleClass="labelPortletContainer"></ice:outputText>
+				</ice:panelGroup>
+				<ice:panelGrid border="0" columns="1">
+					<ice:panelGrid border="0" columns="7">
+
+						<ice:outputText value="Nr. Rid"></ice:outputText>
+						<ice:inputText id="txtNrRid" style="width: 48px" disabled="true"
+							value="#{insRid.rid.nrRid}"></ice:inputText>
+
+						<ice:outputText value="Stato Rid"></ice:outputText>
+						<ice:selectOneMenu value="#{insRid.rid.tipoStatoRid}"
+							disabled="#{insRid.statoDisabled}">
+							<f:selectItems value="#{insRid.elencoTipoStatoRid}" />
+						</ice:selectOneMenu>
+						<ice:panelGroup rendered="#{insRid.modificaRid}">
+							<ice:outputText value="Data Censimento" style="margin-right:5px"></ice:outputText>
+							<ice:inputText value="#{insRid.rid.dtCensimento}" size="12"
+								disabled="true" rendered="#{insRid.rid.dtCensimento!=null}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</ice:inputText>
+							<ice:inputText value="N.P." size="4"
+								rendered="#{insRid.rid.dtCensimento==null}" disabled="true"></ice:inputText>
+						</ice:panelGroup>
+					</ice:panelGrid>
+					<ice:panelGrid border="0" columns="5">
+						<ice:outputText value="Intestato"></ice:outputText>
+						<ice:panelGroup>
+							<ice:inputText style="width: 337px" required="true" id="txtDest"
+								value="#{insRid.rid.intestatarioRid}"></ice:inputText>
+							<ice:message for="txtDest" />
+						</ice:panelGroup>
+						<ice:outputText value="Codice Fiscale"></ice:outputText>
+						<ice:inputText id="txtFiscale" value="#{insRid.rid.cdFiscale}"
+							required="true" partialSubmit="true"
+							validator="#{insRid.verificaCodiceFiscale}"></ice:inputText>
+						<ice:message for="txtFiscale"></ice:message>
+					</ice:panelGrid>
+
+					<!-- 
+					<ice:panelGrid columns="6">
+						<f:facet name="header">
+							<ice:outputText value="Indirizzo" />
+						</f:facet>
+						<ice:outputText value="Provincia:"></ice:outputText>
+						<ice:selectOneMenu partialSubmit="true" id="lstProvincia"
+							tabindex="11" value="#{insRid.rid.provinciaResidenza}"
+							valueChangeListener="#{insRid.provinciaResidenzaValueChange}">
+							<f:selectItems value="#{insRid.provincieResidenza}" />
+						</ice:selectOneMenu>
+
+						<ice:outputText value="Comune:"></ice:outputText>
+						<ice:selectOneMenu partialSubmit="true" id="lstComune"
+							tabindex="12" value="#{insRid.rid.comuneResidenza}"
+							valueChangeListener="#{insRid.comuniResidenzaValueChange}">
+							<f:selectItems value="#{insRid.comuniResidenzaPerProvincia}" />
+						</ice:selectOneMenu>
+
+						<ice:outputText value="CAP:"></ice:outputText>
+						<ice:selectOneMenu partialSubmit="true" id="lstCap" tabindex="13"
+							value="#{insRid.rid.capPost}"
+							valueChangeListener="#{insRid.capResidenzaValueChange}">
+							<f:selectItems value="#{insRid.capComuniResidenza}" />
+						</ice:selectOneMenu>
+
+						<ice:outputText value="Strada:"></ice:outputText>
+						-->
+					<!-- 
+						<ice:selectOneMenu partialSubmit="true" id="lstStrada"
+							tabindex="14" value="#{insRid.rid.idStrada}">
+							<f:selectItems value="#{insRid.stradePerCap}" />
+						</ice:selectOneMenu>
+						 -->
+					<!-- 
+						<ice:panelGroup>
+							<ice:selectInputText id="strada" rows="10" width="300"
+								valueChangeListener="#{insRid.updateListVie}" required="true"
+								partialSubmit="true" value="#{insRid.dsStrada}">
+
+								<f:selectItems value="#{insRid.stradePerCap}" />
+							</ice:selectInputText>
+							<ice:message id="lblErrStrada" for="strada"></ice:message>
+						</ice:panelGroup>
+
+
+						<ice:outputText value="N. Civ.:"></ice:outputText>
+						<ice:panelGroup>
+							<ice:inputText id="txtNumero" style="width: 74px" required="true"
+								tabindex="15" size="5" value="#{insRid.rid.numeroCivico}"></ice:inputText>
+							<ice:message for="txtNumero" />
+						</ice:panelGroup>
+						<ice:outputText value=""></ice:outputText>
+						<ice:outputText value=""></ice:outputText>
+					</ice:panelGrid>
+					-->
+					<ice:panelGrid border="0" columns="13">
+						<f:facet name="header">
+							<ice:outputText value="Coordinate Bancarie" />
+						</f:facet>
+						<ice:outputText value="Paese"></ice:outputText>
+						<ice:panelGroup>
+							<ice:inputText id="txtPaese" value="#{insRid.rid.paese}"
+								disabled="true" style="width: 30px"></ice:inputText>
+							<ice:message for="txtPaese"></ice:message>
+						</ice:panelGroup>
+						<ice:outputText value="Cin"></ice:outputText>
+						<ice:panelGroup>
+							<ice:inputText id="txtCin" value="#{insRid.rid.cin}"
+								style="width: 39px" disabled="true"></ice:inputText>
+							<ice:message for="txtCin"></ice:message>
+						</ice:panelGroup>
+						<ice:outputText value="CinAbi"></ice:outputText>
+						<ice:panelGroup>
+							<ice:inputText id="txtCinAbi" disabled="true"
+								value="#{insRid.rid.cinAbi}" style="width: 39px"></ice:inputText>
+							<ice:message for="txtCinAbi"></ice:message>
+						</ice:panelGroup>
+						<ice:outputText value="Abi"></ice:outputText>
+						<ice:inputText id="txtAbi" value="#{insRid.rid.abi}" maxlength="5"
+							style="width: 59px" converter="IntegerConverter"></ice:inputText>
+						<ice:outputText value="Cab"></ice:outputText>
+						<ice:inputText id="txtCab" value="#{insRid.rid.cab}" maxlength="5"
+							style="width: 59px" converter="IntegerConverter"></ice:inputText>
+						<ice:outputText value="Conto"></ice:outputText>
+						<ice:inputText id="txtNumCC" value="#{insRid.rid.numeroCC}" maxlength="12"
+							style="width: 128px"></ice:inputText>
+
+						<ice:commandButton value="Calcola"
+							actionListener="#{insRid.calcolaIban}" partialSubmit="true"
+							id="btnCalcola" />
+					</ice:panelGrid>
+
+					<ice:panelGrid border="0" columns="5"
+						rendered="#{insRid.ridFromInsertAnag==false}">
+
+
+						<f:facet name="header">
+							<ice:outputText value="Anagrafiche nel Rid" />
+
+						</f:facet>
+						<ice:outputText value="Anagrafica"></ice:outputText>
+						<ice:inputText id="txtNrAnag" style="width: 79px"
+							converter="IntegerConverter" value="#{insRid.nrAnag}"></ice:inputText>
+
+
+						<ice:commandButton value="Aggiungi" partialSubmit="true"
+							actionListener="#{insRid.aggiungiAnagraficaOnClick}"
+							id="btnAggAnag" />
+						<ice:outputText value="Cerca Anagrafica"></ice:outputText>
+						<ice:selectInputText rows="10" size="80" width="350px"
+							listValue="#{insRid.anagraficheItem}" listVar="anagrafica"
+							partialSubmit="true"
+							valueChangeListener="#{insRid.updateListAnagrafiche}"
+							value="#{insRid.dsAnagraficaInRid}">
+							<f:facet name="selectInputText">
+								<ice:panelGrid columns="3">
+									<ice:outputText value="#{anagrafica.idAnagrafica}" />
+									<ice:outputText value="#{anagrafica.intestatario}" />
+									<ice:outputText value="#{anagrafica.dtNascita}">
+										<ice:convertDateTime pattern="dd/MM/yyyy" />
+									</ice:outputText>
+								</ice:panelGrid>
+							</f:facet>
+
+						</ice:selectInputText>
+
+						<!--
+							<ice:commandButton value="Cerca..." partialSubmit="true"
+							actionListener="#{insRid.openAnagraficaPopup}" />
+						 
+						<ice:panelPopup draggable="false"
+							visible="#{insRid.visibleAnagraficaPopup}"
+							style="z-index: 1000; top: 40%; left: 30%; position: absolute; width: 350px;">
+
+							<f:facet name="body">
+								<ice:panelGrid border="0" columns="1">
+									<f:facet name="header">
+										<ice:outputText value="Cerca Anagrafica" />
+									</f:facet>
+									<ice:selectInputText rows="10" width="300"
+										listValue="#{insRid.anagraficheItem}" listVar="anagrafica"
+										valueChangeListener="#{insRid.updateListAnagrafiche}"
+										value="#{insRid.dsAnagraficaInRid}">
+										<f:facet name="selectInputText">
+											<ice:panelGrid columns="5">
+												<ice:outputText value="#{anagrafica.idAnagrafica}" />
+												<ice:outputText value="," />
+												<ice:outputText value="#{anagrafica.intestatario}" />
+												<ice:outputText value="," />
+												<ice:outputText value="#{anagrafica.dtNascita}">
+													<ice:convertDateTime pattern="dd/MM/yyyy" />
+												</ice:outputText>
+											</ice:panelGrid>
+										</f:facet>
+
+									</ice:selectInputText>
+									<ice:panelGroup style="width:100%">
+
+										<ice:commandButton value="chiudi"
+											actionListener="#{insRid.closeAnagraficaPopup}"
+											partialSubmit="true" title="Chiudi popup" immediate="true" />
+									</ice:panelGroup>
+								</ice:panelGrid>
+							</f:facet>
+						</ice:panelPopup>
+						-->
+					</ice:panelGrid>
+
+					<ice:panelGrid columns="0" width="100%" cellpadding="0"
+						cellspacing="0">
+						<ice:dataTable border="0" value="#{insRid.rid.membri}"
+							rendered="#{insRid.visibleAnagrafiche==true}" var="anagrafica">
+
+							<ice:column id="column0"
+								rendered="#{insRid.ridFromInsertAnag==false}">
+								<f:facet name="header">
+								</f:facet>
+								<ice:commandButton image="#{styleBean.elimina}" title="elimina"
+									partialSubmit="true"
+									actionListener="#{insRid.eliminaAnagraficaOnClick}">
+									<f:attribute name="idAnagrafica"
+										value="#{anagrafica.idAnagrafica}" />
+								</ice:commandButton>
+
+							</ice:column>
+							<ice:column id="column1"
+								rendered="#{insRid.ridFromInsertAnag==false}">
+								<f:facet name="header">
+									<ice:outputText value="Anagrafica"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{anagrafica.idAnagrafica}" />
+							</ice:column>
+							<ice:column id="column2">
+								<f:facet name="header">
+									<ice:outputText value="Cognome"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{anagrafica.cognome}" />
+							</ice:column>
+							<ice:column id="column3">
+								<f:facet name="header">
+									<ice:outputText value="Nome"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{anagrafica.nome}" />
+							</ice:column>
+							<ice:column id="column4">
+								<f:facet name="header">
+									<ice:outputText value="Quota"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{anagrafica.quota}"
+									converter="ImportoConverter" />
+							</ice:column>
+							<ice:column id="column5">
+								<f:facet name="header">
+									<ice:outputText value="Tessera"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{anagrafica.tessera}" />
+							</ice:column>
+							<ice:column id="column6">
+								<f:facet name="header">
+									<ice:outputText value="Rateizzazione"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{anagrafica.modalita}" />
+							</ice:column>
+						</ice:dataTable>
+					</ice:panelGrid>
+					<ice:panelGrid border="0" columns="2">
+						<ice:outputText value="Note"></ice:outputText>
+						<ice:inputText id="txtNote" style="width: 760px"
+							value="#{insRid.rid.note}"></ice:inputText>
+
+
+					</ice:panelGrid>
+
+
+					<ice:panelGroup styleClass="bottoniera">
+						<!-- 
+						<ice:commandButton immediate="true" style="float:left;"
+							action="#{insRid.indietroOnClick}" value="Indietro" />-->
+
+						<ice:commandButton style="float:left;"
+							action="#{insRid.proseguiOnClick}" value="Conferma" />
+					</ice:panelGroup>
+
+
+				</ice:panelGrid>
+				<ice:messages globalOnly="true">
+				</ice:messages>
+				<ice:panelPopup autoCentre="true" modal="true" style="z-index:1001;"
+					rendered="#{insRid.popupRid}">
+					<f:facet name="body">
+						<ice:panelGrid width="100%" cellpadding="0" cellspacing="5"
+							style="text-align:center" columns="1">
+							<ice:outputText style="font-size:18px;"
+								rendered="#{insRid.ridFromInsertAnag}"
+								value="Inserita Anagrafica Nr. #{insRid.anag.idAnagrafica} "></ice:outputText>
+							<ice:outputText style="font-size:18px;"
+								value="Inserito Rid Nr. #{insRid.rid.nrRid} "></ice:outputText>
+							<ice:commandButton partialSubmit="true" style="margin-top:10px"
+								value="Chiudi" actionListener="#{insRid.closeRidPopup}"></ice:commandButton>
+						</ice:panelGrid>
+					</f:facet>
+				</ice:panelPopup>
+			</ice:form>
+		</ice:portlet>
+		<!-- 
+		</body>
+		</html> -->
+	</f:view>
+</jsp:root>

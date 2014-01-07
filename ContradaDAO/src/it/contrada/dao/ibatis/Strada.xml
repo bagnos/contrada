@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.contrada.stradario.queries">
+
+
+	<select id="getStrada" resultType="it.contrada.dto.StradaDTO">
+		SELECT id_strada as idStrada, ds_strada as dsStrada, ds_localita as
+		dsLocalita, cd_cap_post as cdCap
+		FROM ${database.schema}STRADA
+		<where>
+			cd_cap_post=#{cdCap}
+			<if test="matchVia != null">
+				and ds_Strada like #{matchVia}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getStradaPerLoc" resultType="it.contrada.dto.StradaDTO">
+		SELECT s.id_strada as idStrada, s.ds_strada as dsStrada, loc.ds_localita as
+		dsLocalita, s.cd_cap_post as cdCap
+		FROM ${database.schema}STRADA s JOIN LOCALITA LOC
+		ON LOC.ID_LOCALITA=S.ID_LOCALITA
+		<where>
+			s.cd_cap_post=#{cdCap}
+			<if test="matchVia != null">
+				and ds_Strada like #{matchVia}
+			</if>
+			and LOC.ID_LOCALITA IS NOT NULL
+			AND LOC.ID_LOCALITA=#{idLoc}
+		</where>
+	</select>
+	
+	<select id="getLocalita" resultType="it.contrada.dto.LocalitaDTO">
+		SELECT id_localita as idLocalita,ds_localita as
+		dsLocalita, cd_cap_post as cdCap, cd_provincia as cdProvincia, cd_comune as cd_comune
+		FROM ${database.schema}LOCALITA
+		<where>
+			cd_cap_post=#{cdCap}
+			and cd_provincia=#{cdProvincia}
+			and cd_comune=#{cdComune}
+		</where>
+	</select>
+	
+	
+	<insert id="insertStrada" parameterType="it.contrada.dto.StradaDTO"
+		useGeneratedKeys="true"  keyProperty="idStrada">
+		INSERT INTO
+		${database.schema}strada
+		(
+		DS_STRADA,
+		DS_LOCALITA,
+		CD_CAP_POST,
+		CD_PROVINCIA,
+		CD_COMUNE,
+		ID_LOCALITA)
+		VALUES
+		(
+		UPPER(#{dsStrada}),
+		UPPER(#{dsLocalita}),
+		#{cdCap},
+		#{cdProvincia},
+		#{cdComune},
+		<if test="idLocalita!=null">
+		#{idLocalita}
+		</if>
+		<if test="idLocalita==null">
+		null
+		</if>
+		);
+
+		 
+</insert>
+
+
+<insert id="insertLocalita" parameterType="it.contrada.dto.LocalitaDTO"
+		useGeneratedKeys="true"  keyProperty="idLocalita">
+		INSERT INTO
+		${database.schema}localita
+		(		
+		`DS_LOCALITA`,
+		`CD_CAP_POST`,
+		`CD_PROVINCIA`,
+		`CD_COMUNE`)
+		VALUES
+		(		
+		UPPER(#{dsLocalita}),
+		#{cdCap},
+		#{cdProvincia},
+		#{cdComune}
+		);
+
+		 
+</insert>
+
+
+
+
+</mapper>
+
+
+

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.contrada.distinta.queries">
+	<insert id="insertDistinta" parameterType="it.contrada.dto.DistintaDTO">
+
+		INSERT INTO
+		${database.schema}DISTINTA
+		VALUES(
+		#{nrDistinta} ,
+		#{nrAnno},
+		#{txOper},
+		CURRENT_TIMESTAMP(),
+		#{txUtente},
+		#{imDistinta},
+		#{operazione.idOperazione}
+		);  
+		
+	</insert>
+
+	<select id="getMaxDistinta" resultType="java.lang.Integer">
+		select
+		IF(max(NR_DISTINTA)+1 IS NULL,1,max(NR_DISTINTA)+1) FROM
+		${database.schema}DISTINTA WHERE
+		NR_ANNO_DISTINTA=#{nrAnno}
+	</select>
+
+	<select id="getDistinta" resultType="it.contrada.dto.DistintaDTO"
+		parameterType="java.util.HashMap">
+		select nr_distinta as nrDistinta,nr_anno_distinta as
+		nrAnno,tx_oper as txOper,tx_utente as txUtente,im_Distinta as
+		imDistinta,ts_inserimento as tsInserimento
+		from
+		${database.schema}DISTINTA WHERE
+		NR_ANNO_DISTINTA=#{nrAnno}
+		order by ts_inserimento desc
+		
+	</select>
+
+</mapper>

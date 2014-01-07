@@ -1,0 +1,434 @@
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
+	version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd">
+	<portlet>
+		<portlet-name>InsAnagrafica</portlet-name>
+		<display-name>Inserimento nuova anagrafica</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Anagrafica/InsAnagrafica.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Anagrafica</title>
+			<short-title>Anagrafica</short-title>
+			<keywords>Anagrafica</keywords>
+		</portlet-info>
+		
+	</portlet>
+	<portlet>
+		<portlet-name>GestRid</portlet-name>
+		<display-name>Gestione Rid</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Rid/InserimentoRid.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Gestione Rid</title>
+			<short-title>Gestione Rid</short-title>
+			<keywords>Rid</keywords>
+		</portlet-info>
+		
+	</portlet>
+	<portlet>
+		<portlet-name>PrepIncassiRid</portlet-name>
+		<display-name>Prepara Incassi Rid</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Rid/PreparaIncassiRid.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Prepara Incassi Rid</title>
+			<short-title>Prepara Incassi Rid</short-title>
+			<keywords>Rid</keywords>
+		</portlet-info>
+		
+	</portlet>
+	<portlet>
+		<portlet-name>RendIncassiRid</portlet-name>
+		<display-name>Rendiconta Incassi Rid</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Rid/RiceviIncassiRid.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Rendiconta Incassi Rid</title>
+			<short-title>Rendiconta Incassi Rid</short-title>
+			<keywords>Rid</keywords>
+		</portlet-info>
+		
+	</portlet>
+	<portlet>
+		<portlet-name>PrepAllArchivi</portlet-name>
+		<display-name>Prepara Allineamento Archivi</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Rid/PreparaAllineamentoArchivi.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Prepara Allineamento Archivi</title>
+			<short-title>Prepara Allineamento Archivi</short-title>
+			<keywords>Rid</keywords>
+		</portlet-info>
+		
+	</portlet>
+	<portlet>
+		<portlet-name>RiceviAllArchivi</portlet-name>
+		<display-name>Ricevi Allineamento Archivi</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Rid/RiceviAllineamentoArchivi.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Ricevi Allineamento Archivi</title>
+			<short-title>Ricevi Allineamento Archivi</short-title>
+			<keywords>Rid</keywords>
+		</portlet-info>
+		
+	</portlet>
+	<portlet>
+		<portlet-name>IntEsitiRid</portlet-name>
+		<display-name>Interroga Esiti Rid</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Rid/InterrogaEsitiIncassiRid.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Interroga Esiti Rid</title>
+			<short-title>Interroga Esiti Rid</short-title>
+			<keywords>Rid</keywords>
+		</portlet-info>
+		
+	</portlet>
+	<portlet>
+		<portlet-name>IntEsitiAllArchivi</portlet-name>
+		<display-name>Interroga Esiti Allineamento Archivi</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Rid/InterrogaEsitiAllineamentiArchivi.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Interroga Esiti Allineamento Archivi</title>
+			<short-title>Interroga Esiti Allineamento Archivi</short-title>
+			<keywords>Rid</keywords>
+		</portlet-info>
+		
+	</portlet>
+	<portlet>
+		<portlet-name>RendicoManuale</portlet-name>
+		<display-name>Rendicontazione Manuale Incassi</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Tessera/RendicontazioneManuale.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Rendicontazione Manuale Incassi</title>
+			<short-title>Rendicontazione Manuale Incassi</short-title>
+			<keywords>Tessera</keywords>
+		</portlet-info>
+		
+	</portlet>
+	<portlet>
+		<portlet-name>AllinQuote</portlet-name>
+		<display-name>Allineamento Quote</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Tessera/AllineaQuotaTessera.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Allineamento Quote</title>
+			<short-title>Allineamento Quote</short-title>
+			<keywords>Tessera</keywords>
+		</portlet-info>
+		
+	</portlet>
+	<portlet>
+		<portlet-name>RicIncassiAnag</portlet-name>
+		<display-name>Ricerca Incassi Per Anagrafica</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Tessera/InterrogazioneIncassiTessere.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Ricerca Incassi Per Anagrafica</title>
+			<short-title>Ricerca Incassi Per Anagrafica</short-title>
+			<keywords>Ricerche</keywords>
+		</portlet-info>
+		
+	</portlet>
+	<portlet>
+		<portlet-name>ListeIncassi</portlet-name>
+		<display-name>Liste Incassi</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/ReportIncassi/ListeIncassi.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Liste Incassi</title>
+			<short-title>Liste Incassi</short-title>
+			<keywords>Ricerche</keywords>
+		</portlet-info>
+		
+	</portlet>
+	<portlet>
+		<portlet-name>RicAnagEta</portlet-name>
+		<display-name>Ricerca Anagrafiche per Eta</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Anagrafica/RicercaFasceEta.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Ricerca Anagrafiche per Eta</title>
+			<short-title>Ricerca Anagrafiche per Eta</short-title>
+			<keywords>Ricerche</keywords>
+		</portlet-info>
+		
+	</portlet>
+	<portlet>
+		<portlet-name>ElencIndFamiglie</portlet-name>
+		<display-name>Elenco Indirizzi Famiglie</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Anagrafica/RicercaIndirizzoFamiglie.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Elenco Indirizzi Famiglie</title>
+			<short-title>Elenco Indirizzi Famiglie</short-title>
+			<keywords>Ricerche</keywords>
+		</portlet-info>
+		
+	</portlet>
+	
+	<!-- 
+	<portlet>
+		<portlet-name>InserimentoRid</portlet-name>
+		<display-name>Inserimento nuovo rid</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Rid/InserimentoRid.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>InserimentoRid</title>
+			<short-title>InserimentoRid</short-title>
+			<keywords>InserimentoRid</keywords>
+		</portlet-info>
+		
+	</portlet>
+	-->
+	
+	<portlet>
+		<portlet-name>CercaFamiglia</portlet-name>
+		<display-name>CercaFamiglia</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Anagrafica/CercaFamiglia.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>CercaFamiglia</title>
+			<short-title>CercaFamiglia</short-title>
+			<keywords>CercaFamiglia</keywords>
+		</portlet-info>
+		
+	</portlet>
+	
+	<portlet>
+		<portlet-name>CercaRidModale</portlet-name>
+		<display-name>CercaRidModale</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Rid/CercaRidModale.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>CercaRidModale</title>
+			<short-title>CercaRidModale</short-title>
+			<keywords>CercaRidModale</keywords>
+		</portlet-info>
+		
+	</portlet>
+	
+	<portlet>
+		<portlet-name>CercaAnagrafica</portlet-name>
+		<display-name>CercaRidModale</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Anagrafica/RicercaAnagrafica.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>CercaAnagrafica</title>
+			<short-title>CercaAnagrafica</short-title>
+			<keywords>CercaAnagrafica</keywords>
+		</portlet-info>
+		
+	</portlet>
+	
+	<portlet>
+		<portlet-name>ProduciFlussoPoste</portlet-name>
+		<display-name>ProduciFlussoPoste</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Poste/ProduciFlussoIncassiPoste.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>ProduciFlussoPoste</title>
+			<short-title>ProduciFlussoPoste</short-title>
+			<keywords>ProduciFlussoPoste</keywords>
+		</portlet-info>
+		
+	</portlet>
+	<portlet>
+		<portlet-name>Stradario</portlet-name>
+		<display-name>Gestione Stradario</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Stradario/Stradario.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Stradario</title>
+			<short-title>Stradario</short-title>
+			<keywords>Stradario</keywords>
+		</portlet-info>
+		
+	</portlet>
+	<portlet>
+		<portlet-name>Gestore</portlet-name>
+		<display-name>Gestore</display-name>
+		<portlet-class>com.icesoft.faces.webapp.http.portlet.MainPortlet</portlet-class>
+		<init-param>
+			<name>com.icesoft.faces.portlet.viewPageURL</name>
+			<value>/Anagrafica/AssegnaGestore.iface</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Gestore</title>
+			<short-title>Gestore</short-title>
+			<keywords>Gestore</keywords>
+		</portlet-info>
+		
+	</portlet>
+		
+</portlet-app>
+
+

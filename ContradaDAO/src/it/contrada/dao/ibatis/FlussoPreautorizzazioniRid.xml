@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.contrada.preautorizzazioni.queries">
+
+
+	<insert id="insertFlussoPreaut" parameterType="java.util.HashMap">
+		INSERT ${database.schema}RID_FLUSSO_PREAUT
+		SELECT
+		ID_RID,
+		CURRENT_DATE,
+		CD_ABI,
+		CD_CAB,
+		NR_CONTO,
+		CD_NAZIONE,
+		NR_CIN,
+		NR_CIN_EUROPEO,
+		NULL,
+		NULL,
+		NULL
+		FROM rid
+		where ${database.schema}rid.id_stato_rid=4
+		and id_rid
+		in
+		<foreach item="item" index="index" collection="rid" open="("
+			separator="," close=")">
+			#{item}
+				</foreach>
+	</insert>
+
+	<update id="aggiornaEsitoPreaut" parameterType="java.util.HashMap">
+		UPDATE
+		${database.schema} RID_FLUSSO_PREAUT
+		SET
+		ID_RID_ESITO_PREAUT=#{causale},
+		DT_ESITO=#{dtEsito},
+		ID_FLUSSO_ESITI=#{idFileEsito}
+		WHERE ID_RID=#{idRid}
+		AND
+		DT_INVIO=#{dtInvio}
+	</update>
+
+	<select id="selectTipoCausaliPreaut" resultType="it.contrada.dominio.dto.TipoCasualiPreautDTO">
+		SELECT
+		ID_RID_ESITO_PREAUT as cdCausale,
+		DS_RID_ESITO_PREAUT as dsCausale,
+		ID_STATO_RID_SUCC as idStatoRidSucc,
+		FG_AGGIORNA_COORDINATE as
+		aggiornaCoordinate
+		FROM
+		${database.schema}tipo_rid_esito_preaut;
+	</select>
+
+	<select id="getRidPreautorizzati" resultType="it.contrada.dto.RidDTO"
+		parameterType="java.util.HashMap">
+		SELECT
+		upper(TX_INTESTATARIO) as intestatarioRid,
+		upper(CD_FISC) as cdFiscale,
+		ID_STATO_RID as tipoStatoRid,
+		upper(CD_NAZIONE) as paese,
+		NR_CIN_EUROPEO cin,
+		CD_ABI abi,
+		CD_CAB as
+		cab,
+		NR_CIN as
+		cinAbi,
+		upper(NR_CONTO) as numeroCC,
+		rp.ID_RID AS nrRid,
+		TX_NOTE as note
+		FROM ${database.schema}RID r, (select id_rid from
+		${database.schema}rid_flusso_preaut
+		where dt_invio=#{dtInvio}) rp
+		where
+		r.id_rid=rp.id_rid;
+	
+	</select>
+	<select id="getNrPreautorizzazioniToday" parameterType="java.util.HashMap"
+		resultType="java.lang.Integer">
+		select count(*)
+		from
+		${database.schema}rid_flusso_preaut
+		where dt_invio=current_date
+	</select>
+
+	<select id="getFlussoPreautorizzati" resultType="it.contrada.preautrid.dto.FlussoPreautInviatoDTO"
+		parameterType="java.util.HashMap">
+		SELECT
+		DT_INVIO AS DT_INVIO,COUNT(*) AS nrDisposizioni
+		FROM {database.schema}rid_flusso_preaut
+		where YEAR(dt_invio)=#{ANNO}
+		GROUP BY DT_INVIO
+	
+	</select>
+
+	<delete id="eliminaFlussoPreautorizzati" parameterType="java.util.HashMap">
+		DELETE
+		FROM
+		{database.schema}rid_flusso_preaut
+		where dt_invio=#{dtInvio}
+	</delete>
+	
+</mapper>
+
+

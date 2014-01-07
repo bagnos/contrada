@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.contrada.carica.queries">
+
+	<update id="aggiornaCarica" parameterType="it.contrada.dominio.dto.TipoCaricaDTO">
+		UPDATE TIPO_CARICA
+		SET IM_MINIMO=#{imMinimo}
+		WHERE ID_TIPO_CARICA=#{idCarica}		
+	</update>
+
+
+	<select id="getCaricaPerTessera" resultType="it.contrada.dto.CaricaTesseraDTO">
+		SELECT
+		C.id_tipo_carica as idCarica, C.ds_tipo_carica as dsCarica,
+		C.im_minimo as imTessera
+		FROM ${database.schema}ORGANIGRAMMA
+		T,${database.schema}TIPO_CARICA C
+		WHERE T.id_tipo_tessera=#{idTessera}
+		AND T.id_tipo_carica=C.id_tipo_carica; 
+</select>
+
+	<select id="getCaricheSuccessive" resultType="it.contrada.dominio.dto.TipoCaricaDTO">
+		SELECT
+		ID_TIPO_CARICA as idCarica,
+		DS_TIPO_CARICA as dsCarica,
+		TX_DIZIONE_TESSERA as txDizioneTessera,
+		NR_ETA_MAX as nrEtaMax,
+		IM_MINIMO as imMinimo,
+		ID_TIPO_CARICA_SUCC as idTipoCaricaSucc
+		FROM
+		${database.schema}tipo_carica
+		WHERE ID_TIPO_CARICA_SUCC IS NOT NULL
+	</select>
+
+	<select id="getCariche" resultType="it.contrada.dominio.dto.TipoCaricaDTO">
+		SELECT TC.ID_TIPO_CARICA AS
+		idCarica,
+		TC.DS_TIPO_CARICA AS dsCarica,
+		TCSUCC.ID_TIPO_CARICA AS
+		idCaricaSucc,
+		TCSUCC.DS_TIPO_CARICA AS dsCaricaSucc,
+		TC.TX_DIZIONE_TESSERA AS txDizioneTessera,
+		TC.NR_ETA_MAX AS nrEtaMax,
+		TC.IM_MINIMO AS imMinimo,
+		TC.IM_MINIMO AS imMinimoPrec,
+		TT.IM_TESSERA as
+		imTessera,
+		TT.ID_TIPO_TESSERA as idTipoTessera,
+		TT.DS_TIPO_TESSERA as
+		dsTipoTessera
+		FROM ${database.schema}tipo_tessera tt
+		JOIN
+		${database.schema}ORGANIGRAMMA O ON
+		(TT.ID_TIPO_TESSERA=O.ID_TIPO_TESSERA)
+		JOIN
+		${database.schema}TIPO_CARICA TC ON
+		(TC.ID_TIPO_CARICA=O.ID_TIPO_CARICA)
+		LEFT JOIN
+		${database.schema}TIPO_CARICA TCSUCC ON
+		(TC.ID_TIPO_CARICA_SUCC=TCSUCC.ID_TIPO_CARICA)
+		
+	
+	</select>
+
+
+
+
+</mapper>

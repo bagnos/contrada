@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.contrada.rid.queries">
+
+	<resultMap id="ridResultMap" type="it.contrada.dto.RidDTO">
+		<result column="TX_INTESTATARIO" property="intestatarioRid" />
+		<result column="cdFiscRid" property="cdFiscale" />
+		<result column="ID_STATO_RID" property="tipoStatoRid" />
+		<result column="nrCivicoRid" property="numeroCivico" />
+		<result column="cdNazioneRid" property="paese" />
+		<result column="idRid" property="nrRid" />
+		<result column="NR_CIN_EUROPEO" property="cin" />
+		<result column="CD_ABI" property="abi" />
+		<result column="CD_CAB" property="cab" />
+		<result column="NR_CIN" property="cinAbi" />
+		<result column="NR_CONTO" property="numeroCC" />
+		<result column="noteRid" property="note" />
+
+		<result column="DS_STATO_RID" property="dsStatoRid" />
+		<result column="localitaRid" property="dsLoc" />
+		<result column="capPostRid" property="capPost" />
+		<result column="provinciaRid" property="provinciaResidenza" />
+		<result column="comuneRid" property="comuneResidenza" />
+		<result column="dtCensimento" property="dtCensimento" />
+
+		<collection property="membri" ofType="it.contrada.dto.MembroRidDTO">
+			<id property="idAnagrafica" column="idAnagrafica" />
+			<id property="cognome" column="cognome" />
+			<id property="nome" column="nome" />
+			<id property="quota" column="quota" />
+			<id property="idRid" column="idRid" />
+			<id property="modalita" column="dsTipoRateizzazione" />
+			<id property="tessera" column="dsTipoTessera" />
+			<id property="idTessera" column="idTessera" />
+			<id column="ID_TIPO_INCASSO_RID" property="idTipoIncassoRid" />
+			<id column="DS_CAUSALE" property="dsTipoIncassoRid" />
+		</collection>
+
+
+	</resultMap>
+
+
+
+
+
+	<insert id="insertRid" useGeneratedKeys="true" keyProperty="nrRid"
+		parameterType="it.contrada.dto.RidDTO">
+		INSERT INTO ${database.schema}RID
+		(TX_INTESTATARIO,
+		CD_FISC,
+		ID_STATO_RID,
+		NR_CIVICO,
+		CD_NAZIONE,
+		NR_CIN_EUROPEO,
+		CD_ABI,
+		CD_CAB,
+		NR_CIN,
+		NR_CONTO,
+		TX_NOTE,
+		ID_OPERAZIONE)
+		VALUES
+		(#{intestatarioRid},
+		#{cdFiscale},
+		#{tipoStatoRid},
+		#{numeroCivico},
+		#{paese},
+		#{cin},
+		#{abi},
+		#{cab},
+		#{cinAbi},
+		#{numeroCC},
+		#{note},
+		#{operazione.idOperazione})
+	</insert>
+
+	<update id="updateRid" parameterType="it.contrada.dto.RidDTO">
+		UPDATE
+		${database.schema}RID
+		SET TX_INTESTATARIO = #{intestatarioRid},
+		CD_FISC
+		= #{cdFiscale},
+		ID_STATO_RID = #{tipoStatoRid},
+		CD_NAZIONE = #{paese},
+		NR_CIN_EUROPEO =
+		#{cin},
+		CD_ABI = #{abi},
+		CD_CAB = #{cab},
+		NR_CIN =
+		#{cinAbi},
+		NR_CONTO =
+		#{numeroCC},
+		TX_NOTE = #{note},
+		ID_OPERAZIONE =
+		#{operazione.idOperazione}
+		WHERE
+		ID_RID=#{nrRid}
+	</update>
+
+	<select id="getMembriRid" resultType="it.contrada.dto.MembroRidDTO">
+		select A.TX_NOME as
+		nome,A.ID_ANAGRAFICA as idAnagrafica, A.TX_COGNOME
+		as cognome,R.ID_RID
+		as
+		idRid,R.TX_INTESTATARIO as intestatario
+		from
+		${database.schema}anagrafica A, ${database.schema}tessera t,
+		${database.schema}rid R
+		<where>
+			A.id_anagrafica=t.id_anagrafica
+			and
+			A.id_stato_anagrafica not in (2) and
+			R.id_rid=t.id_rid
+
+			<if test="nome != null">
+				and A.tx_nome=#{nome}
+		</if>
+			<if test="cognome != null">
+				and A.tx_cognome=#{cognome}
+		</if>
+			<if test="idRid!=null">
+				and R.id_rid=#{idRid}
+		</if>
+		</where>
+
+		group by A.TX_NOME,
+		A.ID_ANAGRAFICA ,
+		A.TX_COGNOME,
+		A.TX_NOME,
+		R.ID_RID
+		,R.TX_INTESTATARIO
+	</select>
+
+	<select id="getMembriRidPerCognome" resultType="it.contrada.dto.MembroRidDTO">
+		select A.TX_NOME
+		as nome,A.ID_ANAGRAFICA as idAnagrafica,
+		A.TX_COGNOME as cognome,
+		A.TX_NOME as nome,
+		R.ID_RID as
+		idRid,R.TX_INTESTATARIO as
+		intestatario
+		from
+		${database.schema}anagrafica A,
+		${database.schema}tessera t,
+		${database.schema}rid R
+		where
+		A.id_anagrafica=t.id_anagrafica
+		and
+		R.id_rid=t.id_rid
+		and
+		A.tx_cognome=#{cognome}
+		group by A.TX_NOME,
+		A.ID_ANAGRAFICA ,
+		A.TX_COGNOME,
+		A.TX_NOME,
+		R.ID_RID ,R.TX_INTESTATARIO
+	</select>
+
+	<select id="getMembriPerCognomeParziale" resultType="it.contrada.dto.MembroRidDTO"
+		parameterType="java.util.HashMap">
+		select concat(A.TX_COGNOME,' ',A.TX_NOME) as nominativo,
+		A.ID_ANAGRAFICA as idAnagrafica,
+		R.ID_RID as idRid
+		from
+		${database.schema}anagrafica A,
+		${database.schema}tessera
+		t,
+		${database.schema}rid R
+		where
+		A.id_anagrafica=t.id_anagrafica
+		AND A.ID_STATO_ANAGRAFICA NOT IN(2)
+		and
+		R.id_rid=t.id_rid
+		and
+		A.tx_cognome like #{matchCognome}
+		<if test="nome!=null">
+			and A.TX_NOME LIKE
+			#{nome}
+		</if>
+		group by
+		nominativo,
+		A.ID_ANAGRAFICA ,
+		R.ID_RID
+		order by r.id_rid;
+	</select>
+
+
+	<select id="getStatiRid" resultType="it.contrada.dominio.dto.TipoStatoRidDTO">
+		select TS.ID_STATO_RID as
+		idStatoRid, TS.DS_STATO_RID as dsStatoRid
+		from
+		${database.schema}tipo_stato_rid TS
+</select>
+
+	<select id="getRidConMembri" resultType="it.contrada.dto.RidDTO"
+		resultMap="ridResultMap">
+		SELECT A.TX_NOME as nome,
+		A.ID_ANAGRAFICA as
+		idAnagrafica,
+		A.TX_COGNOME as cognome,
+		A.TX_NOME as nome,
+		T.ID_TESSERA as
+		idTessera,
+		T.ID_TIPO_INCASSO as
+		idTipoIncasso,
+		TI.DS_TIPO_INCASSO as
+		dsIncasso,
+		T.TX_NOTE_ESAZIONE as
+		dsNote,
+		TT.ID_TIPO_TESSERA as
+		idTipoTessera,
+		TT.DS_TIPO_TESSERA as
+		dsTipoTessera,
+		TR.ID_TIPO_RATEIZZAZIONE as
+		idTipoRateizzazione,
+		TR.ds_TIPO_RATEIZZAZIONE as dsTipoRateizzazione,
+		T.IM_TESSERA as quota,
+		T.ID_RID AS idRid,
+		TT.FG_ATTIVA,
+		RID.TX_INTESTATARIO,
+		RID.CD_FISC AS
+		cdFiscRid,
+		RID.ID_STATO_RID,
+
+		RID.CD_NAZIONE as
+		cdNazioneRid,
+		RID.NR_CIN_EUROPEO,
+		RID.CD_ABI,
+		RID.CD_CAB,
+		RID.NR_CIN,
+		RID.NR_CONTO,
+		RID.TX_NOTE AS noteRid,
+		TSR.DS_STATO_RID,
+		RFP.dtCensimento as dtCensimento
+		FROM
+		${database.schema}ANAGRAFICA A
+		JOIN
+		${database.schema}TESSERA T ON
+		A.ID_ANAGRAFICA=T.ID_ANAGRAFICA
+		JOIN
+		${database.schema}TIPO_INCASSO TI
+		ON
+		TI.ID_TIPO_INCASSO=T.ID_TIPO_INCASSO
+		JOIN
+		${database.schema}TIPO_TESSERA TT ON
+		T.ID_TIPO_TESSERA=TT.ID_TIPO_TESSERA
+		JOIN
+		${database.schema}TIPO_RATEIZZAZIONE TR ON
+		T.ID_TIPO_RATEIZZAZIONE=TR.ID_TIPO_RATEIZZAZIONE
+		JOIN
+		${database.schema}RID
+		ON RID.ID_RID=T.ID_RID
+		LEFT JOIN
+		${database.schema}TIPO_STATO_RID TSR ON
+		RID.ID_STATO_RID=TSR.ID_STATO_RID
+		LEFT JOIN
+
+		(SELECT MAX(DT_ESITO) AS
+		dtCensimento,ID_RID
+		FROM ${database.schema}RID_FLUSSO_PREAUT
+		WHERE
+		ID_RID=#{idRid}
+		AND ID_RID_ESITO_PREAUT=90212
+		GROUP BY ID_RID
+
+		)RFP ON
+		RFP.ID_RID=RID.ID_RID
+		WHERE
+		RID.ID_RID=#{idRid}
+		AND
+		T.ID_TIPO_INCASSO=1 AND
+		A.ID_STATO_ANAGRAFICA NOT IN(2)
+		
+		AND TT.FG_ATTIVA=1
+	</select>
+
+
+
+	<select id="getRid" resultType="it.contrada.dto.RidDTO"
+		parameterType="java.util.HashMap">
+		SELECT
+		ID_RID AS nrRid,
+		upper(TX_INTESTATARIO) as
+		intestatarioRid,
+		upper(CD_FISC) as cdFiscale,
+		R.ID_STATO_RID
+		as
+		tipoStatoRid,
+		RS.DS_STATO_RID as dsStatoRid,
+		upper(CD_NAZIONE) as paese,
+		NR_CIN_EUROPEO
+		cin,
+		CD_ABI abi,
+		CD_CAB as cab,
+		NR_CIN as
+		cinAbi,
+		upper(NR_CONTO) as
+		numeroCC,
+		TX_NOTE as note
+
+		FROM ${database.schema}RID R
+		JOIN ${database.schema}TIPO_STATO_RID RS
+		ON
+		RS.ID_STATO_RID=R.ID_STATO_RID
+
+		where
+		R.id_rid=#{idRid}
+</select>
+
+
+	<select id="getRidCensiti" resultType="it.contrada.dto.RidDTO">
+		SELECT
+		ID_RID AS nrRid,
+		upper(TX_INTESTATARIO) as intestatarioRid,
+		upper(CD_FISC) as cdFiscale,
+		ID_STATO_RID
+		as tipoStatoRid,
+
+		upper(CD_NAZIONE) as paese,
+		NR_CIN_EUROPEO
+		cin,
+		CD_ABI abi,
+		CD_CAB as cab,
+		NR_CIN as
+		cinAbi,
+		upper(NR_CONTO) as
+		numeroCC,
+		TX_NOTE as note
+
+		FROM ${database.schema}RID
+
+		where
+		RID.id_stato_rid=4
+</select>
+
+	<select id="getRidPerStato" resultType="it.contrada.dto.RidDTO"
+		parameterType="java.util.HashMap">
+		SELECT
+		rid.ID_RID AS nrRid,
+		upper(TX_INTESTATARIO) as intestatarioRid,
+		upper(RID.CD_FISC) as cdFiscale,
+		ID_STATO_RID
+		as tipoStatoRid,
+		upper(coalesce(CD_NAZIONE,'')) as paese,
+		NR_CIN_EUROPEO
+		cin,
+		CD_ABI abi,
+		CD_CAB as cab,
+		NR_CIN as
+		cinAbi,
+		upper(coalesce(NR_CONTO,'')) as
+		numeroCC,
+		rid.TX_NOTE as note,
+		concat(A.TX_COGNOME,' ', A.TX_NOME) As
+		anagraficaMembro,
+		trim(concat(COALESCE(A.TX_MAIL,''),' ',
+		COALESCE(A.TX_CELL,''),' ',COALESCE(A.TX_FISSO,''))) As
+		recapitoMembro,
+		tt.ds_tipo_tessera as dsTessera,
+		t.im_tessera/100 as
+		quota
+		FROM
+		${database.schema}RID join ${database.schema}TESSERA T
+		ON
+		T.ID_RID=RID.ID_RID
+		join ${database.schema}ANAGRAFICA A ON
+		A.ID_ANAGRAFICA=T.ID_ANAGRAFICA
+		join
+		TIPO_TESSERA tt ON
+		tt.id_tipo_tessera=t.id_tipo_tessera
+		and
+		t.fg_attiva=1
+		AND
+		A.ID_STATO_ANAGRAFICA NOT IN (2,4)
+		where
+		RID.id_stato_rid in
+		<foreach item="item" index="index" collection="cdStato" open="("
+			separator="," close=")">
+			#{item}
+				</foreach>
+		order by intestatarioRid,nrRid;
+
+	</select>
+
+
+
+
+	<update id="aggiornaStatoRid" parameterType="java.util.HashMap">
+		UPDATE
+		${database.schema}rid
+		SET ID_STATO_RID=#{stato}
+		WHERE
+		ID_STATO_RID=#{statoPrec}
+</update>
+
+	<update id="aggiornaStatoRidPerIdRid" parameterType="java.util.HashMap">
+		UPDATE
+		${database.schema}rid
+		SET ID_STATO_RID=#{stato},
+		TX_NOTE=#{note}
+		WHERE
+		ID_RID=#{idRid}
+</update>
+
+	<update id="aggiornaStatoRidPerListRid" parameterType="java.util.HashMap">
+		UPDATE
+		${database.schema}rid
+		SET ID_STATO_RID=#{stato},
+		TX_NOTE=#{note}
+		WHERE
+		ID_RID IN
+		<foreach item="item" index="index" collection="rid" open="("
+			separator="," close=")">
+			#{item}
+				</foreach>
+	</update>
+
+	<update id="aggiornaCoordinateBancarie" parameterType="java.util.HashMap">
+		UPDATE
+		${database.schema}rid
+		SET CD_NAZIONE=#{cdNazione},
+		NR_CIN_EUROPEO=#{nrCinEuropeo},
+		CD_ABI=#{cdAbi},
+		CD_CAB=#{cdCab},
+		NR_CONTO=#{nrConto},
+		NR_CIN=#{nrCin},
+		TX_NOTE=#{txNote}
+		<if test="intestatario!=null">
+			,TX_INTESTATARIO=#{intestatario}
+		</if>
+		WHERE
+		ID_RID=#{idRid}
+	</update>
+
+	<update id="aggiornaNote" parameterType="java.util.HashMap">
+		UPDATE
+		${database.schema}rid
+
+		set TX_NOTE=#{txNote}
+
+		WHERE
+		ID_RID=#{idRid}
+	</update>
+
+	<update id="aggiornaStatoRidPerIdFlussoAddebito" parameterType="java.util.HashMap">
+		UPDATE ${database.schema}rid R, ${database.schema}incasso_rid IRID
+		SET
+		ID_STATO_RID=#{stato},
+		TX_NOTE=#{note}
+		WHERE R.ID_RID=IRID.ID_RID
+		AND
+		IRID.ID_FLUSSO_ADDEBITO=#{idFlussoAddebito}
+	</update>
+
+	<update id="aggiornaNoteRidPerIdFlussoAddebito" parameterType="java.util.HashMap">
+		UPDATE ${database.schema}rid R, ${database.schema}incasso_rid IRID
+		SET
+		TX_NOTE=#{note}
+		WHERE R.ID_RID=IRID.ID_RID
+		AND
+		IRID.ID_FLUSSO_ADDEBITO=#{idFlussoAddebito}
+	</update>
+
+	<select id="elencaTipoIncassiRid" resultType="it.contrada.dominio.dto.TipoIncassoDTO">
+		SELECT
+		ID_TIPO_INCASSO_RID AS idTipoIncasso,
+		DS_INCASSO AS dsTipoIncasso
+		FROM
+		${database.schema}TIPO_INCASSO_RID
+		WHERE FG_ATTIVA=true
+</select>
+
+
+
+</mapper>
+

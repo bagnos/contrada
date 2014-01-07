@@ -1,0 +1,703 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.contrada.anagrafica.queries">
+
+	<!-- Very Complex Result Map -->
+	<resultMap id="anagraficaConPrincResultMap" type="it.contrada.dto.AnagraficaDTO">
+	<result property="idAnaPrinc" column="idAnaPrinc" />
+	<result property="idFamiglia" column="idFamiglia" />
+	<result property="intestatarioPrinc" column="intestatarioPrinc" />
+	<result property="indirizzo" column="indirizzo" />
+	<result property="capProvincia" column="capProvincia" />
+	<result property="txMail" column="txMail" />
+	<result property="telefono" column="telefono" />	
+	<result property="sesso" column="sesso" />
+	<collection property="anagrafiche" ofType="it.contrada.dto.AnagraficaDTO">
+			<id property="idAnagrafica" column="idAnagrafica" />
+			<id property="intestatario" column="intestatario" />
+			<id property="idFamiglia" column="idFamiglia" />		
+		</collection>
+	</resultMap>
+	
+	<!-- Very Complex Result Map -->
+	<resultMap id="anagraficaResultMap" type="it.contrada.dto.AnagraficaDTO">
+
+		<result property="idAnagrafica" column="idAnagrafica" />
+		<result property="idGestore" column="idGestore" />
+		<result property="dsGestore" column="dsGestore" />
+		<result property="nome" column="nome" />
+		<result property="cognome" column="cognome" />
+		<result property="sesso" column="sesso" />
+		<result property="dtNascita" column="dtNascita" />
+		<result property="dtMorte" column="dtMorte" />
+		<result property="dtInserimento" column="dtInserimento" />
+		<result property="cdFiscale" column="cdFiscale" />
+		<result property="idFamiglia" column="idFamiglia" />
+		<result property="dtUltCens" column="dtUltCens" />
+		<result property="provinciaNascita" column="provinciaNascita" />
+		<result property="provinciaResidenza" column="provinciaResidenza" />
+		<result property="idStrada" column="idStrada" />
+		<result property="dsLocalita" column="dsLocalita" />
+		<result property="idLocalita" column="idLocalita" />
+		<result property="dsStrada" column="dsStrada" />
+		<result property="capPost" column="capPost" />
+		<result property="comuneNascita" column="comuneNascita" />
+		<result property="comuneResidenza" column="comuneResidenza" />
+		<result property="nrCivico" column="nrCivico" />
+		<result property="statoNascita" column="CD_ISO_STATO" />
+		<result property="statoResidenza" column="CD_ISO_STATO_RES" />
+		<result property="dtFazzoletto" column="DT_FAZZOLETTO" />
+		<result property="idStatoAnagrafica" column="ID_STATO_ANAGRAFICA" />
+		<result property="tipoStatoAnagrafica" column="DS_STATO_ANAGRAFICA" />
+		<result property="capoFamiglia" column="capoFamiglia" />
+		<result property="intestatario" column="intestatario" />
+		<result property="indirizzo" column="indirizzo" />
+		<result property="dsGestore" column="dsGestore" />
+		<result property="capProvincia" column="capProvincia" />
+		<result property="txMail" column="txMail" />
+		<result property="txCell" column="txCell" />
+		<result property="txFisso" column="txFisso" />
+		<result property="dtCessazione" column="dtCessazione" />
+		<result property="note" column="note" />
+		<!--
+			<association property="author" column="blog_author_id" javaType="
+			Author"> <id property="id" column="author_id" /> <result
+			property="username" column="author_username" /> <result
+			property="password" column="author_password" /> <result
+			property="email" column="author_email" /> <result property="bio"
+			column="author_bio" /> <result property="favouriteSection"
+			column="author_favourite_section" /> </association>
+		-->
+		<collection property="tessere" ofType="it.contrada.dto.TesseraDTO">
+			<id property="idTessera" column="idTessera" />
+			<id property="idTipoIncasso" column="idTipoIncasso" />
+			<id property="dsIncasso" column="dsIncasso" />
+			<id property="idTipoIncasso" column="idTipoIncasso" />
+			<id property="idTipoEsattore" column="idTipoEsattore" />
+			<id property="dsEsattore" column="dsEsattore" />
+			<id property="idAnag" column="idAnagrafica" />
+			<id property="idMav" column="idMav" />
+			<id property="dsNote" column="dsNote" />
+			<id property="idTipoTessera" column="idTipoTessera" />
+			<id property="dsTipoTessera" column="dsTipoTessera" />
+			<id property="idTipoRateizzazione" column="idTipoRateizzazione" />
+			<id property="dsTipoRateizzazione" column="dsTipoRateizzazione" />
+			<id property="quota" column="quota" />
+			<id property="idRid" column="idRid" />
+			<id property="fgAttiva" column="FG_ATTIVA" />
+			<id property="idTipoCarica" column="ID_TIPO_CARICA" />
+			<id property="dsTipoCarica" column="DS_TIPO_CARICA" />
+		</collection>
+
+
+
+
+
+		<collection property="rid" ofType="it.contrada.dto.RidDTO">
+			<id column="TX_INTESTATARIO" property="intestatarioRid" />
+			<id column="cdFiscRid" property="cdFiscale" />
+			<id column="ID_STATO_RID" property="tipoStatoRid" />
+			<id column="idStradaRid" property="idStrada" />
+			<id column="nrCivicoRid" property="numeroCivico" />
+			<id column="cdNazioneRid" property="paese" />
+			<id column="idRid" property="nrRid" />
+			<id column="NR_CIN_EUROPEO" property="cin" />
+			<id column="CD_ABI" property="abi" />
+			<id column="CD_CAB" property="cab" />
+			<id column="NR_CIN" property="cinAbi" />
+			<id column="NR_CONTO" property="numeroCC" />
+			<id column="noteRid" property="note" />
+			<id column="ID_TIPO_INCASSO_RID" property="idTipoIncassoRid" />
+			<id column="DS_CAUSALE" property="dsTipoIncassoRid" />
+			<id column="DS_STATO_RID" property="dsStatoRid" />
+			<id column="localitaRid" property="dsLoc" />
+			<id column="capPostRid" property="capPost" />
+			<id column="provinciaRid" property="provinciaResidenza" />
+			<id column="comuneRid" property="comuneResidenza" />
+		</collection>
+
+	</resultMap>
+
+	<select id="getAnagraficheConPrincipale" parameterType="java.util.HashMap" resultMap="anagraficaConPrincResultMap">
+		SELECT A.ID_FAMIGLIA as idFamiglia,INF.ID_ANAGRAFICA AS
+		idAnaPrinc,A.ID_ANAGRAFICA as idAnagrafica,INF.SESSO AS SESSO,
+		INF.INTESTATARIO AS intestatarioPrinc,
+		CONCAT(A.TX_COGNOME,' ',A.TX_NOME) AS INTESTATARIO,
+		INF.INDIRIZZO,INF.CAPPROVINCIA,coalesce(INF.TXMAIL,'') AS TXMAIL,
+		TRIM(CONCAT(COALESCE(INF.TXCELL,''),'  ',COALESCE(INF.TXFISSO,''))) AS TELEFONO
+		FROM ${database.schema}INDIRIZZO_FAMIGLIA INF
+		JOIN ${database.schema}ANAGRAFICA A ON INF.IDFAMIGLIA=A.ID_FAMIGLIA
+		<where>
+			<if test="stato!=null">
+				AND A.ID_STATO_ANAGRAFICA in
+				<foreach item="item" index="index" collection="stato" open="("
+					separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+		ORDER BY intestatarioPrinc 
+	</select>
+
+
+	<select id="getAnagrafica" resultMap="anagraficaResultMap"
+		parameterType="java.util.HashMap">
+		SELECT A.TX_NOME as nome,
+		A.ID_ANAGRAFICA as idAnagrafica,
+		A.ID_GESTORE
+		AS idGestore,
+		A.TX_COGNOME as cognome,
+		concat(A.TX_COGNOME,'
+		',A.TX_NOME) as intestatario,
+		A.TX_SESSO as sesso,
+		A.DT_NASCITA as
+		dtNascita,
+		A.DT_MORTE asdtMorte,
+		A.DT_CESSAZIONE AS dtCessazione,
+		A.DT_INSERIMENTO AS dtInserimento,
+		A.CD_FISC as cdFiscale,
+		A.ID_FAMIGLIA as idFamiglia,
+		A.DT_ULT_CENS as dtUltCens,
+		A.TX_NOTE as
+		note,
+		A.CD_PROVINCIA_NASCITA as provinciaNascita,
+		A.CD_COMUNE_NASCITA as
+		comuneNascita,
+		A.ID_STRADA AS idStrada,
+		A.NR_CIVICO AS nrCivico,
+		A.DT_FAZZOLETTO,
+		A.ID_STATO_ANAGRAFICA,
+		TSA.DS_STATO_ANAGRAFICA,
+		A.TX_MAIL AS txMail,
+		A.TX_CELL as
+		txCell,
+		A.TX_FISSO as txFisso,
+		ST.CD_CAP_POST AS capPost,
+		ST.CD_PROVINCIA AS
+		provinciaResidenza,
+		ST.CD_COMUNE AS comuneResidenza,
+		ST.DS_STRADA as
+		dsStrada,
+		ST.DS_LOCALITA as dsLocalita,
+		ST.ID_LOCALITA AS
+		idLocalita,
+		T.ID_TESSERA
+		as
+		idTessera,
+		T.ID_TIPO_INCASSO as
+		idTipoIncasso,
+		TI.DS_TIPO_INCASSO as
+		dsIncasso,
+		T.ID_ESATTORE as
+		idTipoEsattore,
+		E.DS_ESATTORE as dsEsattore,
+		T.ID_MAV
+		as idMav,
+		T.TX_NOTE_ESAZIONE as
+		dsNote,
+		TT.ID_TIPO_TESSERA as
+		idTipoTessera,
+		TT.DS_TIPO_TESSERA as
+		dsTipoTessera,
+		TR.ID_TIPO_RATEIZZAZIONE as
+		idTipoRateizzazione,
+		TR.ds_TIPO_RATEIZZAZIONE as dsTipoRateizzazione,
+		T.IM_TESSERA as quota,
+		T.ID_RID AS idRid,
+		T.FG_ATTIVA,
+		T.ID_TIPO_CARICA,
+		TCAR.DS_TIPO_CARICA,
+		RID.TX_INTESTATARIO,
+		RID.CD_FISC AS
+		cdFiscRid,
+		RID.ID_STATO_RID,
+		RID.CD_NAZIONE as
+		cdNazioneRid,
+		RID.NR_CIN_EUROPEO,
+		RID.CD_ABI,
+		RID.CD_CAB,
+		RID.NR_CIN,
+		RID.NR_CONTO,
+		RID.TX_NOTE AS noteRid,
+		TSR.DS_STATO_RID,
+		PROV.CD_ISO_STATO,
+		PROV_RES.CD_ISO_STATO
+		AS
+		CD_ISO_STATO_RES,
+		if(A.ID_ANAGRAFICA=FAMIGLIA.ID_CAPO_FAMIGLIA,'true','false') as
+		capoFamiglia
+		FROM
+		${database.schema}ANAGRAFICA A
+		JOIN
+		${database.schema}TIPO_STATO_ANAGRAFICA TSA
+		ON
+		(A.ID_STATO_ANAGRAFICA=TSA.ID_STATO_ANAGRAFICA)
+		LEFT JOIN
+		${database.schema}TESSERA T ON
+		(A.ID_ANAGRAFICA=T.ID_ANAGRAFICA AND
+		T.FG_ATTIVA='1')
+		LEFT JOIN
+		${database.schema}TIPO_INCASSO TI ON
+		TI.ID_TIPO_INCASSO=T.ID_TIPO_INCASSO
+		LEFT JOIN
+		${database.schema}ESATTORE E ON T.ID_ESATTORE=E.ID_ESATTORE
+		LEFT JOIN
+		${database.schema}TIPO_TESSERA TT ON
+		T.ID_TIPO_TESSERA=TT.ID_TIPO_TESSERA
+		LEFT JOIN
+		${database.schema}TIPO_RATEIZZAZIONE TR ON
+		T.ID_TIPO_RATEIZZAZIONE=TR.ID_TIPO_RATEIZZAZIONE
+		JOIN
+		${database.schema}STRADA ST ON
+		A.ID_STRADA=ST.ID_STRADA
+		LEFT JOIN
+		${database.schema}RID
+		ON RID.ID_RID=T.ID_RID
+		LEFT JOIN
+		${database.schema}TIPO_STATO_RID TSR ON
+		RID.ID_STATO_RID=TSR.ID_STATO_RID
+		LEFT JOIN
+		${database.schema}PROVINCIA
+		PROV
+		ON
+		A.CD_PROVINCIA_NASCITA=PROV.CD_PROVINCIA
+		LEFT JOIN
+		${database.schema}STATO
+		ON
+		STATO.CD_ISO_STATO=PROV.CD_ISO_STATO
+		JOIN
+		${database.schema}PROVINCIA
+		PROV_RES ON
+		PROV_RES.CD_PROVINCIA=ST.CD_PROVINCIA
+		JOIN
+		${database.schema}STATO
+		STATO_RES ON
+		STATO_RES.CD_ISO_STATO=PROV_RES.CD_ISO_STATO
+		LEFT JOIN
+		${database.schema}FAMIGLIA ON
+		A.ID_FAMIGLIA=FAMIGLIA.ID_FAMIGLIA
+		LEFT
+		JOIN
+		${database.schema}TIPO_CARICA TCAR
+		ON
+		TCAR.ID_TIPO_CARICA=T.ID_TIPO_CARICA
+		LEFT JOIN
+		${database.schema}GESTORE G
+		ON G.ID_GESTORE=A.ID_GESTORE
+		<where>
+			<choose>
+				<when test="cdAnag != null">
+					AND A.ID_ANAGRAFICA=#{cdAnag}
+		</when>
+				<when test="cdFamiglia != null">
+					AND A.ID_FAMIGLIA=#{cdFamiglia}
+		</when>
+				<when test="cognome != null and nome!=null">
+					and A.TX_COGNOME LIKE #{cognome} AND
+					A.TX_NOME LIKE
+					#{nome} 
+			</when>
+				<when test="cognome != null and nome==null">
+					AND A.TX_COGNOME LIKE #{cognome}
+		</when>
+				<when test="stato!=null">
+					AND A.ID_STATO_ANAGRAFICA in
+					<foreach item="item" index="index" collection="stato" open="("
+						separator="," close=")">
+						#{item}
+				</foreach>
+				</when>
+				<otherwise>
+					and a.id_anagrafica=0;
+		</otherwise>
+
+			</choose>
+			<!-- AND (T.FG_ATTIVA='1' OR T.FG_ATTIVA IS NULL)-->
+		</where>
+
+
+	</select>
+
+	<select id="exitAnagrafica" parameterType="java.util.HashMap"
+		resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM ${database.schema}ANAGRAFICA A
+		WHERE
+		UCASE(A.TX_COGNOME)=UCASE(#{cognome})
+		AND
+		UCASE(A.TX_NOME)=UCASE(#{nome})
+		AND A.DT_NASCITA=#{dtNascita}
+	</select>
+
+	<select id="getAnagraficaParzialePerCognome" parameterType="java.util.HashMap"
+		resultType="it.contrada.dto.AnagraficaDTO">
+		SELECT
+		A.ID_ANAGRAFICA as idAnagrafica,
+		concat(A.TX_COGNOME,'
+		',A.TX_NOME) as intestatario,
+		A.DT_NASCITA as dtNascita
+		FROM
+		${database.schema}ANAGRAFICA A
+		WHERE A.TX_COGNOME LIKE
+		#{cognome}
+		<if test="nome!=null">
+			and A.TX_NOME LIKE
+			#{nome}
+		</if>
+		AND A.ID_STATO_ANAGRAFICA=1
+	</select>
+
+	<update id="updateGestore" parameterType="it.contrada.dto.AnagraficaDTO">
+		UPDATE
+		${database.schema}ANAGRAFICA
+		SET ID_GESTORE=#{idGestore}
+		WHERE
+		ID_ANAGRAFICA=#{idAnagrafica}
+	</update>
+
+	<update id="updateIndirizzoAnagrafica" parameterType="java.util.HashMap">
+		UPDATE
+		${database.schema}ANAGRAFICA
+		SET ID_STRADA=#{idStrada},
+		NR_CIVICO=#{nrCivico}
+		WHERE
+		ID_FAMIGLIA=#{idFamiglia}
+	</update>
+
+	<update id="updateStatoAnagrafica" parameterType="java.util.HashMap">
+		UPDATE
+		${database.schema}ANAGRAFICA
+		SET
+		ID_STATO_ANAGRAFICA=#{idStatoAnagrafica}
+		where ID_ANAGRAFICA in
+		<foreach item="item" index="index" collection="idAnagrafiche"
+			open="(" separator="," close=")">
+			#{item}
+				</foreach>
+	</update>
+
+	<update id="updateAnagraficaByCdAnag" parameterType="it.contrada.dto.AnagraficaDTO">
+		UPDATE
+		${database.schema}ANAGRAFICA
+		SET
+		TX_NOME = UPPER(#{nome}),
+		ID_GESTORE=#{idGestore},
+		TX_COGNOME =UPPER(#{cognome}),
+		TX_MAIL=#{txMail},
+		TX_CELL=#{txCell},
+		TX_FISSO=#{txFisso},
+		TX_SESSO =
+		#{sesso},
+		DT_NASCITA =
+		#{dtNascita},
+		DT_MORTE =
+		#{dtMorte},
+		CD_FISC =
+		#{cdFiscale},
+		ID_GESTORE=#{idGestore},
+		ID_FAMIGLIA
+		= #{idFamiglia},
+		DT_ULT_CENS
+		=#{dtUltCens},
+		DT_NASCITA
+		=#{dtNascita},
+		DT_FAZZOLETTO
+		=#{dtFazzoletto},
+		TX_NOTE = #{note},
+		NR_CIVICO=#{nrCivico},
+		ID_STRADA =
+		#{idStrada},
+		CD_PROVINCIA_NASCITA =
+		#{provinciaNascita},
+		CD_COMUNE_NASCITA = #{comuneNascita},
+		ID_STATO_ANAGRAFICA=#{idStatoAnagrafica},
+		<if test="idStatoAnagrafica==2">
+			DT_CESSAZIONE=CURRENT_DATE,
+		</if>
+		ID_OPERAZIONE=#{operazione.idOperazione}
+
+		WHERE
+		ID_ANAGRAFICA=#{idAnagrafica}
+	</update>
+	<insert id="insertAnagrafica" useGeneratedKeys="true"
+		keyProperty="idAnagrafica" parameterType="it.contrada.dto.AnagraficaDTO">
+		INSERT INTO
+		${database.schema}ANAGRAFICA
+		(TX_NOME,TX_COGNOME,TX_SESSO,
+		DT_NASCITA,DT_MORTE,CD_FISC,ID_FAMIGLIA,DT_ULT_CENS,
+		TX_NOTE,NR_CIVICO,ID_STRADA,CD_PROVINCIA_NASCITA,CD_COMUNE_NASCITA,DT_FAZZOLETTO,ID_GESTORE,TX_MAIL,TX_CELL,TX_FISSO,ID_OPERAZIONE,DT_INSERIMENTO)
+		VALUES(UPPER(#{nome}),
+		UPPER(#{cognome}),
+		#{sesso},
+		#{dtNascita},
+		#{dtMorte},
+		#{cdFiscale},
+		#{idFamiglia},
+		#{dtUltCens},
+		#{note},
+		#{nrCivico},
+		#{idStrada},
+		#{provinciaNascita},
+		#{comuneNascita},
+		#{dtFazzoletto},
+		#{idGestore},
+		#{txMail},
+		#{txCell},
+		#{txFisso},
+		#{operazione.idOperazione},
+		CURRENT_DATE
+
+		)
+	</insert>
+
+	<select id="getStatiAnagrafica" resultType="it.contrada.dominio.dto.TipoStatoAnagraficaDTO">
+		SELECT
+		ID_STATO_ANAGRAFICA as idStatoAnagrafica, DS_STATO_ANAGRAFICA as
+		dsStatoAnagrafica
+		FROM ${database.schema}TIPO_STATO_ANAGRAFICA
+</select>
+
+	<select id="getFasceEta" resultType="it.contrada.dto.AnagraficaDTO"
+		parameterType="java.util.HashMap">
+		select concat(a.tx_cognome,' ',a.tx_nome) as
+		intestatario,concat(s.ds_strada,',',cast(a.nr_civico as char)) as indirizzo,a.dt_nascita as dtNascita,
+		concat(s.cd_cap_post," ",coalesce(ds_localita,c.ds_comune)," ",p.cd_sigla_prov) as capProvincia
+		from ${database.schema}anagrafica a
+		join
+		${database.schema}strada s on s.id_Strada=a.id_Strada
+		join
+		${database.schema}comune c on (c.cd_comune=s.cd_comune and
+		c.cd_provincia=s.cd_provincia)
+		join ${database.schema}provincia p on
+		s.cd_provincia=p.cd_provincia
+		<where>
+			<if test="dtDa!=null and dtA!=null">
+				and a.dt_nascita BETWEEN #{dtDa}
+				AND #{dtA}
+</if>
+			<if test="mese!=null">
+				and month(a.dt_nascita)=#{mese}
+</if>
+			<if test="eta!=null">
+				and (year(current_date)-year(a.dt_nascita))=#{mese}
+</if>
+
+			<if test="sesso!=null">
+				and a.tx_sesso=#{sesso}
+</if>
+
+			and a.id_stato_anagrafica in (1)
+		</where>
+		order by a.dt_nascita
+	</select>
+
+	<select id="getIndirizzoFamiglie" resultType="it.contrada.dto.AnagraficaDTO">
+		select * from ${database.schema}indirizzo_famiglia
+		<if test="codiciFamiglia!=null">
+			where idFamiglia in
+			<foreach item="item" index="index" collection="codiciFamiglia"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<!--
+			SELECT CONCAT(A4.TX_NOME,' ',A4.TX_COGNOME) AS intestatario,
+			CONCAT(S.DS_STRADA,' ',CAST(A4.NR_CIVICO AS CHAR)) AS indirizzo,
+			CONCAT(S.CD_CAP_POST,' ',COALESCE(S.DS_LOCALITA,C.DS_COMUNE),'
+			',P.CD_SIGLA_PROV) AS capProvincia, A4.ID_FAMIGLIA AS idFamiglia FROM
+			${database.schema}ANAGRAFICA A4 JOIN STRADA S ON
+			S.ID_STRADA=A4.ID_STRADA JOIN ${database.schema}PROVINCIA P ON
+			P.CD_PROVINCIA=S.CD_PROVINCIA JOIN ${database.schema}COMUNE C ON
+			(C.CD_COMUNE=S.CD_COMUNE AND S.CD_PROVINCIA=C.CD_PROVINCIA) WHERE
+			A4.ID_ANAGRAFICA IN ( SELECT A.ID_ANAGRAFICA FROM
+			${database.schema}ANAGRAFICA A JOIN FAMIGLIA F ON
+			A.ID_ANAGRAFICA=F.ID_CAPO_FAMIGLIA UNION SELECT A2.ID_ANAGRAFICA FROM
+			${database.schema}ANAGRAFICA A2 WHERE A2.DT_NASCITA=(SELECT
+			MAX(DT_NASCITA) FROM ${database.schema}ANAGRAFICA A3 WHERE
+			A3.ID_FAMIGLIA=A2.ID_FAMIGLIA AND A3.ID_STATO_ANAGRAFICA=1) AND
+			A2.ID_STATO_ANAGRAFICA=1) order by idFamiglia
+		-->
+	</select>
+	<select id="getAnagraficaPerResidenza" resultMap="anagraficaResultMap"
+		parameterType="it.contrada.dto.ParmResidenzaDTO">
+		SELECT A4.ID_ANAGRAFICA AS idAnagrafica,CONCAT(A4.TX_COGNOME,' ',A4.TX_NOME) AS intestatario,
+		CONCAT(S.DS_STRADA,' ',CAST(A4.NR_CIVICO AS CHAR)) AS indirizzo,
+		CONCAT(S.CD_CAP_POST,' ',COALESCE(S.DS_LOCALITA,C.DS_COMUNE),' ',P.CD_SIGLA_PROV) AS capProvincia, A4.ID_FAMIGLIA AS idFamiglia,
+		CONCAT(G.TX_COGNOME,' ',G.TX_NOME) AS dsGestore,TT.DS_TIPO_TESSERA AS dsTipoTessera,TI.DS_TIPO_INCASSO AS dsIncasso,
+		TCAR.DS_TIPO_CARICA,A4.DT_NASCITA as dtNascita,T.IM_TESSERA as quota,A4.TX_MAIL AS txMail,
+		A4.TX_CELL AS txCell,A4.TX_FISSO as txFisso, E.DS_ESATTORE AS dsEsattore
+		FROM
+		${database.schema}ANAGRAFICA A4 JOIN STRADA S ON
+		S.ID_STRADA=A4.ID_STRADA JOIN ${database.schema}PROVINCIA P ON
+		P.CD_PROVINCIA=S.CD_PROVINCIA JOIN ${database.schema}COMUNE C ON
+		(C.CD_COMUNE=S.CD_COMUNE AND S.CD_PROVINCIA=C.CD_PROVINCIA) LEFT JOIN
+		${database.schema}GESTORE G
+		ON G.ID_GESTORE=A4.ID_GESTORE
+		<!--
+			LEFT JOIN ANAGRAFICA A1 ON G.ID_GESTORE=A1.ID_GESTORE
+		-->
+		JOIN TESSERA T ON T.ID_ANAGRAFICA=A4.ID_ANAGRAFICA
+		JOIN TIPO_TESSERA TT
+		ON TT.ID_TIPO_TESSERA=T.ID_TIPO_TESSERA
+		JOIN
+		${database.schema}TIPO_INCASSO TI ON
+		TI.ID_TIPO_INCASSO=T.ID_TIPO_INCASSO
+		JOIN
+		${database.schema}TIPO_CARICA
+		TCAR ON
+		T.ID_TIPO_CARICA=TCAR.ID_TIPO_CARICA
+		LEFT JOIN ESATTORE E ON T.ID_ESATTORE=E.ID_ESATTORE
+
+		<where>
+			<if test="cdCap!=null">
+				S.CD_CAP_POST=#{cdCap}
+			</if>
+			<if test="cdProvincia!=null">
+				AND S.CD_PROVINCIA=#{cdProvincia}
+			</if>
+			<if test="cdComune!=null">
+				AND S.CD_COMUNE=#{cdComune}
+			</if>
+			<if test="idLocalita!=null">
+				AND S.ID_LOCALITA = #{idLocalita}
+			</if>
+			<if test="idStrada!=null">
+				AND S.ID_STRADA=#{idStrada}
+			</if>
+			<if test="idGestore!=null and idGestore==0">
+				AND A4.ID_GESTORE IS NULL
+			</if>
+			<if test="idGestore!=null and idGestore==-1">
+				AND A4.ID_GESTORE IS NOT NULL
+			</if>
+			<if test="idGestore!=null and idGestore>0">
+				AND A4.ID_GESTORE=#{idGestore}
+			</if>
+			<if test="idTipoIncasso!=null and idTipoIncasso!=-1">
+				AND T.ID_TIPO_INCASSO=#{idTipoIncasso}
+			</if>
+			AND A4.ID_STATO_ANAGRAFICA=1
+			AND T.ID_TIPO_TESSERA=1
+			AND T.FG_ATTIVA=1
+		</where>
+
+		order by idFamiglia
+	</select>
+
+	<select id="getPagantiAnnoPrecedente" resultType="it.contrada.dto.AnagraficaDTO"
+		parameterType="java.util.HashMap">
+		select * from
+		(SELECT A.ID_FAMIGLIA as
+		idFamiglia,CONCAT(A.TX_COGNOME,'
+		',A.TX_NOME) as
+		intestatario,
+		COALESCE(CAST(A.DT_NASCITA AS
+		CHAR),'N.P.') AS
+		dtNascita,
+		A.TX_MAIL AS
+		txMail, A.TX_CELL AS txCell,
+		A.TX_FISSO AS
+		txFisso,IP.INDIRIZZO AS
+		indirizzo,
+		IP.CAPPROVINCIA as capProvincia
+		FROM
+		${database.schema}ANAGRAFICA A JOIN
+		${database.schema}INDIRIZZO_FAMIGLIA IP
+		ON
+		A.ID_FAMIGLIA=IP.IDFAMIGLIA
+		WHERE YEAR(DT_INSERIMENTO)=#{annoInCorso}
+		union
+		SELECT A.ID_FAMIGLIA as
+		idFamiglia,CONCAT(A.TX_COGNOME,'
+		',A.TX_NOME) as
+		intestatario,
+		COALESCE(CAST(A.DT_NASCITA AS
+		CHAR),'N.P.') AS
+		dtNascita,
+		A.TX_MAIL AS
+		mail, A.TX_CELL AS cell,
+		A.TX_FISSO AS
+		fisso,CONCAT(IP.INDIRIZZO,',
+		',IP.CAPPROVINCIA) AS
+		indirizzo
+		FROM
+		${database.schema}ANAGRAFICA A JOIN
+		${database.schema}INDIRIZZO_FAMIGLIA
+		IP
+		ON
+		A.ID_FAMIGLIA=IP.IDFAMIGLIA
+		join ${database.schema}tessera_storico t on
+		(a.id_anagrafica=t.id_anagrafica and
+		t.nr_anno=#{anno})
+		join (select
+		id_anagrafica
+		from ${database.schema}rateizzazione r join
+		${database.schema}tessera t
+		on
+		r.id_tessera=t.id_tessera
+		and
+		r.nr_anno=#{anno}
+		and t.id_tipo_tessera=1
+		group by
+		r.nr_anno,r.id_tessera
+		having sum(im_rata)>0) p
+		on
+		p.id_anagrafica=a.id_anagrafica
+
+		WHERE A.id_stato_anagrafica=1
+		and
+		t.id_tipo_tessera=#{tipoTessera}) anags
+		order by intestatario;
+	</select>
+
+	<select id="getVotanti" resultType="it.contrada.dto.AnagraficaDTO"
+		parameterType="java.util.HashMap">
+		select
+		a.id_anagrafica as idAnagrafica,
+		a.id_famiglia as idFamiglia,
+		concat(a.tx_cognome,' ',a.tx_nome) as intestatario,
+		IP.INDIRIZZO AS indirizzo,
+		upper(IP.CAPPROVINCIA) AS capProvincia,
+		COALESCE(CAST(A.DT_NASCITA AS CHAR),'N.P.') AS dtNascita,
+		IF(A.DT_FAZZOLETTO = '1111-11-11', null, A.DT_FAZZOLETTO) AS dtFazzoletto,
+
+		upper(trim(coalesce(a.tx_mail,''))) as txMail,
+		trim(coalesce(a.tx_cell,'')) as txCell,
+		trim(coalesce(a.tx_fisso,'')) as txfisso,
+		upper(coalesce(tc.ds_tipo_carica,'')) as carica,
+		coalesce(ti.ds_tipo_incasso,'') as incasso,
+		ts.im_tessera as quota
+		from ${database.schema}anagrafica a
+		join
+		${database.schema}INDIRIZZO_FAMIGLIA ip
+		ON A.ID_FAMIGLIA=IP.IDFAMIGLIA
+		join
+		${database.schema}tessera ts
+		on ts.id_anagrafica=a.id_anagrafica
+		left join tipo_carica tc
+		on tc.id_tipo_carica=ts.id_tipo_carica
+		left join tipo_incasso ti
+		on ti.id_tipo_incasso=ts.id_tipo_incasso
+		left join (select id_Tessera
+		from ${database.schema}rateizzazione
+		where nr_anno between #{annoDa} and year(now())
+		and id_tipo_stato_rata=1
+		group by id_tessera
+		having sum(im_rata)!=0) as pag
+		on pag.id_tessera=ts.id_tessera
+		WHERE (pag.ID_TESSERA IS not NULL or (pag.ID_TESSERA IS NULL and
+		ts.im_tessera=0))
+
+		<if test="dtElezione!=null">
+			and
+			DATE_FORMAT(FROM_DAYS(DATEDIFF(#{dtElezione},coalesce(dt_nascita,'1111-11-11'))),
+			'%Y')+0>=#{etaMin}
+    </if>
+		and ts.id_tipo_tessera=#{idTipoTessera}
+		and a.id_stato_anagrafica=1
+		order by intestatario;
+	</select>
+
+</mapper>

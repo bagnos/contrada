@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.contrada.flussoesito.queries">
+
+	<select id="getEsitoIncassiRid" parameterType="java.util.HashMap"
+		resultType="it.contrada.incassorid.dto.IncassoRidDTO">
+		SELECT ir.ID_RID as idRid,
+		tre.ID_RID_ESITO as idRidEsito, 
+		DT_ESITO as dtEsito,
+		IM_RICHIESTO as imRichiesto,
+		CD_IBAN as cdIban,
+		NR_ANNO as nrAnno,
+		NR_MESE as nrMese,
+		DS_TIPO_MESE as dsMese,
+		TX_NOME_FILE as txNomeFile,
+		CONCAT(cast(TRE.ID_RID_ESITO as char),'-',TRE.DS_RID_ESITO)AS dsEsitoRid,
+		ds_incasso as dsIncassoRid,
+		tx_intestatario as txIntestatario
+
+		FROM ${database.schema}incasso_rid IR
+		LEFT JOIN
+		${database.schema}FLUSSO_ESITI FE ON
+		FE.id_flusso_esito=IR.id_flusso_esiti
+		JOIN
+		${database.schema}TIPO_RID_ESITO TRE ON
+		TRE.id_rid_esito=IR.id_Rid_Esito
+		JOIN
+		${database.schema}TIPO_INCASSO_RID TIR ON
+		TIR.id_tipo_incasso_rid=IR.id_tipo_incasso_rid
+		JOIN
+		${database.schema}TIPO_MESE TP ON TP.id_tipo_mese=ir.nr_Mese
+		
+		<where>
+
+			<if test="anno != null">
+				IR.NR_ANNO=#{anno}
+		</if>
+			<if test="mese != null">
+				AND IR.NR_MESE=#{mese}
+		</if>
+			<if test="causaleIncasso != null">
+				AND IR.ID_RID_ESITO=#{causaleIncasso}
+		</if>
+			<if test="tipoIncassoRid != null">
+				AND IR.ID_TIPO_INCASSO_RID=#{tipoIncassoRid}
+			</if>
+			<if test="nrRid != null">
+				AND IR.ID_RID=#{nrRid}
+			</if>
+
+		</where>
+		ORDER BY TRE.ID_RID_ESITO,ID_RID
+
+	</select>
+
+
+
+
+	<insert id="insertFlussoEsito" useGeneratedKeys="true"
+		keyProperty="idFlussoEsito" parameterType="it.contrada.dto.FlussoEsitoDTO">
+		INSERT INTO
+		${database.schema}FLUSSO_ESITI
+		(TX_NOME_FILE,DT_ESITO_DA,DT_ESITO_A,ID_TIPO_FLUSSO)
+		VALUES(#{txNomeFile},
+		#{dtDa},
+		#{dtA},
+		#{tipoFlusso}
+		)
+	</insert>
+
+	<select id="getFlussiEsito" parameterType="java.util.HashMap"
+		resultType="it.contrada.dto.FlussoEsitoDTO">
+		SELECT
+		TX_NOME_FILE as txNomeFile,
+		DT_ESITO_DA as dtDa,
+		DT_ESITO_A as dtA,
+		ID_TIPO_FLUSSO as tipoFlusso,
+		TS_INSERITO as
+		tsRicevuto,
+		NR_DISP as nrDisp,
+		IM_FLUSSO as imFlusso
+		FROM ${database.schema}FLUSSO_ESITI
+		WHERE
+		ID_TIPO_FLUSSO=#{tipoFlusso}
+		ORDER BY TS_INSERITO DESC
+		LIMIT #{nrLast}
+
+	</select>
+
+	<update id="aggiornaFlussoEsito" parameterType="it.contrada.dto.FlussoEsitoDTO">
+		UPDATE
+		${database.schema}flusso_esiti
+		SET NR_DISP = #{nrDisp},
+		IM_FLUSSO=#{imFlusso}
+		WHERE
+		ID_FLUSSO_ESITO=#{idFlussoEsito}	
+	</update>
+
+	<select id="getEsitoPreautPerRid" parameterType="java.util.HashMap"
+		resultType="it.contrada.preautrid.dto.RidEsitoPreautDTO">
+		SELECT RP.ID_RID_ESITO_PREAUT as cdEsito,
+		FE.TX_NOME_FILE as nomeFile,
+		RP.DT_ESITO as dtEsito,
+		RP.ID_RID as idRid,
+		TR.DS_RID_ESITO_PREAUT as
+		dsEsito,
+		CONCAT(RID.CD_NAZIONE,LPAD(RID.NR_CIN_EUROPEO,2,'0'),
+		LPAD(CAST(RID.CD_ABI AS CHAR),5,'0'),LPAD(CAST(RID.CD_CAB AS
+		CHAR),5,'0'),RID.NR_CIN ,LPAD(RID.NR_CONTO,12,'0')) AS IBAN
+		FROM
+		${database.schema}RID_FLUSSO_PREAUT RP
+		JOIN
+		${database.schema}FLUSSO_ESITI FE ON
+		FE.id_flusso_esito=RP.id_flusso_esiti
+		JOIN
+		${database.schema}TIPO_RID_ESITO_PREAUT TR ON
+		RP.ID_RID_ESITO_PREAUT=TR.ID_RID_ESITO_PREAUT
+		JOIN ${database.schema}
+		RID ON RID.ID_RID=RP.ID_RID
+		WHERE
+		<choose>
+			<when test="idRid != null and dtA!=null and dtDa!=null">
+				RP.ID_RID=#{idRid} AND RP.DT_ESITO BETWEEN #{dtDa}
+				AND #{dtA}
+		</when>
+			<when test="idRid == null and dtA!=null and dtDa!=null">
+				RP.DT_ESITO BETWEEN #{dtDa} AND #{dtA}
+		</when>
+			<when test="idRid != null and dtA==null and dtDa==null">
+				RP.ID_RID=#{idRid}
+		</when>
+			<otherwise>
+				RP.ID_RID=0
+			</otherwise>
+		</choose>
+		AND RP.DT_ESITO IS NOT NULL
+		ORDER BY RP.DT_ESITO DESC
+
+
+	</select>
+	<select id="getMaxDataFlusso" parameterType="java.lang.Integer" resultType="java.sql.Date">
+		SELECT
+		MAX(DT_ESITO_A)
+		FROM ${database.schema}FLUSSO_ESITI
+		WHERE
+		ID_TIPO_FLUSSO=#{idTipoFlusso}
+	</select>
+
+
+
+
+
+</mapper>
+

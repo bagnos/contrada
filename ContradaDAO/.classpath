@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ContradaCommon"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ContradaInterface"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ContradaUtil"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ContradaUserLibrary"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

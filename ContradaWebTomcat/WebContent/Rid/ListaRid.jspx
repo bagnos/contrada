@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
+	<jsp:directive.page contentType="text/html;charset=utf-8" />
+	<f:view>
+		<ice:portlet>
+			<ice:outputStyle href="#{styleBean.activeCss}" />
+			<ice:form>
+				<ice:panelGroup>
+					<ice:panelGroup styleClass="portletContainer">
+						<ice:outputText value="Lista Rid"
+							styleClass="labelPortletContainer"></ice:outputText>
+					</ice:panelGroup>
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="Stato"
+							style="width: 100px;margin-left: 1px;"></ice:outputText>
+						<ice:selectOneMenu required="true" id="statoRid"
+							value="#{listaRidView.cdStato}">
+							<f:selectItems value="#{listaRidView.stati}" />
+						</ice:selectOneMenu>
+						<ice:message for="statoRid"></ice:message>
+						<ice:commandButton style="margin-left:5px;" value="Cerca"
+							actionListener="#{listaRidView.cercaClick}"></ice:commandButton>
+					</ice:panelGroup>
+
+
+
+					<ice:panelGroup rendered="#{listaRidView.visibleRid}" style="margin:5px">
+
+						<ice:panelGrid columns="6">
+							<ice:outputText value="Nr. Anagrafiche:"></ice:outputText>
+							<ice:outputText value="#{listaRidView.nrAnagrafiche}"></ice:outputText>
+							<ice:outputText value="Importo Totale:"></ice:outputText>
+							<ice:outputText value="#{listaRidView.impTotale}">
+							<f:convertNumber type="currency"/>
+							</ice:outputText>
+							<ice:graphicImage url="#{styleBean.imgExcel}" />
+							<ice:dataExporter for="rids" label="#{styleBean.labelExcel}"
+								type="excel" ignorePagination="true" />
+
+						</ice:panelGrid>
+
+						<ice:dataTable id="rids" rows="#{styleBean.maxRowsTables}"
+							value="#{listaRidView.rid}" var="rid">
+							<ice:column id="idRid">
+								<f:facet name="header">
+									<ice:outputText value="Rid" />
+								</f:facet>
+								<ice:outputText value="#{rid.nrRid}" />
+							</ice:column>
+
+							<ice:column id="intest">
+								<f:facet name="header">
+									<ice:outputText value="Intestatario" />
+								</f:facet>
+								<ice:outputText value="#{rid.intestatarioRid}" />
+							</ice:column>
+
+							<ice:column id="Abi">
+								<f:facet name="header">
+									<ice:outputText value="Abi" />
+								</f:facet>
+								<ice:outputText value="#{rid.abi}" />
+							</ice:column>
+							<ice:column id="Cab">
+								<f:facet name="header">
+									<ice:outputText value="Cab" />
+								</f:facet>
+								<ice:outputText value="#{rid.cab}" />
+							</ice:column>
+							<ice:column id="Conto">
+								<f:facet name="header">
+									<ice:outputText value="Conto" />
+								</f:facet>
+								<ice:outputText value="#{rid.numeroCC}" />
+							</ice:column>
+							<ice:column id="fiscale">
+								<f:facet name="header">
+									<ice:outputText value="Codice Fiscale" />
+								</f:facet>
+								<ice:outputText value="#{rid.cdFiscale}" />
+							</ice:column>
+							<ice:column id="anagrafica">
+								<f:facet name="header">
+									<ice:outputText value="Anagrafica" />
+								</f:facet>
+								<ice:outputText value="#{rid.anagraficaMembro}" />
+							</ice:column>
+							<ice:column id="recapito">
+								<f:facet name="header">
+									<ice:outputText value="Recapito" />
+								</f:facet>
+								<ice:outputText value="#{rid.recapitoMembro}" />
+							</ice:column>
+							<ice:column id="tessera">
+								<f:facet name="header">
+									<ice:outputText value="Tessera" />
+								</f:facet>
+								<ice:outputText value="#{rid.dsTessera}" />
+							</ice:column>
+							<ice:column id="quota">
+								<f:facet name="header">
+									<ice:outputText value="Quota" />
+								</f:facet>
+								<ice:outputText value="#{rid.quota}">
+									<f:convertNumber type="currency" />
+								</ice:outputText>
+							</ice:column>
+
+						</ice:dataTable>
+						<ice:dataPaginator id="tabAnag" for="rids" paginator="true"
+							fastStep="#{styleBean.fastStep}"
+							paginatorMaxPages="#{StyleBean.paginatorMaxPages}">
+							<f:facet name="first">
+								<ice:graphicImage url="#{styleBean.first}" style="border:none;"
+									title="First Page" />
+							</f:facet>
+
+							<f:facet name="last">
+								<ice:graphicImage url="#{styleBean.last}" style="border:none;"
+									title="Last Page" />
+							</f:facet>
+							<f:facet name="previous">
+								<ice:graphicImage url="#{styleBean.previous}"
+									style="border:none;" title="Previous Page" />
+							</f:facet>
+							<f:facet name="fastforward">
+								<ice:graphicImage url="#{styleBean.fastforward}"
+									style="border:none;" title="Fast Forward" />
+							</f:facet>
+							<f:facet name="fastrewind">
+								<ice:graphicImage url="#{styleBean.fastrewind}"
+									style="border:none;" title="Fast Backwards" />
+							</f:facet>
+							<f:facet name="next">
+								<ice:graphicImage url="#{styleBean.next}" style="border:none;"
+									title="Next Page" />
+							</f:facet>
+
+
+						</ice:dataPaginator>
+
+
+
+					</ice:panelGroup>
+
+
+				</ice:panelGroup>
+			</ice:form>
+
+		</ice:portlet>
+	</f:view>
+</jsp:root>

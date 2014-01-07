@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE display PUBLIC "-//Liferay//DTD Display 5.2.0//EN" "http://www.liferay.com/dtd/liferay-display_5_2_0.dtd">
+<display>
+	<category name="Nicchio">
+		<portlet id="InsAnagrafica" />
+		<portlet id="Stradario" />
+		<portlet id="Gestore" />
+		<portlet id="CercaFamiglia" />
+		<portlet id="CercaAnagrafica" />
+		<portlet id="CercaRidModale" />
+		<portlet id="GestRid" />
+		<portlet id="PrepIncassiRid" />
+		<portlet id="RendIncassiRid" />
+		<portlet id="PrepAllArchivi" />
+		<portlet id="RiceviAllArchivi" />
+		<portlet id="IntEsitiRid" />
+		<portlet id="IntEsitiAllArchivi" />
+		<portlet id="RendicoManuale" />
+		<portlet id="AllinQuote" />
+		<portlet id="RicIncassiAnag" />
+		<portlet id="ListeIncassi" />
+		<portlet id="RicAnagEta" />
+		<portlet id="ElencIndFamiglie" />
+		<portlet id="ProduciFlussoPoste" />
+		
+	</category>
+</display>

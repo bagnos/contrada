@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.contrada.carica.cap">
+
+	<select id="getCapParziale" resultType="it.contrada.dto.CapDTO">
+		select cd_cap_post as
+		cdCap,c.cd_Provincia as cdProv, c.cd_comune as
+		cdComune,concat(c.cd_cap_post," ",co.ds_comune," ",p.ds_provincia) as
+		dsCap
+		from ${database.schema}cap_post c
+		join ${database.schema}comune co
+		on (co.cd_comune=c.cd_comune and
+		co.cd_provincia=c.cd_provincia)
+		join
+		${database.schema}provincia p on (co.cd_provincia=p.cd_provincia)
+		where (co.ds_comune like #{matchCap} or cd_cap_post like #{matchCap})
+		and c.cd_provincia= #{cdProvincia}
+</select>
+
+	<insert id="insertCap" parameterType="it.contrada.dto.CapDTO">
+		INSERT INTO ${database.schema}cap_post
+		(CD_CAP_POST,
+		CD_PROVINCIA,
+		CD_COMUNE)
+		VALUES
+		(
+		#{cdCap},
+		#{cdProv},
+		#{cdComune}
+		)
+
+</insert>
+
+</mapper>
+

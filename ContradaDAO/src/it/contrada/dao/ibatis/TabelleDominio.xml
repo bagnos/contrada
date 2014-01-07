@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.contrada.domionio.queries">
+	<select id="selectTipoCausaliPreaut" parameterType="it.contrada.dominio.dto.TipoCasualiPreautDTO">
+		SELECT
+		ID_RID_ESITO_PREAUT as cdCausale,
+		DS_RID_ESITO_PREAUT as dsCausale
+		FROM
+		${database.schema}tipo_rid_esito_preaut;
+	</select>
+</mapper>

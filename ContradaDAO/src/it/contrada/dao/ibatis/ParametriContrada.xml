@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.contrada.parametricontrada.queries">
+
+
+	<select id="getParametri" resultType="it.contrada.dto.ParametriContradaDTO">
+		SELECT
+		TX_INTESTAZIONE as txIntestazione,
+		TX_INDIRIZZO as txIndirizzo,
+		TX_LOCALITA as txLocalita,
+		TX_PROVINCIA as txProvincia,
+		CD_CAP as cdCap,
+		CD_FISC as cdFisc,
+		CD_PIVA as cdPiva,
+		CD_SIA as cdSia,
+		CD_ABI as cdAbi,
+		CD_CAB as cdCab,
+		NR_CONTO as nrConto,
+		NR_CIN as nrCin,
+		NR_CCP as nrCCP
+		FROM
+		${database.schema}PARAMETRI_CONTRADA
+ 
+</select>
+
+
+
+
+
+</mapper>
+

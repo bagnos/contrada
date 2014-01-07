@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.5.xsd">
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:it/contrada/dao/ibatis/database.properties</value>
+			</list>
+		</property>
+	</bean>
+
+
+	<jee:jndi-lookup id="dataSource" jndi-name="${dbContrada_jndi_name}"></jee:jndi-lookup>
+
+	<bean id="SqlMapClient" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation">
+			<value>it/contrada/dao/ibatis/Configuration.xml</value>
+		</property>
+	</bean>
+
+
+	<bean id="anagrafeDAO" class="it.contrada.dao.AnagrafeDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="capDAO" class="it.contrada.dao.CapDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="famigliaDAO" class="it.contrada.dao.FamigliaDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	
+
+	<bean id="tesseraDAO" class="it.contrada.dao.TesseraDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+
+
+	<bean id="caricaDAO" class="it.contrada.dao.CaricaDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="comuneDAO" class="it.contrada.dao.ComuneDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="esattoreDAO" class="it.contrada.dao.EsattoreDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="incassoDAO" class="it.contrada.dao.IncassoDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="nazioneDAO" class="it.contrada.dao.NazioneDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="provinciaDAO" class="it.contrada.dao.ProvinciaDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="regioneDAO" class="it.contrada.dao.RegioneDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="stradaDAO" class="it.contrada.dao.StradaDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="ridDAO" class="it.contrada.dao.RidDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="rateizzazioneDAO" class="it.contrada.dao.RateizzazioneDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="distintaDao" class="it.contrada.dao.DistintaDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="flussoRidIncassoDao" class="it.contrada.dao.FlussoRidIncassoDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="parametriContradaDao" class="it.contrada.dao.ParametriContradaDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="flussoPreautorizzazioniRidDAO" class="it.contrada.dao.FlussoPreautorizzazioniRidDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="flussoEsitoDAO" class="it.contrada.dao.FlussoEsitoDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="meseDAO" class="it.contrada.dao.MeseDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="postaDAO" class="it.contrada.dao.FlussoIncassoPosteDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="spinoffDAO" class="it.contrada.dao.SpinOffDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+	<bean id="gestoreDAO" class="it.contrada.dao.GestoreDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+	
+	<bean id="utenteDAO" class="it.contrada.dao.UtenteDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+	
+	<bean id="operazioneDAO" class="it.contrada.dao.OperazioneDAO">
+		<property name="sqlSessionFactory" ref="SqlMapClient" />
+	</bean>
+
+
+
+
+	<bean id="famigliaBO" class="it.contrada.bean.GestioneFamiglia">
+		<property name="famigliaDao" ref="famigliaDAO" />
+	</bean>
+
+	<bean id="flussoBO" class="it.contrada.bean.GestioneFlusso">
+		<property name="rateizzazioneDAO" ref="rateizzazioneDAO" />
+		<property name="flussoRidAddebitoDAO" ref="flussoRidIncassoDao" />
+		<property name="parametriContradaDAO" ref="parametriContradaDao" />
+		<property name="ridDAO" ref="ridDAO" />
+		<property name="flussoPreautorizzazioniRidDAO" ref="flussoPreautorizzazioniRidDAO" />
+		<property name="flussoEsitoDAO" ref="flussoEsitoDAO" />
+		<property name="ricezionePreaut" ref="ricFlussoPreaut" />
+		<property name="ricezioneIncassiRid" ref="ricFlussoIncassiRid" />
+	</bean>
+
+	<bean id="tesseraBO" class="it.contrada.bean.GestioneTessera">
+		<property name="tesseraDao" ref="tesseraDAO" />
+
+	</bean>
+	
+	<bean id="operazioneBO" class="it.contrada.pojo.Operazione">
+		<property name="operazioneDao" ref="operazioneDAO" />
+
+	</bean>
+
+
+
+	<bean id="ricFlussoPreaut" class="it.contrada.pojo.RicezioneFlussoPreautorizzazioneRid">
+
+	</bean>
+
+	<bean id="ricFlussoIncassiRid" class="it.contrada.pojo.RicezioneFlussoIncassiRid">
+
+	</bean>
+
+
+
+
+	<!--
+		<jee:local-slsb id="scarica_ValoreInBianco"
+		jndi-name="ejb/HDDepositiaRisparmioEAR/Scarica_ValoreInBianco/local-it.copergmps.vb.valoriinbianco.interfaces.IScarica_ValoreInBianco"
+		business-interface="it.copergmps.vb.valoriinbianco.interfaces.IScarica_ValoreInBianco"></jee:local-slsb>
+	-->
+
+</beans>

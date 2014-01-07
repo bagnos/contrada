@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
+	<jsp:directive.page contentType="text/html;charset=utf-8" />
+	<f:view>
+		<ice:portlet>
+
+			<ice:form>
+				<ice:outputStyle href="#{styleBean.activeCss}" />
+
+				<ice:panelGroup>
+					<ice:panelGroup styleClass="portletContainer">
+						<ice:outputText value="#{msgs.stampaDocumenti}"
+							styleClass="labelPortletContainer"></ice:outputText>
+					</ice:panelGroup>
+
+					<!-- TIPO Documento -->
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="#{msgs.documento}" styleClass="label140"></ice:outputText>
+						<ice:selectOneMenu value="#{stampaLettere.tipoDocumento}">
+							<f:selectItems value="#{stampaLettere.tipoDocumenti}" />
+						</ice:selectOneMenu>
+					</ice:panelGroup>
+
+
+					<!-- ANAGRAFICA -->
+					<ice:panelGroup styleClass="bottonieraContainer">
+						<ice:panelGroup>
+							<ice:commandButton value="#{msgs.conferma}"
+								actionListener="#{stampaLettere.generaDocumento}"></ice:commandButton>
+						</ice:panelGroup>
+					</ice:panelGroup>
+
+				</ice:panelGroup>
+
+
+			</ice:form>
+		</ice:portlet>
+	</f:view>
+
+</jsp:root>

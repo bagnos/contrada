@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.contrada.rateizzazione.queries">
+
+	<select id="getTipoRateizzazione" resultType="it.contrada.dominio.dto.TipoRateizzazioneDTO">
+		SELECT
+		id_tipo_rateizzazione as idTipoRateizzazione, ds_tipo_rateizzazione
+		as
+		dsTipoRateizzazione
+		FROM ${database.schema}TIPO_RATEIZZAZIONE; 
+</select>
+
+	<delete id="eliminaRataPerFlussoPosta" parameterType="java.lang.Long">
+		DELETE
+		FROM
+		${database.schema}RATEIZZAZIONE
+		WHERE
+		RATEIZZAZIONE.ID_FLUSSO_INCASSO_POSTE IN (
+		SELECT
+		I.ID_FLUSSO_INCASSO_POSTE
+		FROM INCASSO_POSTE I
+		WHERE
+		I.ID_FLUSSO=#{idFlusso})
+</delete>
+
+	<select id="getTipoRateizzazionePerTessera" resultType="it.contrada.dominio.dto.TipoRateizzazioneDTO">
+		SELECT
+		TR.id_tipo_rateizzazione as idTipoRateizzazione,
+		ds_tipo_rateizzazione
+		as dsTipoRateizzazione
+		FROM
+		${database.schema}TIPO_INCASSO_TESSERA_RATEIZZAZIONE TRT,
+		${database.schema}TIPO_RATEIZZAZIONE TR
+		WHERE
+		TRT.id_tipo_rateizzazione=TR.id_tipo_rateizzazione
+		AND
+		TRT.id_tipo_tessera=#{idTessera} 
+</select>
+
+	<select id="getTipoRateizzazionePerTesseraIncasso" resultType="it.contrada.dominio.dto.TipoRateizzazioneDTO">
+		SELECT TR.id_tipo_rateizzazione as idTipoRateizzazione,
+		ds_tipo_rateizzazione as dsTipoRateizzazione
+		FROM
+		${database.schema}TIPO_INCASSO_TESSERA_RATEIZZAZIONE TRTI,
+		${database.schema}TIPO_RATEIZZAZIONE TR
+		WHERE
+		TRTI.id_tipo_rateizzazione=TR.id_tipo_rateizzazione
+		AND
+		TRTI.id_tipo_tessera=#{idTessera}
+		AND TRTI.id_tipo_incasso=#{idIncasso}
+	</select>
+
+	<select id="insertRateizzazione" parameterType="it.contrada.dto.RateizzazioneDTO">
+		INSERT INTO
+		${database.schema}rateizzazione
+		(ID_TESSERA,
+		ID_RATA,
+		IM_RATA,
+		ID_FLUSSO_ADDEBITO,
+		ID_FLUSSO_INCASSO_POSTE,
+		ID_TIPO_STATO_RATA,
+		NR_DISTINTA,
+		NR_ANNO_DISTINTA,
+		NR_ANNO,
+		ID_RID,
+		ID_TIPO_INCASSO,
+		ID_ESATTORE,
+		TX_NOTE,
+		NR_BOLLETTINO_MANUALE)
+		VALUES
+		(
+		#{idTessera},
+		#{idRata},
+		#{imRata},
+		#{idFlusso},
+		#{idFlussoPoste},
+		#{tipoStatoRata},
+		#{nrDistinta},
+		#{nrAnnoDistinta},
+		#{nrAnno},
+		#{idRid},
+		#{idIncasso},
+		#{idEsattore},
+		#{note},
+		#{nrBollettinoManuale}
+		)
+</select>
+
+	<select id="getRateizzazioniPerAnagrafica" resultType="it.contrada.dto.RateizzazioneDTO"
+		parameterType="java.util.HashMap">
+		SELECT
+		TS.ID_TIPO_INCASSO as idIncasso,
+		TS.NR_ANNO as
+		nrAnno,A.ID_ANAGRAFICA as
+		idAnagrafica,CONCAT(A.TX_COGNOME,' ',A.TX_NOME) AS anagrafica,
+		IF
+		(TS.ID_RID IS NOT
+		NULL AND
+		TS.ID_RID!=0,CONCAT(CAST(TI.DS_TIPO_INCASSO AS CHAR), '-'
+		,CAST(TS.ID_RID AS
+		CHAR)),TI.DS_TIPO_INCASSO) AS dsIncasso,
+		TT.DS_TIPO_TESSERA AS
+		dsTessera,
+		TS.IM_TESSERA as imRata,
+		COALESCE(R.IM_RATA,0) as
+		imRataIncassata,
+		COALESCE(TSR.DS_TIPO_STATO_RATA,'NON PAGATA') as
+		dsStatoRata,
+		R.NR_ANNO_DISTINTA as nrAnnoDistinta, R.NR_DISTINTA as
+		nrDistinta,
+		CONCAT(CAST(R.NR_ANNO_DISTINTA AS
+		CHAR),'-',CAST(R.NR_DISTINTA AS
+		CHAR)) as dsDistinta,
+		CONCAT(CAST(COALESCE(R.ID_TESSERA,'0') AS
+		CHAR),CAST(COALESCE(YEAR(DT_RISCOSSIONE),'0') AS
+		CHAR),CAST(COALESCE(R.ID_RATA,'0') AS CHAR)) as idRateizzazione,
+		TR.ID_TIPO_MESE AS nrMeseRata,
+		R.DT_RISCOSSIONE AS dtRiscossione,
+		R.ID_RATA AS idRata,
+		R.ID_TESSERA as idTessera,
+		TRA.DS_TIPO_RATEIZZAZIONE AS
+		dsRateizzazione,
+		R.ID_FLUSSO_ADDEBITO as
+		idFlusso,
+		R.tx_note as note,
+		coalesce(R.ID_FLUSSO_INCASSO_POSTE,R.NR_BOLLETTINO_MANUALE) AS
+		nrBollettinoManuale,
+		TSR.ID_TIPO_STATO_RATA AS tipoStatoRata
+		FROM
+		${database.schema}TESSERA_STORICO TS
+		LEFT JOIN
+		${database.schema}RATEIZZAZIONE R ON (R.ID_TESSERA=TS.ID_TESSERA AND
+		R.NR_ANNO=TS.NR_ANNO)
+		LEFT
+		JOIN ${database.schema}TIPO_STATO_RATA TSR ON
+		(R.ID_TIPO_STATO_RATA=TSR.ID_TIPO_STATO_RATA)
+		LEFT JOIN
+		${database.schema}RATA TR ON (R.ID_RATA=TR.ID_RATA)
+		JOIN
+		${database.schema}TIPO_INCASSO TI ON
+		(TS.ID_TIPO_INCASSO=TI.ID_TIPO_INCASSO)
+		JOIN
+		${database.schema}ANAGRAFICA A ON (TS.ID_ANAGRAFICA=A.ID_ANAGRAFICA)
+		JOIN TIPO_TESSERA TT ON (TS.ID_TIPO_TESSERA=TT.ID_TIPO_TESSERA)
+		JOIN
+		TIPO_RATEIZZAZIONE TRA ON
+		(TS.ID_TIPO_RATEIZZAZIONE=TRA.ID_TIPO_RATEIZZAZIONE)
+		WHERE
+		A.ID_ANAGRAFICA=#{idAnagrafica}
+		<if test="idTipoTessera !=null">
+
+			AND TT.ID_TIPO_TESSERA in
+			<foreach item="item" index="index" collection="idTipoTessera"
+				open="(" separator="," close=")">
+				#{item}
+				</foreach>
+
+		</if>
+
+		<if test="annoDa !=null and annoA!=null">
+			AND R.nr_ANNO BETWEEN #{annoDa} and #{annoA}
+		</if>
+
+
+
+		ORDER BY TS.NR_ANNO,ANAGRAFICA
+	</select>
+	<delete id="deleteRateizzazione" parameterType="it.contrada.dto.RateizzazioneDTO">
+		DELETE
+		FROM
+		${database.schema}RATEIZZAZIONE
+		WHERE ID_TESSERA=#{idTessera}
+		AND
+		NR_ANNO=#{nrAnno}
+		AND ID_RATA=#{idRata}
+		
+	</delete>
+
+	<insert id="insertflussoRateizzazionePerMese" parameterType="java.util.HashMap">
+		INSERT INTO
+		${database.schema}RATEIZZAZIONE
+		SELECT
+		T.ID_TESSERA,#{anno},CURRENT_TIMESTAMP(),ID_RATA,
+		ROUND((T.IM_TESSERA *
+		PC_IMPORTO)/100,0) -COALESCE(RISC.IM_RISCOSSO,0),
+		1,NULL,NULL,NULL,NULL,T.ID_RID,T.ID_TIPO_INCASSO,T.ID_ESATTORE,NULL,NULL
+		FROM ${database.schema}TESSERA T
+		JOIN ANAGRAFICA A
+		ON
+		A.ID_ANAGRAFICA=T.ID_ANAGRAFICA
+		JOIN
+		${database.schema}RATA R
+		ON
+		R.ID_TIPO_RATEIZZAZIONE=T.ID_TIPO_RATEIZZAZIONE
+		JOIN
+		${database.schema}TIPO_TESSERA TT
+		ON
+		TT.ID_TIPO_TESSERA=T.ID_TIPO_TESSERA
+		JOIN
+		${database.schema}TIPO_INCASSO_RID_TESSERA TIR ON
+		TT.ID_TIPO_TESSERA=TIR.ID_TIPO_TESSERA
+		JOIN RID ON RID.ID_RID=T.ID_RID
+		LEFT JOIN
+		(SELECT
+		ID_TESSERA,SUM(IM_RATA) AS IM_RISCOSSO
+		FROM
+		${database.schema}RATEIZZAZIONE
+		WHERE
+		NR_ANNO=#{anno}
+		AND
+		ID_TIPO_STATO_RATA=1
+		GROUP BY ID_TESSERA
+		) RISC
+		ON
+		(T.ID_TESSERA=RISC.ID_TESSERA )
+		WHERE T.ID_TIPO_INCASSO=1
+		and
+		T.IM_TESSERA&gt;(COALESCE(RISC.IM_RISCOSSO,0))
+		AND T.IM_TESSERA&gt;0
+		AND
+		RID.ID_STATO_RID=1
+		AND
+		TIR.ID_TIPO_INCASSO_RID=#{idTipoIncassoRid}
+		AND
+		R.ID_TIPO_MESE=#{mese}
+		AND A.ID_STATO_ANAGRAFICA NOT IN(2,4)
+		AND
+		T.FG_ATTIVA=1
+		AND TT.FG_ATTIVA=1
+		and
+		ROUND((T.IM_TESSERA *
+		PC_IMPORTO)/100,0)
+		-COALESCE(RISC.IM_RISCOSSO,0)>0
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<!--
+			UNION SELECT R.ID_TESSERA,CURRENT_TIMESTAMP(),R1.ID_RATA, R.IM_RATA,
+			1,NULL,NULL,#{anno},NULL,NULL FROM ${database.schema}RATEIZZAZIONE R
+			JOIN ${database.schema}TESSERA T ON T.ID_TESSERA=R.ID_TESSERA JOIN
+			${database.schema}TIPO_TESSERA TT ON
+			T.ID_TIPO_TESSERA=TT.ID_TIPO_TESSERA JOIN
+			${database.schema}TIPO_INCASSO_RID_TESSERA TIR ON
+			TT.ID_TIPO_TESSERA=TIR.ID_TIPO_TESSERA JOIN RID ON
+			RID.ID_RID=T.ID_RID JOIN RATA R1 ON
+			R1.ID_TIPO_RATEIZZAZIONE=T.ID_TIPO_RATEIZZAZIONE JOIN ANAGRAFICA A ON
+			T.ID_ANAGRAFICA=A.ID_ANAGRAFICA LEFT JOIN (SELECT
+			ID_TESSERA,SUM(IM_RATA) AS IM_RISCOSSO FROM
+			${database.schema}RATEIZZAZIONE WHERE NR_ANNO=#{anno} AND
+			ID_TIPO_STATO_RATA=1 GROUP BY ID_TESSERA ) RISC ON
+			(T.ID_TESSERA=RISC.ID_TESSERA) WHERE R.NR_ANNO=#{anno} and
+			T.IM_TESSERA&gt;(COALESCE(RISC.IM_RISCOSSO,0)) AND
+			R1.ID_TIPO_MESE=#{mese} AND RID.ID_STATO_RID=1 AND
+			TIR.ID_TIPO_INCASSO_RID=#{idTipoIncassoRid} AND
+			R.ID_TIPO_STATO_RATA=2 AND T.FG_ATTIVA=1 AND TT.FG_ATTIVA=1 AND
+			A.ID_STATO_ANAGRAFICA=1
+		-->
+
+
+
+	</insert>
+
+	<update id="aggiornaRidFlussoAddebito" parameterType="java.util.HashMap">
+		UPDATE
+		${database.schema}RATEIZZAZIONE R, ${database.schema}INCASSO_RID
+		RF,${database.schema}TESSERA T
+		SET
+		R.ID_FLUSSO_ADDEBITO=RF.ID_FLUSSO_ADDEBITO
+		WHERE RF.ID_RID=T.ID_RID
+		AND
+		T.ID_TESSERA=R.ID_TESSERA
+		AND R.ID_FLUSSO_ADDEBITO is null
+		AND
+		R.NR_ANNO=#{anno}
+		AND R.ID_RATA IN (SELECT ID_RATA FROM RATA WHERE
+		ID_TIPO_MESE=#{mese})
+		AND RF.NR_ANNO=#{anno}
+		AND RF.NR_MESE=#{mese}
+	</update>
+
+	<update id="aggiornaStatoRata" parameterType="java.util.HashMap">
+		UPDATE
+		${database.schema}RATEIZZAZIONE R
+		SET
+		R.ID_TIPO_STATO_RATA=#{idStatoRata}
+		WHERE
+		R.ID_FLUSSO_ADDEBITO=#{idFlussoAddebito}		
+	</update>
+
+	<update id="aggiornaStatoRataPerPosta" parameterType="java.util.HashMap">
+		UPDATE
+		${database.schema}RATEIZZAZIONE R
+		SET
+		R.ID_TIPO_STATO_RATA=#{idStatoRata},
+		R.DT_RISCOSSIONE=#{dtOperazione}
+		WHERE
+		R.ID_FLUSSO_INCASSO_POSTE=#{idFlussoIncassoPoste}		
+	</update>
+
+	<delete id="eliminaRateizzazioneDaFlusso" parameterType="java.util.HashMap">
+		delete
+		from ${database.schema}rateizzazione
+		where id_flusso_addebito in
+		(select id_flusso_addebito from
+		${database.schema}incasso_rid where
+		nr_anno=#{anno} and nr_mese=#{mese} and
+		id_tipo_incasso_rid=#{idTipoIncassoRid})
+	</delete>
+
+	<select id="getIdRidFromIdFlusso" resultType="java.lang.Integer"
+		parameterType="java.util.HashMap">
+		SELECT DISTINCT ID_RID
+		FROM
+		${database.schema}RATEIZZAZIONE R
+		JOIN ${database.schema}TESSERA T
+		ON
+		T.ID_TESSERA=R.ID_TESSERA
+		WHERE
+		R.ID_FLUSSO_ADDEBITO=#{idFlussoAddebito}
+</select>
+
+	<!--
+		CON QUESTA QUERY SI PERDE TUTTE LE RATEIZZAZINE FATTE NELL'ANNNO PER
+		QUELLE ANAGRAFICHE CHE SUCCESSIVAMENTE SONO STATE "CESSATE" SEMPRE
+		NELLO STESSO ANNO. LA CESSAZIONE PORTA LE TESSERE NELLO STORICO COME
+		DISATTIVATE E QUINDI NON CONTEMPLATE NEL CALCOLO FINALE. QUESTA QUERY
+		VA VISTA COME LE RATE RELATIVE ALLE ANAGRAFICHE ATTIVE
+	-->
+
+	<select id="getRate" parameterType="it.contrada.dto.ParmIncassoDTO"
+		resultType="it.contrada.dto.RateizzazioneDTO">
+		SELECT
+		ts.nr_anno as nrAnno,A.ID_ANAGRAFICA as	idAnagrafica,
+		CONCAT(A.TX_COGNOME,' ',A.TX_NOME) AS anagrafica,
+		ti.ds_tipo_incasso as dsIncasso,
+		TS.IM_TESSERA as imRata,
+		COALESCE(sum(if (coalesce(r.id_tipo_stato_rata,0) in
+		(1),R.IM_RATA,0)),0) as imRataIncassata,
+		tt.ds_tipo_tessera as
+		dsTessera,
+		r.tx_note as note,
+		coalesce(R.ID_FLUSSO_INCASSO_POSTE,R.NR_BOLLETTINO_MANUALE) AS nrBollettinoManuale,
+		ES.DS_ESATTORE as dsEsattore
+
+		FROM
+		${database.schema}TESSERA_STORICO TS
+		JOIN
+		${database.schema}TESSERA TE
+		ON (TE.ID_TESSERA=TS.ID_TESSERA)
+		LEFT JOIN
+		${database.schema}RATEIZZAZIONE R ON
+		(R.ID_TESSERA=TS.ID_TESSERA AND
+		R.NR_ANNO=TS.NR_ANNO)
+		LEFT JOIN
+		${database.schema}ESATTORE ES ON
+		ES.ID_ESATTORE=TS.ID_ESATTORE
+		JOIN
+		${database.schema}TIPO_INCASSO TI ON
+		(TS.ID_TIPO_INCASSO=TI.ID_TIPO_INCASSO)
+		JOIN
+		${database.schema}ANAGRAFICA A ON (TS.ID_ANAGRAFICA=A.ID_ANAGRAFICA)
+		JOIN TIPO_TESSERA TT ON (TS.ID_TIPO_TESSERA=TT.ID_TIPO_TESSERA)
+		JOIN
+		TIPO_RATEIZZAZIONE TRA ON
+		(TS.ID_TIPO_RATEIZZAZIONE=TRA.ID_TIPO_RATEIZZAZIONE)
+
+
+		<where>
+			<if test="tipoTessere !=null">
+				and TS.ID_TIPO_TESSERA in
+				<foreach item="item" index="index" collection="tipoTessere"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+
+			</if>
+			<if test="tipoIncasso !=null and tipoIncasso!=0">
+				AND TS.ID_TIPO_INCASSO=#{tipoIncasso}
+				</if>
+			<if test="idEsattore !=null and idEsattore!=0">
+				AND TS.ID_ESATTORE=#{idEsattore}
+		</if>
+			<if test="annoDa !=null and annoA!=null">
+				AND TS.NR_ANNO between #{annoDa} and #{annoA}
+		</if>
+
+		</where>
+		and ts.fg_attiva=1
+
+
+
+		GROUP BY
+		nrAnno,idAnagrafica,anagrafica,ds_tipo_incasso,imRata,tt.ds_tipo_tessera
+
+
+		<if test="tipoPagamento!=null and tipoPagamento==3">
+			HAVING imRataIncassata=0
+		</if>
+
+		<if test="tipoPagamento!=null and tipoPagamento==2">
+			HAVING imRataIncassata&gt;=imRata 
+		</if>
+
+		<if test="tipoPagamento!=null and tipoPagamento==1">
+			HAVING imRata&gt;imRataIncassata and imRataIncassata!=0
+		</if>
+
+		order by a.tx_cognome,a.tx_nome
+
+	</select>
+
+	<select id="getIncassoAnnuale" parameterType="java.util.HashMap"
+		resultType="it.contrada.dto.IncassoAnnualeDTO">
+		SELECT #{anno} as anno,DS_TIPO_INCASSO AS dsIncasso,QUOTA.QUOTA as
+		quota,INCASSO.INCASSATO as incassato,round((incassato/quota)*100,2) as
+		percentuale
+		FROM
+		(SELECT
+		ID_TIPO_INCASSO,SUM(IM_TESSERA) AS QUOTA
+		FROM
+		${database.schema}TESSERA_STORICO TS
+		WHERE NR_ANNO=#{anno}
+		AND
+		FG_ATTIVA=1
+		<if test="tipoTessera!=null">
+			AND ID_TIPO_TESSERA IN
+			<foreach item="item" index="index" collection="tipoTessera"
+				open="(" separator="," close=")">
+				#{item}
+				</foreach>
+		</if>
+		GROUP BY ID_TIPO_INCASSO) QUOTA
+		JOIN
+		(SELECT
+		TI.ID_TIPO_INCASSO,SUM(R.IM_RATA)AS INCASSATO
+		FROM
+		${database.schema}RATEIZZAZIONE R JOIN
+		${database.schema}TESSERA_STORICO T
+		ON
+		(T.ID_TESSERA=R.ID_TESSERA and
+		R.NR_ANNO=T.NR_ANNO AND R.NR_ANNO=#{anno})
+		JOIN
+		${database.schema}TIPO_TESSERA TT ON
+		(TT.ID_TIPO_TESSERA=T.ID_TIPO_TESSERA)
+		JOIN
+		${database.schema}TIPO_INCASSO TI ON
+		(T.ID_TIPO_INCASSO=TI.ID_TIPO_INCASSO)
+		WHERE R.NR_ANNO=#{anno}
+		AND
+		R.ID_TIPO_STATO_RATA=1
+
+		<if test="tipoTessera!=null">
+			AND TT.ID_TIPO_TESSERA IN
+			<foreach item="item" index="index" collection="tipoTessera"
+				open="(" separator="," close=")">
+				#{item}
+				</foreach>
+		</if>
+		GROUP BY R.NR_ANNO,TI.ID_TIPO_INCASSO) INCASSO
+		ON
+		QUOTA.ID_TIPO_INCASSO=INCASSO.ID_TIPO_INCASSO
+		JOIN
+		${database.schema}TIPO_INCASSO TI ON
+		QUOTA.ID_TIPO_INCASSO=TI.ID_TIPO_INCASSO
+	</select>
+
+
+</mapper>
