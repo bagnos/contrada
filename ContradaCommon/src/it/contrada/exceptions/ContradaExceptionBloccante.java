@@ -1,6 +1,6 @@
 package it.contrada.exceptions;
 
-public class ContradaExceptionBloccante extends Exception {
+public class ContradaExceptionBloccante extends ContradaException {
 
 	/**
 	 * 
