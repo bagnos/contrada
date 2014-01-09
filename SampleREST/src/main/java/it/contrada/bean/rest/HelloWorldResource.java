@@ -1,8 +1,8 @@
 package it.contrada.bean.rest;
 
-import java.util.GregorianCalendar;
+import it.contrada.dto.AnagraficaDTO;
 
-import it.contrada.bean.dto.AnagraficaDTO;
+import java.util.GregorianCalendar;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,7 +28,7 @@ public class HelloWorldResource {
 		a.setCognome("Bagnolesi");
 		a.setNome("Simone");
 		a.setEta(27);
-		a.setDtNascita(GregorianCalendar.getInstance().getTime());
+		
 		return a;
 	}
 	
