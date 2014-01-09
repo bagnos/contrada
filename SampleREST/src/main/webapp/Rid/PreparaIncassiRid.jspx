@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
+
+	<f:view>
+		<ice:portlet>
+			<ice:outputStyle href="#{styleBean.activeCss}" />
+			<ice:form>
+				<ice:panelGroup styleClass="portletContainer">
+					<ice:outputText value="Prepara Incassi Rid"
+						styleClass="labelPortletContainer"></ice:outputText>
+				</ice:panelGroup>
+				<ice:panelGrid>
+
+					<ice:panelGrid columns="2">
+						<ice:outputText value="Tipo Incasso Rid"></ice:outputText>
+						<ice:selectOneMenu value="#{preparaIncassiRid.incassoRid}"
+							partialSubmit="true"
+							valueChangeListener="#{preparaIncassiRid.incassoRidOnChange}">
+
+							<f:selectItems value="#{preparaIncassiRid.incassoRidItem}" />
+						</ice:selectOneMenu>
+
+						<ice:outputText value="Anno"></ice:outputText>
+						<ice:selectOneMenu value="#{preparaIncassiRid.anno}">
+
+							<f:selectItems value="#{preparaIncassiRid.annoItem}" />
+						</ice:selectOneMenu>
+						<ice:outputText value="Mese di Riferimento"></ice:outputText>
+						<ice:selectOneMenu value="#{preparaIncassiRid.mese}">
+
+							<f:selectItems value="#{preparaIncassiRid.meseItem}" />
+						</ice:selectOneMenu>
+						<ice:outputText value="Data Valuta" />
+						<ice:selectInputDate renderAsPopup="true" partialSubmit="false"
+							popupDateFormat="dd/MM/yyyy"
+							value="#{preparaIncassiRid.dtValuta}" tabindex="5"
+							style="width: 194px">
+
+
+						</ice:selectInputDate>
+					</ice:panelGrid>
+
+
+
+					<ice:panelGrid columns="2"
+						rendered="#{preparaIncassiRid.visibleListRid==true}">
+
+						<ice:graphicImage url="#{styleBean.imgExcel}"></ice:graphicImage>
+						<ice:dataExporter for="incassi" label="#{styleBean.labelExcel}"
+							type="excel" ignorePagination="true" />
+
+					</ice:panelGrid>
+					<ice:dataTable id="incassi" rows="#{styleBean.maxRowsTables}"
+						rendered="#{preparaIncassiRid.visibleListRid==true}"
+						value="#{preparaIncassiRid.rids}" var="rid">
+						<ice:column id="cdRid">
+							<f:facet name="header">
+								<ice:outputText value="Rid"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{rid.idRid}" />
+						</ice:column>
+
+						<ice:column id="intest">
+							<f:facet name="header">
+								<ice:outputText value="Intestatario"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{rid.txIntestatario}" />
+						</ice:column>
+
+						<ice:column id="Abi">
+							<f:facet name="header">
+								<ice:outputText value="Abi"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{rid.cdAbi}" />
+						</ice:column>
+						<ice:column id="Cab">
+							<f:facet name="header">
+								<ice:outputText value="Cab"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{rid.cdCab}" />
+						</ice:column>
+						<ice:column id="Conto">
+							<f:facet name="header">
+								<ice:outputText value="Conto"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{rid.nrConto}" />
+						</ice:column>
+						<ice:column id="Importo">
+							<f:facet name="header">
+								<ice:outputText value="Importo"></ice:outputText>
+							</f:facet>
+							<ice:outputText converter="ImportoConverter"
+								value="#{rid.imRichiesto}" />
+						</ice:column>
+					</ice:dataTable>
+
+
+					<ice:dataPaginator id="tabAnag" for="incassi" paginator="true"
+						rendered="#{preparaIncassiRid.visibleListRid==true}"
+						fastStep="#{styleBean.fastStep}"
+						paginatorMaxPages="#{StyleBean.paginatorMaxPages}">
+						<f:facet name="first">
+							<ice:graphicImage url="#{styleBean.first}" style="border:none;"
+								title="First Page"></ice:graphicImage>
+						</f:facet>
+
+						<f:facet name="last">
+							<ice:graphicImage url="#{styleBean.last}" style="border:none;"
+								title="Last Page"></ice:graphicImage>
+						</f:facet>
+						<f:facet name="previous">
+							<ice:graphicImage url="#{styleBean.previous}"
+								style="border:none;" title="Previous Page"></ice:graphicImage>
+						</f:facet>
+						<f:facet name="fastforward">
+							<ice:graphicImage url="#{styleBean.fastforward}"
+								style="border:none;" title="Fast Forward"></ice:graphicImage>
+						</f:facet>
+						<f:facet name="fastrewind">
+							<ice:graphicImage url="#{styleBean.fastrewind}"
+								style="border:none;" title="Fast Backwards"></ice:graphicImage>
+						</f:facet>
+						<f:facet name="next">
+							<ice:graphicImage url="#{styleBean.next}" style="border:none;"
+								title="Next Page"></ice:graphicImage>
+						</f:facet>
+
+
+					</ice:dataPaginator>
+					<ice:outputText value="#{preparaIncassiRid.note}" />
+
+				</ice:panelGrid>
+				<ice:panelGroup>
+					<ice:panelGroup style="float:left;">
+						<ice:commandButton value="#{preparaIncassiRid.labelGeneraFlusso}"
+							actionListener="#{preparaIncassiRid.preparaOnClick}" />
+						<ice:commandButton value="Elimina" style="margin-left:10px"
+							actionListener="#{preparaIncassiRid.eliminaOnClick}"
+							rendered="#{preparaIncassiRid.disabledElimina==false}" />
+					</ice:panelGroup>
+					<!-- 
+				<ice:panelGroup rendered="#{preparaIncassiRid.disabledElimina==false}" style="float:left;">
+				<input type="button" value="Esporta" class="iceCmdBtn" 
+				onclick="window.open('export.txt?nomeFile=#{preparaIncassiRid.keyDownloadFile}')"/>
+				</ice:panelGroup>
+				 -->
+				</ice:panelGroup>
+				<!-- 
+				<a href="export.txt?nomeFile=#{preparaIncassiRid.keyDownloadFile}" target="_blank"> <h:graphicImage
+					style="border:none" alt="#{msgs.esportaFlusso}"
+					url="#{styleBean.imgPrint}"></h:graphicImage> </a>-->
+			</ice:form>
+
+		</ice:portlet>
+	</f:view>
+</jsp:root>

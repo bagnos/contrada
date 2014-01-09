@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
+
+
+	<f:view>
+		<ice:portlet id="miaPortlet">
+			<ice:outputStyle href="#{styleBean.activeCss}" />
+			<ice:outputDeclaration doctypeRoot="HTML"
+				doctypePublic="-//W3C//DTD HTML 4.01 Transitional//EN"
+				doctypeSystem="http://www.w3.org/TR/html4/loose.dtd" />
+			<ice:form id="form">
+				<ice:panelGroup styleClass="portletContainer">
+					<ice:outputText value="Lista Incassi"
+						styleClass="labelPortletContainer"></ice:outputText>
+				</ice:panelGroup>
+				<ice:panelGrid cellpadding="7" cellspacing="5">
+					<f:loadBundle var="bundlePag"
+						basename="it.contrada.resources.pagamenti" />
+					<ice:panelGrid border="0" columns="1">
+
+						<ice:panelGrid columns="2">
+							<ice:panelGroup>
+								<ice:outputText value="Tipo Tessera:" />
+							</ice:panelGroup>
+
+							<ice:selectOneMenu value="#{listeIncassi.parm.tipoTessera}" partialSubmit="true" valueChangeListener="#{listeIncassi.tipoTesseraValueChange}">
+								<f:selectItems value="#{listeIncassi.tipoTessere}" />
+							</ice:selectOneMenu>
+							
+							
+							<ice:outputText value="Tipo Incasso:" />
+							<ice:setEventPhase phase="INVOKE_APPLICATION" events="ValueChangeEvent">
+							<!-- onchange="document.body.disabled=true;alert('invio');iceSubmitPartial(form,this,event);" -->
+							<ice:selectOneMenu value="#{listeIncassi.parm.tipoIncasso}" partialSubmit="false"  id="tipoIncasso"  valueChangeListener="#{listeIncassi.tipoIncassoValueChange}">
+								<f:selectItems value="#{listeIncassi.ricerche}" />
+							</ice:selectOneMenu>
+							</ice:setEventPhase>
+							
+
+							
+
+							<ice:outputText value="Esattore"
+								rendered="#{listeIncassi.renderEsattori}"></ice:outputText>
+							<ice:selectOneMenu value="#{listeIncassi.parm.idEsattore}"
+								rendered="#{listeIncassi.renderEsattori}">
+								<f:selectItems value="#{listeIncassi.esattori}" />
+							</ice:selectOneMenu>
+							
+							<!-- 
+							<ice:outputText value="Pagamento:" />
+							<ice:selectOneMenu value="#{listeIncassi.parm.tipoPagamento}">
+								<f:selectItem itemValue="0" itemLabel="#{bundlePag.Vuoto}" />
+								<f:selectItem itemValue="1" itemLabel="#{bundlePag.Parziale}" />
+								<f:selectItem itemValue="2" itemLabel="#{bundlePag.Completo}" />
+								<f:selectItem itemValue="3" itemLabel="#{bundlePag.Nessuno}" />
+							</ice:selectOneMenu>
+							 -->
+
+							<ice:outputText value="Anno:" />
+							<ice:panelGroup>
+								<ice:selectOneMenu value="#{listeIncassi.parm.annoDa}">
+									<f:selectItems value="#{listeIncassi.anni}" />
+								</ice:selectOneMenu>
+								<!-- 
+								<ice:outputText value="Anno A:" style="margin-left:10px;" />
+								<ice:selectOneMenu value="#{listeIncassi.parm.annoA}">
+									<f:selectItems value="#{listeIncassi.anni}" />
+								</ice:selectOneMenu>
+								 -->
+							</ice:panelGroup>
+
+
+
+
+							<!-- 
+							<ice:outputText value="Raggruppa Per Anagrafica" />
+							<ice:selectBooleanCheckbox partialSubmit="true"
+										title="ragruppa per anagrafica"										
+										value="#{listeIncassi.raggruppaAnag}"></ice:selectBooleanCheckbox>
+							 -->
+						</ice:panelGrid>
+						<ice:panelGrid columns="2">
+							<ice:commandButton value="Cerca"
+								actionListener="#{listeIncassi.cercaClick}" />
+
+
+						</ice:panelGrid>
+
+
+						<ice:panelGroup rendered="#{listeIncassi.renderPagamenti}">
+							<ice:panelGrid columns="6">
+								<ice:outputText value="Nr. Anagrafiche"></ice:outputText>
+								<ice:inputText value="#{listeIncassi.nrAnagrafiche}"
+									disabled="true" style="width: 40px;"></ice:inputText>
+
+								<ice:outputText value="Importo"></ice:outputText>
+								<ice:inputText styleClass="txtImportoTotale"
+									value="#{listeIncassi.importo}" disabled="true">
+									<f:convertNumber type="currency" />
+								</ice:inputText>
+
+								<ice:outputText value="Importo Incassato"></ice:outputText>
+								<ice:inputText styleClass="txtImportoTotale"
+									value="#{listeIncassi.importoIncassato}" disabled="true">
+									<f:convertNumber type="currency" />
+								</ice:inputText>
+							</ice:panelGrid>
+							<ice:panelGrid columns="2">
+
+								<ice:graphicImage url="#{styleBean.imgExcel}" />
+								<ice:dataExporter for="tbPagamenti"
+									label="#{styleBean.labelExcel}" type="excel"
+									ignorePagination="true" />
+
+							</ice:panelGrid>
+							<ice:dataTable value="#{listeIncassi.rate}" var="rata"
+								rows="#{styleBean.maxRowsTables}" id="tbPagamenti">
+								<ice:column id="anno">
+									<f:facet name="header">
+										<ice:outputText value="Anno"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{rata.nrAnno}"></ice:outputText>
+								</ice:column>
+								<ice:column id="idAnagrafica">
+									<f:facet name="header">
+										<ice:outputText value="Id Anag."></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{rata.idAnagrafica}"></ice:outputText>
+								</ice:column>
+								<ice:column id="Anagrafica">
+									<f:facet name="header">
+										<ice:outputText value="Anagrafica"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{rata.anagrafica}"></ice:outputText>
+								</ice:column>
+								<ice:column id="Incasso">
+									<f:facet name="header">
+										<ice:outputText value="Incasso"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{rata.dsIncasso}"></ice:outputText>
+								</ice:column>
+								<ice:column id="Tessera">
+									<f:facet name="header">
+										<ice:outputText value="Tessera"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{rata.dsTessera}"></ice:outputText>
+								</ice:column>
+								<ice:column id="Esattore" rendered="#{listeIncassi.renderEsattori}">
+									<f:facet name="header">
+										<ice:outputText value="Esattore"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{rata.dsEsattore}"></ice:outputText>
+								</ice:column>
+								<ice:column id="Importo">
+									<f:facet name="header">
+										<ice:outputText value="Importo"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{rata.imRata}"
+										converter="ImportoConverter"></ice:outputText>
+								</ice:column>
+								<ice:column id="Iincasso">
+									<f:facet name="header">
+										<ice:outputText value="Incassato"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{rata.imRataIncassata}"
+										converter="ImportoConverter"></ice:outputText>
+								</ice:column>
+							</ice:dataTable>
+							<ice:dataPaginator id="tabAnag" rows="#{styleBean.maxRowsTables}"
+								for="tbPagamenti" paginator="true"
+								fastStep="#{styleBean.fastStep}"
+								paginatorMaxPages="#{StyleBean.paginatorMaxPages}">
+								<f:facet name="first">
+									<ice:graphicImage url="#{styleBean.first}" style="border:none;"
+										title="First Page" />
+								</f:facet>
+
+								<f:facet name="last">
+									<ice:graphicImage url="#{styleBean.last}" style="border:none;"
+										title="Last Page" />
+								</f:facet>
+								<f:facet name="previous">
+									<ice:graphicImage url="#{styleBean.previous}"
+										style="border:none;" title="Previous Page" />
+								</f:facet>
+								<f:facet name="fastforward">
+									<ice:graphicImage url="#{styleBean.fastforward}"
+										style="border:none;" title="Fast Forward" />
+								</f:facet>
+								<f:facet name="fastrewind">
+									<ice:graphicImage url="#{styleBean.fastrewind}"
+										style="border:none;" title="Fast Backwards" />
+								</f:facet>
+								<f:facet name="next">
+									<ice:graphicImage url="#{styleBean.next}" style="border:none;"
+										title="Next Page" />
+								</f:facet>
+
+
+							</ice:dataPaginator>
+
+						</ice:panelGroup>
+						<ice:outputText value="#{listeIncassi.valueNonPresenti}"></ice:outputText>
+					</ice:panelGrid>
+
+
+
+
+
+
+
+
+
+
+
+				</ice:panelGrid>
+			</ice:form>
+		</ice:portlet>
+	</f:view>
+</jsp:root>

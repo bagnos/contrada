@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
+
+	<!--  <script language="JavaScript" type="text/javascript">  function HandleFileButtonClick()  { alert("cazzo");   document.getElementById("myFile").click();    document.getElementById("fileInput").value = document.getElementById("myFile").value;  }  </script>-->
+	<f:view>
+		<ice:portlet>
+			<ice:outputStyle href="#{styleBean.activeCss}" />
+			<ice:form>
+				<ice:panelGroup styleClass="portletContainer">
+					<ice:outputText value="Ricevi Allineamento Archivi"
+						styleClass="labelPortletContainer"></ice:outputText>
+				</ice:panelGroup>
+				<ice:panelGrid>
+
+					<ice:panelGrid rendered="#{riceviAllArchivi.visibleEsiti}">
+						<f:facet name="header">
+							<ice:outputText value="#{riceviAllArchivi.intEsitiPrec}" />
+						</f:facet>
+						<ice:dataTable value="#{riceviAllArchivi.esiti}" var="esito">
+
+							<ice:column id="tsEsito">
+								<f:facet name="header">
+									<ice:outputText value="Ricevuto" />
+								</f:facet>
+								<ice:outputText value="#{esito.tsRicevuto}" />
+							</ice:column>
+
+							<ice:column id="Esito Da">
+								<f:facet name="header">
+									<ice:outputText value="Esito Da" />
+								</f:facet>
+								<ice:outputText value="#{esito.dtDa}" />
+							</ice:column>
+
+							<ice:column id="Data A">
+								<f:facet name="header">
+									<ice:outputText value="Esito A" />
+								</f:facet>
+								<ice:outputText value="#{esito.dtA}" />
+							</ice:column>
+							<ice:column id="Nome">
+								<f:facet name="header">
+									<ice:outputText value="Nome File" />
+								</f:facet>
+								<ice:outputText value="#{esito.nomeFile}" />
+							</ice:column>
+							<ice:column id="Nr. Disp">
+								<f:facet name="header">
+									<ice:outputText value="Nr. Disp" />
+								</f:facet>
+								<ice:outputText value="#{esito.nrDisp}" />
+							</ice:column>
+						</ice:dataTable>
+
+					</ice:panelGrid>
+					<ice:panelGrid>
+
+
+						<ice:inputFile label="Elabora" fileNamePattern=".+\.txt"
+							actionListener="#{riceviAllArchivi.eleboraOnClick}"
+							id="inputFileComponent" immediate="false"
+							submitOnUpload="postUpload"  progressListener="#{riceviAllArchivi.progressListener}"></ice:inputFile>
+						<ice:message for="inputFileComponent" />
+						<ice:outputProgress value="#{riceviAllArchivi.fileProgress}" />
+						<ice:outputText value="#{riceviAllArchivi.note}" />
+
+
+
+					</ice:panelGrid>
+
+					<ice:panelGroup rendered="#{riceviAllArchivi.visibleListRid==true}">
+						<ice:outputText value="Esito" />
+						<ice:selectOneMenu partialSubmit="true"
+							value="#{riceviAllArchivi.causale}"
+							valueChangeListener="#{riceviAllArchivi.causaliOnChange}">
+							<f:selectItems value="#{riceviAllArchivi.causaliItem}" />
+						</ice:selectOneMenu>
+
+					</ice:panelGroup>
+					<ice:panelGrid columns="2"
+						rendered="#{riceviAllArchivi.visibleListRid==true}">
+
+						<ice:graphicImage url="#{styleBean.imgExcel}"></ice:graphicImage>
+						<ice:dataExporter for="esiti" label="#{styleBean.labelExcel}"
+							type="excel" ignorePagination="true" />
+
+					</ice:panelGrid>
+					<ice:dataTable id="esiti"
+						rendered="#{riceviAllArchivi.visibleListRid==true}"
+						value="#{riceviAllArchivi.ridsFiltrati}" var="rid"
+						rows="#{styleBean.maxRowsTables}">
+
+						<ice:column id="cdRid">
+							<f:facet name="header">
+								<ice:outputText value="Rid"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{rid.records12.codiceIndividuale}">
+
+							</ice:outputText>
+						</ice:column>
+
+						<ice:column id="intestatario">
+							<f:facet name="header">
+								<ice:outputText value="Intestatario"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{rid.intestatario}">
+								<f:convertNumber />
+							</ice:outputText>
+						</ice:column>
+
+
+
+						<ice:column id="id causale">
+							<f:facet name="header">
+								<ice:outputText value="Tipo Causale"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{rid.idCausale}" />
+
+						</ice:column>
+
+						<ice:column id="causale">
+							<f:facet name="header">
+								<ice:outputText value="Causale"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{rid.dsCausale}" />
+						</ice:column>
+
+
+						<ice:column id="Stato">
+							<f:facet name="header">
+								<ice:outputText value="Stato"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{rid.stato}" />
+						</ice:column>
+					</ice:dataTable>
+					<ice:dataPaginator id="tabAnag" for="esiti" paginator="true"
+						rendered="#{riceviAllArchivi.visibleListRid==true}"
+						fastStep="#{styleBean.fastStep}"
+						paginatorMaxPages="#{StyleBean.paginatorMaxPages}">
+						<f:facet name="first">
+							<ice:graphicImage url="#{styleBean.first}" style="border:none;"
+								title="First Page" />
+						</f:facet>
+
+						<f:facet name="last">
+							<ice:graphicImage url="#{styleBean.last}" style="border:none;"
+								title="Last Page" />
+						</f:facet>
+						<f:facet name="previous">
+							<ice:graphicImage url="#{styleBean.previous}"
+								style="border:none;" title="Previous Page" />
+						</f:facet>
+						<f:facet name="fastforward">
+							<ice:graphicImage url="#{styleBean.fastforward}"
+								style="border:none;" title="Fast Forward" />
+						</f:facet>
+						<f:facet name="fastrewind">
+							<ice:graphicImage url="#{styleBean.fastrewind}"
+								style="border:none;" title="Fast Backwards" />
+						</f:facet>
+						<f:facet name="next">
+							<ice:graphicImage url="#{styleBean.next}" style="border:none;"
+								title="Next Page" />
+						</f:facet>
+
+
+					</ice:dataPaginator>
+					<ice:panelGrid columns="2"
+						rendered="#{riceviAllArchivi.visibleListRid==true}">
+						<ice:outputText value="Nr. Disposizioni:" />
+						<ice:outputText value="#{riceviAllArchivi.nrDisposizioni}" />
+
+					</ice:panelGrid>
+
+				</ice:panelGrid>
+
+			</ice:form>
+
+		</ice:portlet>
+
+	</f:view>
+</jsp:root>

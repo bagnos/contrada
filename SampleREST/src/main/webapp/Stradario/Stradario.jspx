@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
+
+	<f:view>
+		<ice:portlet id="idPortlet">
+			<ice:outputStyle href="#{styleBean.activeCss}" />
+			<ice:form id="idForm">
+
+
+				<ice:panelGroup>
+					<ice:panelGroup styleClass="portletContainer">
+						<ice:outputText value="Gestione Stradario"
+							styleClass="labelPortletContainer"></ice:outputText>
+					</ice:panelGroup>
+					<!-- TIPO INSERIMENTO -->
+
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="#{msgs.tipoCensimentoStradario}"
+							styleClass="label140"></ice:outputText>
+						<ice:selectOneMenu value="#{stradarioBean.tipoInserimento}"
+							partialSubmit="true"
+							valueChangeListener="#{stradarioView.tipoCensimentoValueChange}">
+							<f:selectItem itemLabel="#{msgs.strada}" itemValue="1" />
+							<f:selectItem itemLabel="#{msgs.localita}" itemValue="2" />
+							<f:selectItem itemLabel="#{msgs.cap}" itemValue="3" />
+							<!--
+							<f:selectItem itemLabel="Comune" itemValue="3" /> -->
+						</ice:selectOneMenu>
+					</ice:panelGroup>
+					<!-- PROVINVIA -->
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="#{msgs.provincia}" styleClass="label140"></ice:outputText>
+
+						<ice:selectOneMenu value="#{stradarioBean.cdProvincia}"
+							partialSubmit="true" 
+							valueChangeListener="#{stradarioView.provinciaChange}">
+							<f:selectItems value="#{stradarioView.provincieItem}" />
+						</ice:selectOneMenu>
+
+					</ice:panelGroup>
+					<!-- COMUNE -->
+					<ice:panelGroup rendered="#{stradarioBean.tipoInserimento==3}">
+						<ice:panelGroup styleClass="elementContainer">
+							<ice:outputText value="#{msgs.comune}" styleClass="label140"></ice:outputText>
+
+							<ice:selectOneMenu value="#{stradarioBean.cdComune}"
+								id="lstComune" required="true" 
+								requiredMessage="Comune non inserito">
+								<f:selectItems value="#{stradarioView.comuneItem}" />
+							</ice:selectOneMenu>
+							<ice:message for="lstComune"></ice:message>
+
+						</ice:panelGroup>
+						<ice:panelGroup styleClass="elementContainer">
+							<ice:outputText value="#{msgs.cap}" styleClass="label140"></ice:outputText>
+							<ice:inputText value="#{stradarioBean.cdCap}" maxlength="5" 
+								id="cdCap" size="7" >
+								
+							</ice:inputText>
+							<ice:message for="cdCap"></ice:message>
+						</ice:panelGroup>
+					</ice:panelGroup>
+					<!-- INSERIMENTO STRADA -->
+					<ice:panelGroup rendered="#{stradarioBean.tipoInserimento!=3}">
+						<ice:panelGroup styleClass="elementContainer">
+							<ice:outputText value="#{msgs.cap}" styleClass="label140"></ice:outputText>
+							<ice:selectInputText rows="10" width="200" size="60"
+								style="display:inline; margin-left:0px;"
+								listValue="#{stradarioView.capItems}" listVar="cap"
+								partialSubmit="true"
+								valueChangeListener="#{stradarioView.updateListCap}"
+								value="#{stradarioBean.dsCap}">
+								<f:facet name="selectInputText">
+									<ice:panelGrid columns="1">
+										<ice:outputText value="#{cap.dsCap}" />
+
+									</ice:panelGrid>
+								</f:facet>
+
+							</ice:selectInputText>
+						</ice:panelGroup>
+						<!-- combo localita  -->
+						<ice:panelGroup styleClass="elementContainer"
+							rendered="#{stradarioBean.tipoInserimento==1}">
+							<ice:outputText value="#{msgs.localita}" styleClass="label140" />
+							<ice:selectOneMenu value="#{stradarioBean.cdLocalita}"
+								partialSubmit="true" disabled="#{stradarioView.disabledItemLoc}">
+								<f:selectItems value="#{stradarioView.localitaItem}" />
+							</ice:selectOneMenu>
+						</ice:panelGroup>
+						<ice:panelGroup styleClass="elementContainer"
+							rendered="#{stradarioBean.tipoInserimento==1}">
+							<ice:outputText value="#{msgs.strada}" styleClass="label140"></ice:outputText>
+							<ice:inputText value="#{stradarioBean.dsStrada}"
+								disabled="#{stradarioView.disabledStrada}" style="width:290px"></ice:inputText>
+						</ice:panelGroup>
+						<ice:panelGroup styleClass="elementContainer"
+							rendered="#{stradarioBean.tipoInserimento==2}">
+							<ice:outputText value="#{msgs.localita}" styleClass="label140"></ice:outputText>
+							<ice:inputText value="#{stradarioBean.dsLocalita}"></ice:inputText>
+						</ice:panelGroup>
+
+					</ice:panelGroup>
+					<ice:panelGroup styleClass="bottonieraContainer">
+						<ice:panelGroup>
+							<ice:commandButton value="#{msgs.conferma}"
+								actionListener="#{stradarioView.confermaOnClick}"></ice:commandButton>
+						</ice:panelGroup>
+					</ice:panelGroup>
+					<ice:panelGroup styleClass="noteContainer"
+						rendered="#{stradarioView.renderedNote}">
+						<ice:outputText value="#{stradarioView.note}"
+							styleClass="inputNote"></ice:outputText>
+
+					</ice:panelGroup>
+				</ice:panelGroup>
+
+
+			</ice:form>
+		</ice:portlet>
+	</f:view>
+</jsp:root>

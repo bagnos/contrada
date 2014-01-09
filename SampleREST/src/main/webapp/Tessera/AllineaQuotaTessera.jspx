@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
+
+
+	<f:view>
+		<ice:portlet>
+			<ice:outputStyle href="#{styleBean.activeCss}" />
+			<ice:outputDeclaration doctypeRoot="HTML"
+				doctypePublic="-//W3C//DTD HTML 4.01 Transitional//EN"
+				doctypeSystem="http://www.w3.org/TR/html4/loose.dtd" />
+			<ice:form>
+				<ice:panelGroup styleClass="portletContainer">
+					<ice:outputText value="Allinea Quota Tessera"
+						styleClass="labelPortletContainer"></ice:outputText>
+				</ice:panelGroup>
+				<ice:panelGroup style="margin-bottom:10px;">
+						<ice:outputText value="Attenzione: L'allineamento deve essere effettuato solo dopo il recupero  degli incassi di fine anno."
+							style="font-style: italic;font-weight: bold;"></ice:outputText>
+					</ice:panelGroup>
+				<ice:panelGrid cellpadding="7" cellspacing="5">
+					<ice:panelGrid border="0" columns="2">
+
+						<ice:outputText value=""></ice:outputText>
+						<ice:outputText value=""></ice:outputText>
+						<ice:outputText value="Data limite per aggiornamento"></ice:outputText>
+						<ice:selectInputDate renderAsPopup="true" partialSubmit="false"
+							popupDateFormat="dd/MM/yyyy"
+							value="#{allineaQuotaTessera.dtRiferimento}" style="width: 262px">
+							<f:convertDateTime type="date"
+								timeZone="#{styleBean.generalTimeZone}" />
+						</ice:selectInputDate>
+
+					</ice:panelGrid>
+
+					<!-- tabella anagrafiche -->
+					<ice:panelGroup
+						rendered="#{allineaQuotaTessera.visibleAnagrafiche}">
+						<ice:panelGroup>
+						<ice:outputText value="Nr. anagrafiche #{allineaQuotaTessera.nrAnags}"></ice:outputText>
+						</ice:panelGroup>
+						<ice:dataTable border="0" rows="#{styleBean.maxRowsTables}"
+							id="tesseraDaStampare" value="#{allineaQuotaTessera.tessereAll}"
+							var="anagrafica">
+
+
+							<ice:column id="column0">
+								<f:facet name="header">
+									<ice:outputText value="Nr. Anagrafica"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{anagrafica.idAnag}" />
+							</ice:column>
+							<ice:column id="column1">
+								<f:facet name="header">
+									<ice:outputText value="Cognome"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{anagrafica.cognome}" />
+							</ice:column>
+							<ice:column id="column2">
+								<f:facet name="header">
+									<ice:outputText value="Nome"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{anagrafica.nome}" />
+							</ice:column>
+							<ice:column id="column3">
+								<f:facet name="header">
+									<ice:outputText value="Data"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{anagrafica.dtNascita}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</ice:outputText>
+							</ice:column>
+							<ice:column id="column4">
+								<f:facet name="header">
+									<ice:outputText value="Carica"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{anagrafica.dsTipoCarica}" />
+							</ice:column>
+							<ice:column id="column5">
+								<f:facet name="header">
+									<ice:outputText value="Nuova Carica"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{anagrafica.dsTipoCaricaSucc}" />
+							</ice:column>
+							<ice:column id="column6">
+								<f:facet name="header">
+									<ice:outputText value="Nuovo Importo"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{anagrafica.quota}"
+									converter="ImportoConverter" />
+							</ice:column>
+						</ice:dataTable>
+						<ice:dataPaginator for="tesseraDaStampare" paginator="true"
+							fastStep="#{styleBean.fastStep}"
+							paginatorMaxPages="#{StyleBean.paginatorMaxPages}">
+							<f:facet name="first">
+								<ice:graphicImage url="#{styleBean.first}" style="border:none;"
+									title="First Page" />
+							</f:facet>
+
+							<f:facet name="last">
+								<ice:graphicImage url="#{styleBean.last}" style="border:none;"
+									title="Last Page" />
+							</f:facet>
+							<f:facet name="previous">
+								<ice:graphicImage url="#{styleBean.previous}"
+									style="border:none;" title="Previous Page" />
+							</f:facet>
+							<f:facet name="fastforward">
+								<ice:graphicImage url="#{styleBean.fastforward}"
+									style="border:none;" title="Fast Forward" />
+							</f:facet>
+							<f:facet name="fastrewind">
+								<ice:graphicImage url="#{styleBean.fastrewind}"
+									style="border:none;" title="Fast Backwards" />
+							</f:facet>
+							<f:facet name="next">
+								<ice:graphicImage url="#{styleBean.next}" style="border:none;"
+									title="Next Page" />
+							</f:facet>
+
+
+						</ice:dataPaginator>
+					</ice:panelGroup>
+
+
+
+					<ice:panelGrid columns="2">
+						<ice:commandButton value="Cerca"
+							actionListener="#{allineaQuotaTessera.cercaTesseraClick}" />
+						<ice:commandButton value="Allinea" rendered="#{allineaQuotaTessera.visibleAnagrafiche}"
+							actionListener="#{allineaQuotaTessera.allineaQuotaClick}" />
+					</ice:panelGrid>
+					<ice:outputText value="#{allineaQuotaTessera.messaggio}"></ice:outputText>
+				</ice:panelGrid>
+			</ice:form>
+		</ice:portlet>
+	</f:view>
+</jsp:root>

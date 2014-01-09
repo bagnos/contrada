@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
+	<jsp:directive.page contentType="text/html;charset=utf-8" />
+	<f:view>
+		<ice:portlet>
+			<ice:form>
+				<ice:outputStyle href="#{styleBean.activeCss}" />
+				<ice:panelGroup styleClass="portletContainer">
+						<ice:outputText value="Home"
+							styleClass="labelPortletContainer"></ice:outputText>
+					</ice:panelGroup>
+				
+				
+				<ice:panelGroup styleClass="panelContainer" style="width:470px;margin-top:10px">
+
+
+					<ice:panelGroup styleClass="panelHeaderContainer" style="text-align:center" >
+						<ice:outputText value="Ultime Operazioni"
+							styleClass="labelPortletContainer"></ice:outputText>
+					</ice:panelGroup>
+					
+					
+						<ice:dataTable  id="tblOperazioni" rows="8" style="margin:6px"
+							scrollable="false" columnWidths="20%,20%,60%"
+							value="#{homeView.operazioni}" var="operazione">
+							<ice:column id="Data">
+								<f:facet name="header">
+									<ice:outputText value="Data"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{operazione.tsOperazione}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</ice:outputText>
+							</ice:column>
+							<ice:column id="Utente">
+								<f:facet name="header">
+									<ice:outputText value="Utente"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{operazione.user}">
+
+								</ice:outputText>
+							</ice:column>
+							<ice:column id="Operazione">
+								<f:facet name="header">
+									<ice:outputText value="Tipo Operazione"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{operazione.dsOperazione}">
+
+								</ice:outputText>
+							</ice:column>
+						</ice:dataTable>
+					
+						<ice:dataPaginator id="tabAnag" for="tblOperazioni" 
+							paginator="true" fastStep="#{styleBean.fastStep}"
+							paginatorMaxPages="#{StyleBean.paginatorMaxPages}">
+							<f:facet name="first">
+								<ice:graphicImage url="#{styleBean.first}" style="border:none;"
+									title="First Page" />
+							</f:facet>
+
+							<f:facet name="last">
+								<ice:graphicImage url="#{styleBean.last}" style="border:none;"
+									title="Last Page" />
+							</f:facet>
+							<f:facet name="previous">
+								<ice:graphicImage url="#{styleBean.previous}"
+									style="border:none;" title="Previous Page" />
+							</f:facet>
+							<f:facet name="fastforward">
+								<ice:graphicImage url="#{styleBean.fastforward}"
+									style="border:none;" title="Fast Forward" />
+							</f:facet>
+							<f:facet name="fastrewind">
+								<ice:graphicImage url="#{styleBean.fastrewind}"
+									style="border:none;" title="Fast Backwards" />
+							</f:facet>
+							<f:facet name="next">
+								<ice:graphicImage url="#{styleBean.next}" style="border:none;"
+									title="Next Page" />
+							</f:facet>
+
+
+						</ice:dataPaginator>
+					
+					</ice:panelGroup>
+				
+			</ice:form>
+		</ice:portlet>
+	</f:view>
+</jsp:root>

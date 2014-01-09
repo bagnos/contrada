@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
+
+
+	<f:view>
+		<ice:portlet>
+			<ice:outputStyle href="#{styleBean.activeCss}" />
+			<ice:outputDeclaration doctypeRoot="HTML"
+				doctypePublic="-//W3C//DTD HTML 4.01 Transitional//EN"
+				doctypeSystem="http://www.w3.org/TR/html4/loose.dtd" />
+			<ice:form>
+				<ice:panelGroup styleClass="portletContainer">
+					<ice:outputText value="Ricerca Incassi Tessera"
+						styleClass="labelPortletContainer"></ice:outputText>
+				</ice:panelGroup>
+				<ice:panelGrid border="0" columns="1">
+
+
+
+					<ice:panelGrid columns="5"
+						rendered="#{interrogazioneIncassiTessere.ricerca==1}">
+						<ice:outputText value="Id. Anagrafica"></ice:outputText>
+
+
+
+						<ice:inputText id="anag"
+							value="#{interrogazioneIncassiTessere.idAnagrafica}"
+							required="false" style="width: 62px"
+							converter="javax.faces.Integer"></ice:inputText>
+
+
+
+						<ice:message id="lblErrNome" for="anag" />
+
+
+
+
+						<ice:outputText value="Cerca Anagrafica" />
+						<ice:selectInputText id="idPopupAnagrafica" rows="10" width="300"
+							listValue="#{interrogazioneIncassiTessere.anagraficheItem}"
+							listVar="anagrafica" partialSubmit="true"
+							valueChangeListener="#{interrogazioneIncassiTessere.updateListAnagrafiche}"
+							value="#{interrogazioneIncassiTessere.dsAnagrafica}">
+							<f:facet name="selectInputText">
+								<h:panelGrid columns="2">
+									<h:outputText value="#{anagrafica.idAnagrafica}" />
+									<h:outputText value="#{anagrafica.intestatario}" />
+								</h:panelGrid>
+							</f:facet>
+
+						</ice:selectInputText>
+					</ice:panelGrid>
+					<ice:panelGrid columns="2">
+						<ice:outputText value="Anno Da:" />
+						<ice:panelGroup>
+							<ice:selectOneMenu partialSubmit="true"
+								value="#{interrogazioneIncassiTessere.annoDa}">
+								<f:selectItems value="#{interrogazioneIncassiTessere.anni}" />
+							</ice:selectOneMenu>
+							<ice:outputText value="Anno A:" />
+							<ice:selectOneMenu partialSubmit="true"
+								value="#{interrogazioneIncassiTessere.annoA}">
+								<f:selectItems value="#{interrogazioneIncassiTessere.anni}" />
+							</ice:selectOneMenu>
+						</ice:panelGroup>
+						<ice:outputText value="Tipo Tessera"></ice:outputText>
+						<ice:selectOneMenu partialSubmit="false" id="lstTessere"
+							value="#{interrogazioneIncassiTessere.tessera}">
+							<f:selectItems
+								value="#{interrogazioneIncassiTessere.tessereItem}" />
+						</ice:selectOneMenu>
+						
+						<ice:panelGroup styleClass="bottoniera">
+						<ice:commandButton value="Cerca" style="float:left"
+							actionListener="#{interrogazioneIncassiTessere.cercaClick}" />
+						</ice:panelGroup>
+						
+						
+					</ice:panelGrid>
+					<ice:outputText value="#{interrogazioneIncassiTessere.messaggio}"
+						styleClass="inputNote" />
+					<ice:dataTable border="1"
+						value="#{interrogazioneIncassiTessere.rateizzazioni}"
+						var="rateizzazione"
+						rendered="#{interrogazioneIncassiTessere.visibleInterrogazioni}">
+
+						<!-- 
+						<ice:column id="elemina">
+							<f:facet name="header">
+							</f:facet>
+							<ice:commandButton value="elimina" partialSubmit="true" onclick="if (!confirm('Sei sicuro di eliminare definitivamente la rata?')) return false;"
+								rendered="#{rateizzazione.imRataIncassata>0 and rateizzazione.idFlusso==null}"
+								actionListener="#{interrogazioneIncassiTessere.eliminaRataOnClick}">
+								<f:attribute name="idRateizzazione"
+									value="#{rateizzazione.idRateizzazione}" />
+							</ice:commandButton>
+
+						</ice:column>
+						 
+						<ice:column id="column2">
+							<f:facet name="header">
+								<ice:outputText value="Anagrafica" />
+							</f:facet>
+							<ice:outputText value="#{rateizzazione.anagrafica}" />
+						</ice:column>
+						-->
+						<ice:column id="anno">
+							<f:facet name="header">
+								<ice:outputText value="Anno" />
+							</f:facet>
+							<ice:outputText value="#{rateizzazione.nrAnno}"
+								converter="IntegerConverter" />
+						</ice:column>
+						<ice:column id="Mese">
+							<f:facet name="header">
+								<ice:outputText value="Mese" />
+							</f:facet>
+							<ice:outputText value="#{rateizzazione.nrMeseRata}" />
+						</ice:column>
+						<ice:column id="Rateizzazione">
+							<f:facet name="header">
+								<ice:outputText value="Rateizzazione" />
+							</f:facet>
+							<ice:outputText value="#{rateizzazione.dsRateizzazione}" />
+						</ice:column>
+						<ice:column id="mese">
+							<f:facet name="header">
+								<ice:outputText value="Data Incasso/Invio" />
+							</f:facet>
+							<ice:outputText value="#{rateizzazione.dtRiscossione}">
+							<f:convertDateTime pattern="dd/MM/yyyy"/>
+							</ice:outputText>
+													</ice:column>
+
+						<ice:column id="Tessera">
+							<f:facet name="header">
+								<ice:outputText value="Tessera" />
+							</f:facet>
+							<ice:outputText value="#{rateizzazione.dsTessera}" />
+						</ice:column>
+						<ice:column id="Incasso">
+							<f:facet name="header">
+								<ice:outputText value="Incasso" />
+							</f:facet>
+							<ice:outputText value="#{rateizzazione.dsIncasso}" />
+						</ice:column>
+						<ice:column id="Quota Prevista">
+							<f:facet name="header">
+								<ice:outputText value="Quota Prevista" />
+							</f:facet>
+							<ice:outputText value="#{rateizzazione.imRata}"
+								converter="ImportoConverter" />
+						</ice:column>
+						<ice:column id="Quota">
+							<f:facet name="header">
+								<ice:outputText value="Quota Incassata" />
+							</f:facet>
+							<ice:outputText value="#{rateizzazione.imRataIncassata}"
+								converter="ImportoConverter" />
+						</ice:column>
+						<ice:column id="StatoRata">
+							<f:facet name="header">
+								<ice:outputText value="Stato Rata" />
+							</f:facet>
+							<ice:outputText value="#{rateizzazione.dsStatoRata}" />
+						</ice:column>
+						<ice:column id="Nr.Bollettino">
+							<f:facet name="header">
+								<ice:outputText value="Nr.Bollettino" />
+							</f:facet>
+							<ice:outputText value="#{rateizzazione.nrBollettinoManuale}"/>
+						</ice:column>
+						<ice:column id="Distinta">
+							<f:facet name="header">
+								<ice:outputText value="Nr. Distinta" />
+							</f:facet>
+							<ice:outputText value="#{rateizzazione.nrDistinta}"
+								converter="IntegerConverter" />
+						</ice:column>
+						<ice:column id="Flusso">
+							<f:facet name="header">
+								<ice:outputText value="Nr. Flusso" />
+							</f:facet>
+							<ice:outputText value="#{rateizzazione.idFlusso}" />
+						</ice:column>
+						<ice:column id="Note">
+							<f:facet name="header">
+								<ice:outputText value="Note" />
+							</f:facet>
+							<ice:outputText value="#{rateizzazione.note}" />
+						</ice:column>
+
+
+					</ice:dataTable>
+
+
+
+
+
+					<ice:panelGrid columns="8"
+						rendered="#{interrogazioneIncassiTessere.visibleInterrogazioni}">
+						<ice:outputText value="Tessere"></ice:outputText>
+						<ice:inputText value="#{interrogazioneIncassiTessere.nrTessere}"
+							readonly="true" style="width: 57px" converter="IntegerConverter"></ice:inputText>
+						<ice:outputText value="Incassato"></ice:outputText>
+						<ice:inputText value="#{interrogazioneIncassiTessere.incassato}"
+							readonly="true" converter="ImportoConverter" style="width: 86px"></ice:inputText>
+						<ice:outputText value="Incasso Previsto"></ice:outputText>
+						<ice:inputText
+							value="#{interrogazioneIncassiTessere.incassoPrevisto}"
+							readonly="true" converter="ImportoConverter" style="width: 86px"></ice:inputText>
+					</ice:panelGrid>
+
+
+				</ice:panelGrid>
+			</ice:form>
+		</ice:portlet>
+	</f:view>
+</jsp:root>

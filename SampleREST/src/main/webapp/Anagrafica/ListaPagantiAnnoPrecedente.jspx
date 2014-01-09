@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
+
+	<f:view>
+		<ice:portlet>
+			<ice:outputStyle href="#{styleBean.activeCss}" />
+			<ice:outputDeclaration doctypeRoot="HTML"
+				doctypePublic="-//W3C//DTD HTML 4.01 Transitional//EN"
+				doctypeSystem="http://www.w3.org/TR/html4/loose.dtd" />
+			<ice:form>
+				<ice:panelGroup>
+					<ice:panelGroup styleClass="portletContainer">
+						<ice:outputText value="Lista Prova Generale"
+							styleClass="labelPortletContainer"></ice:outputText>
+					</ice:panelGroup>
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="Anno Riferimento" styleClass="label140"></ice:outputText>
+
+						<ice:selectOneMenu value="#{listaPagantiAnnoPrecedente.anno}">
+							<f:selectItems value="#{listaPagantiAnnoPrecedente.annoItem}" />
+						</ice:selectOneMenu>
+
+					</ice:panelGroup>
+					<ice:panelGroup styleClass="bottonieraContainer">
+						<ice:panelGroup>
+							<ice:commandButton value="Cerca"
+								actionListener="#{listaPagantiAnnoPrecedente.recuperaAnagrafiche}"></ice:commandButton>
+						</ice:panelGroup>
+					</ice:panelGroup>
+
+					<!-- anagrafiche -->
+					<ice:panelGroup style="margin-top:5px;"
+						rendered="#{listaPagantiAnnoPrecedente.renderAnags}">
+						<!-- exceld -->
+
+						<!--  tabella -->
+						<ice:panelGroup>
+							<ice:panelGroup
+								style="padding-top:5px;padding-bottom:5px;float:left">
+								<ice:outputText value="Nr. Anagrafiche:"></ice:outputText>
+								<ice:outputText value="#{listaPagantiAnnoPrecedente.nrAnags}"></ice:outputText>
+							</ice:panelGroup>
+
+							<!--<ice:graphicImage url="#{styleBean.imgExcel}" />-->
+
+							<ice:dataExporter for="tabAnag" label="#{styleBean.labelExcel}"
+								style="border:none;margin-left:10px" type="excel"
+								ignorePagination="true" image="#{styleBean.imgExcel}" />
+
+
+						</ice:panelGroup>
+
+
+						<!-- scrollable="true"
+							columnWidths="20px,40px,200px,200px,150px,150px,100px,100px,100px,100px,100px,100px,100px"
+							scrollHeight="200px" -->
+
+						<ice:dataTable border="1" cellpadding="2" cellspacing="0"
+							rows="#{styleBean.maxRowsTables}" id="tabAnag"
+							value="#{listaPagantiAnnoPrecedente.anagrafiche}"
+							var="anagrafica">
+
+
+							<ice:column id="column0">
+								<f:facet name="header">
+									<ice:outputText value="Fam." />
+								</f:facet>
+								<ice:outputText value="#{anagrafica.idFamiglia}" />
+							</ice:column>
+							<ice:column id="column1">
+								<f:facet name="header">
+									<ice:outputText value="Anagrafica" />
+								</f:facet>
+								<ice:outputText value="#{anagrafica.intestatario}" />
+							</ice:column>
+
+							<ice:column id="column3">
+								<f:facet name="header">
+									<ice:outputText value="Indirizzo" />
+								</f:facet>
+								<ice:outputText value="#{anagrafica.indirizzo}" />
+							</ice:column>
+
+														<ice:column id="nascita">
+								<f:facet name="header">
+									<ice:outputText value="Data Nascita" />
+								</f:facet>
+								<ice:outputText value="#{anagrafica.dtNascita}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</ice:outputText>
+							</ice:column>
+
+
+							<ice:column id="Telefono">
+								<f:facet name="header">
+									<ice:outputText value="Cellulare" />
+								</f:facet>
+								<ice:outputText value="#{anagrafica.txCell}" />
+							</ice:column>
+							<ice:column id="Mail">
+								<f:facet name="header">
+									<ice:outputText value="Mail" />
+								</f:facet>
+								<ice:outputText value="#{anagrafica.txMail}" />
+							</ice:column>
+							<ice:column id="Fisso">
+								<f:facet name="header">
+									<ice:outputText value="Fisso" />
+								</f:facet>
+								<ice:outputText value="#{anagrafica.txFisso}" />
+							</ice:column>
+
+
+
+						</ice:dataTable>
+						<ice:dataPaginator  for="tabAnag" paginator="true"
+							
+							fastStep="30"
+							paginatorMaxPages="#{StyleBean.paginatorMaxPages}">
+							<f:facet name="first">
+								<ice:graphicImage url="#{styleBean.first}" style="border:none;"
+									title="First Page" />
+							</f:facet>
+
+							<f:facet name="last">
+								<ice:graphicImage url="#{styleBean.last}" style="border:none;"
+									title="Last Page" />
+							</f:facet>
+							<f:facet name="previous">
+								<ice:graphicImage url="#{styleBean.previous}"
+									style="border:none;" title="Previous Page" />
+							</f:facet>
+							<f:facet name="fastforward">
+								<ice:graphicImage url="#{styleBean.fastforward}"
+									style="border:none;" title="Fast Forward" />
+							</f:facet>
+							<f:facet name="fastrewind">
+								<ice:graphicImage url="#{styleBean.fastrewind}"
+									style="border:none;" title="Fast Backwards" />
+							</f:facet>
+							<f:facet name="next">
+								<ice:graphicImage url="#{styleBean.next}" style="border:none;"
+									title="Next Page" />
+							</f:facet>
+
+
+						</ice:dataPaginator>
+					</ice:panelGroup>
+
+				</ice:panelGroup>
+			</ice:form>
+		</ice:portlet>
+	</f:view>
+</jsp:root>
