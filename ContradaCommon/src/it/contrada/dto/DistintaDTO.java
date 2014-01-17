@@ -17,6 +17,15 @@ public class DistintaDTO implements Serializable {
 	private int nrTessere;
 	private String user;
 	private OperazioneDTO operazione;
+	private String txTimeStamp;
+
+	public void setTxTimeStamp(String txTimeStamp) {
+		this.txTimeStamp = txTimeStamp;
+	}
+
+	public String getTxTimeStamp() {
+		return txTimeStamp;
+	}
 
 	public String getUser() {
 		return user;

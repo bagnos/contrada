@@ -25,13 +25,23 @@
 									readonly="false" />
 								<ice:outputText value="Stato" />
 								<ice:panelGroup>
-									<ice:selectOneMenu style="float:left" partialSubmit="false"
+									<ice:selectOneMenu style="float:left" partialSubmit="true"
 										id="lstStatiAnagrafica"
 										disabled="#{insAnagrafica01.readOnlyStatoAnag}"
 										value="#{insAnagrafica01.anagrafica.idStatoAnagrafica}"
 										tabindex="1">
 										<f:selectItems value="#{insAnagrafica01.statiAnagrafica}" />
 									</ice:selectOneMenu>
+									
+									
+									<ice:panelGroup style="float:right;display:inline;" rendered="#{insAnagrafica01.anagrafica.idStatoAnagrafica==3}">
+									<ice:selectBooleanCheckbox id="deltessere"
+										value="#{insAnagrafica01.eliminaTessere}"/>
+													
+									<ice:outputText value="Elimina Tessere" />
+									</ice:panelGroup>
+									
+									
 									<ice:panelGroup style="float:right;display:inline;"
 										rendered="#{insAnagrafica01.anagrafica.dtCessazione!=null and insAnagrafica01.anagrafica.idStatoAnagrafica==2}">
 										<ice:outputText value="Data Cessazione:" />
@@ -136,7 +146,7 @@
 
 							</ice:panelGrid>
 							<ice:outputText value="Note:"
-								style="display: inline-block; width: 104px;" />
+								style="display: inline-block; width: 114px;" />
 							<ice:inputText size="123" maxlength="400"
 								value="#{insAnagrafica01.anagrafica.note}" />
 						</ice:panelTab>
@@ -318,8 +328,8 @@
 									<ice:panelGroup>
 										<ice:outputText value="Carica:"
 											rendered="#{insAnagrafica01.visibleCariche}"></ice:outputText>
-										<ice:selectOneMenu partialSubmit="true" tabindex="24" id="tipoCarica"
-											value="#{insAnagrafica01.tipoCarica}"
+										<ice:selectOneMenu partialSubmit="true" tabindex="24"
+											id="tipoCarica" value="#{insAnagrafica01.tipoCarica}"
 											rendered="#{insAnagrafica01.visibleCariche}"
 											valueChangeListener="#{insAnagrafica01.tipoCaricaValueChange}">
 											<f:selectItems value="#{insAnagrafica01.elencoTipoCarica}" />
@@ -510,7 +520,7 @@
 						<ice:panelTab id="tab5" label="Economato">
 							<!-- INGREDIENTI -->
 							<ice:panelGroup styleClass="elementContainer">
-								<ice:outputText value="Data Fazzoletto" styleClass="label140" ></ice:outputText>
+								<ice:outputText value="Data Fazzoletto" styleClass="label140"></ice:outputText>
 								<ice:panelGroup style="display:inline-block">
 									<ice:selectInputDate id="dtFazzoletto" renderAsPopup="true"
 										partialSubmit="false" popupDateFormat="dd/MM/yyyy"
@@ -532,10 +542,15 @@
 
 					<ice:panelGroup styleClass="bottoniera">
 
-
-
-						<ice:commandButton style="float:left;" 
+					
+						<ice:commandButton 
+							action="#{insAnagrafica01.annullaOnClick}" value="Indietro" />
+						
+						
+						<ice:commandButton style="margin-left:20px"
 							action="#{insAnagrafica01.proseguiOnClick}" value="Conferma" />
+							
+						
 					</ice:panelGroup>
 
 				</ice:panelGroup>
@@ -552,6 +567,9 @@
 						</ice:panelGrid>
 					</f:facet>
 				</ice:panelPopup>
+				
+				
+				
 
 			</ice:form>
 		</ice:portlet>

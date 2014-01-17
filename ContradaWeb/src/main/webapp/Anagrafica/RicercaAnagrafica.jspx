@@ -8,23 +8,8 @@
 
 		<ice:portlet>
 			<ice:form>
-			<!-- 
-				<script language="javascript">
-      Ice.onSendReceive('document:body', function() {
-            alert('sendCallback!'); document.getElementById('document:body').disabled=true;
-           
- 
-        }, function() {
- 
-            alert('receiveCallback!');
-            document.getElementById('document:body').disabled=false;
- 
-        });
-        ice.onAfterUpdate(function(){alert('onAfterUpdate!');});
-         
 
- </script>-->
-
+				
 
 				<ice:outputStyle href="#{styleBean.activeCss}" />
 				<ice:panelGroup styleClass="portletContainer">

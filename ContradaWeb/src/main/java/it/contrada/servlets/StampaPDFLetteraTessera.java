@@ -97,16 +97,9 @@ public class StampaPDFLetteraTessera extends HttpServlet {
 				responseOutputStream.write(bytes);
 			}
 
-		} catch (TransformerException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			throw new ServletException(e);
-		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			throw new ServletException(e);
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			throw new ServletException(e);
-		}
-
+		} 
 	}
 }

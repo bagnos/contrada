@@ -52,9 +52,7 @@ public class StampaDocumenti {
 		}
 	}
 
-	public void generaDocumento(ActionEvent e) throws ContradaExceptionBloccante,
-			ContradaExceptionNonBloccante, IOException, TransformerException,
-			DocumentException, URISyntaxException {
+	public void generaDocumento(ActionEvent e) throws Exception {
 		if (tipoDocumento != null) {
 			PdfReport report = new PdfReport();
 			List<Integer> stati=new ArrayList<Integer>();

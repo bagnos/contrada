@@ -72,6 +72,7 @@ public class StampaTesseraPDF extends HttpServlet {
 			// TODO Auto-generated catch block
 			throw new ServletException(e);
 		}
+		
 	}
 
 }

@@ -12,6 +12,7 @@ import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
 import it.contrada.interfaces.IGestioneRateizzazione;
 import it.contrada.pojo.Operazione;
+import it.contrada.util.BaseUtil;
 import it.contrada.util.Constanti;
 import it.contrada.util.DecodificaErrore;
 
@@ -124,6 +125,7 @@ public class GestioneRateizzazione implements IGestioneRateizzazione {
 		// TODO Auto-generated method stub
 
 		String user = Utente.getUser();
+		
 
 		try {
 
@@ -152,9 +154,9 @@ public class GestioneRateizzazione implements IGestioneRateizzazione {
 			distinta.setNrAnno(nrAnno);
 			distinta.setNrDistinta(nrDistinta);
 			distinta.setTxOper(String.format(
-					"Incassata %d tessere per un totale di euro %d",
-					rateizzazioni.size(), quotaTot));
-			distinta.setTxUtente("");
+					"Incassata %d tessere per un totale di %s",
+					rateizzazioni.size(), BaseUtil.formatImporto(quotaTot)));
+			distinta.setTxUtente(operazioneDTO.getUser());
 			int rowsDist = distintaDao.insertDistinta(distinta);
 			if (rowsDist == 0) {
 				throw new ContradaExceptionBloccante(DecodificaErrore

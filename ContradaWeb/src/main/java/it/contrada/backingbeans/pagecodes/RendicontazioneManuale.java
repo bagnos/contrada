@@ -1,7 +1,6 @@
 package it.contrada.backingbeans.pagecodes;
 
 import it.contrada.businessdelegate.GestioneRateizzazioneBD;
-import it.contrada.businessdelegate.RicercaAnagraficaBD;
 import it.contrada.businessdelegate.RicercaTipoTesseraBD;
 import it.contrada.dominio.dto.TipoTesseraDTO;
 import it.contrada.dto.AnagraficaDTO;
@@ -13,9 +12,12 @@ import it.contrada.enumcontrada.TipoStatoRata;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
 import it.contrada.web.util.Configuration;
+import it.contrada.web.util.ConverterContrada;
 import it.contrada.web.util.Errori;
 import it.contrada.web.util.RicercaAnagraficaUtil;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -26,8 +28,6 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
-
-import org.apache.commons.digester.SetRootRule;
 
 import com.icesoft.faces.component.selectinputtext.SelectInputText;
 
@@ -54,7 +54,20 @@ public class RendicontazioneManuale {
 	private int totQuotaIncassata;
 	private boolean disRendManuale;
 	private String note;
-	
+	private boolean renderStampaDistinta;
+	private DistintaDTO distinta;
+
+	public DistintaDTO getDistinta() {
+		return distinta;
+	}
+
+	public boolean isRenderStampaDistinta() {
+		return renderStampaDistinta;
+	}
+
+	public void setRenderStampaDistinta(boolean renderStampaDistinta) {
+		this.renderStampaDistinta = renderStampaDistinta;
+	}
 
 	public String getNote() {
 		return note;
@@ -372,6 +385,7 @@ public class RendicontazioneManuale {
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 		List<RateizzazioneDTO> rateizzazioni = new ArrayList<RateizzazioneDTO>();
 		RateizzazioneDTO rat = null;
+		renderStampaDistinta=false;
 
 		if (getTessere() == null || getTessere().isEmpty()) {
 			return;
@@ -394,11 +408,18 @@ public class RendicontazioneManuale {
 			}
 		}
 		if (!rateizzazioni.isEmpty()) {
-			DistintaDTO distinta = GestioneRateizzazioneBD
+			 
+		     distinta = GestioneRateizzazioneBD
 					.inserisciRateizzazione(rateizzazioni);
+		    
+		     java.util.Date date= new java.util.Date();
+		     distinta.setTsInserimento(new Timestamp(date.getTime()));		     
+		     distinta.setTxTimeStamp(ConverterContrada.convertDateToString(date));
 
 			setMessaggio(String.format("Distinta numero %d,%s", distinta
 					.getNrDistinta(), distinta.getTxOper()));
+			
+			renderStampaDistinta=true;
 
 			tessere = new ArrayList<TesseraDTO>();
 			setTotQuotaIncassata(0);

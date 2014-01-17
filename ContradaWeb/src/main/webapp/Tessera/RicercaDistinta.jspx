@@ -27,6 +27,7 @@
 							</ice:selectOneMenu>
 						</ice:setEventPhase>
 					</ice:panelGroup>
+					<ice:outputText  style="display:inline-block;margin-top:10px;" value="#{ricercaDistinta.message}"></ice:outputText>
 
 					<ice:panelGroup rendered="#{ricercaDistinta.visibleDistinta}">
 
@@ -35,7 +36,7 @@
 						<!--<ice:dataExporter for="distinta" image="#{styleBean.imgExcel}"
 								label="#{styleBean.labelExcel}" type="excel"
 								ignorePagination="true" />-->
-						<ice:panelGroup>
+						<ice:panelGroup style="margin-top:10px;">
 							<ice:outputText value="Nr. Distinte:" />
 							<ice:outputText value="#{ricercaDistinta.nrDistinte}" />
 						</ice:panelGroup>
@@ -63,9 +64,9 @@
 									<ice:outputText value="" />
 								</f:facet>
 								<a
-									href="StampaDistinta.distinta?id=#{distinta.nrDistinta}&amp;anno=#{distinta.nrAnno}&amp;data=#{distinta.tsInserimento}"
+									href="StampaDistinta.distinta?id=#{distinta.nrDistinta}&amp;anno=#{distinta.nrAnno}&amp;data=#{distinta.txTimeStamp}&amp;utente=#{distinta.txUtente}"
 									target="_blank"> <h:graphicImage style="border:none"
-									alt="#{msgs.stampaDistinta}" url="#{styleBean.imgPrint}" /> </a>
+									title="#{msgs.stampaDistinta}" url="#{styleBean.imgPrint}" /> </a>
 							</ice:column>
 
 							<ice:column id="Distinta">

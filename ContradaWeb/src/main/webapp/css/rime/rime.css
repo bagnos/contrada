@@ -30,24 +30,24 @@
  * this file under either the MPL or the LGPL License."
  *
  */
-	/* Basic CSS styles This stylesheet is intended to match the style of the default Windows XP UI */
-	/* Default CSS styles. These styles override the basic HTML tags on the page  */
-	/* Version received from KF Apr 01 2006 v1.2   */ /*
+/* Basic CSS styles This stylesheet is intended to match the style of the default Windows XP UI */
+/* Default CSS styles. These styles override the basic HTML tags on the page  */
+/* Version received from KF Apr 01 2006 v1.2   */ /*
 =================== Font Family, Size and Color ==============
 */
-	/* set the attributes for the font family, size and color for ALL elements on the page */
-	/* make the fonts inside tables and forms == the default size of the page */
+/* set the attributes for the font family, size and color for ALL elements on the page */
+/* make the fonts inside tables and forms == the default size of the page */
 body,table {
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 11px;
+	font-size: 12px;
 	color: #000000;
 }
 
 /*
 =================== HTML Form Element Appearence ==============
 */ /* set the style elements for any of the textarea form elements   */
-	/* STILI LEFERAY */
-	/* set the style elements for any of the select form elements   */
+/* STILI LEFERAY */
+/* set the style elements for any of the select form elements   */
 select {
 	
 }
@@ -62,7 +62,7 @@ fieldset {
 .iceInpTxt,.iceInpSecrt,.iceInpTxtArea {
 	margin: 2px;
 	padding: 3px;
-	font: 11px Arial;
+	font: 12px Arial;
 	background: #FFF;
 	border: 1px solid #d9d9d9;
 }
@@ -88,16 +88,16 @@ input:focus,textarea:focus {
 .iceSelOneMnu,.iceSelMnyLb,.iceSelMnyMnu,.iceSelOneLb {
 	margin-top: 2px;
 	margin-bottom: 2px;
-	font: 11px Arial;
+	font: 12px Arial;
 	background: #FFF;
 	border: 1px solid #d9d9d9;
-	font: 11px Arial;
+	font: 12px Arial;
 }
 
 .iceInpTxtArea {
 	margin: 2px;
 	padding: 3px;
-	font: 11px Arial;
+	font: 12px Arial;
 	background: #FFF;
 	border: 1px solid #d9d9d9;
 }
@@ -122,8 +122,31 @@ input:focus,textarea:focus {
 	color: #484848;
 }
 
-.bottoniera { 
+.bottoniera {
 	margin-top: 5px;
+	
+	/*
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #cecfce;
+	width: 100%;
+	clear: both;*/
+}
+
+.btn-protettorato {
+	background-image: url('../../images/portlet/btn_small_noIcona.gif') !important;
+	border: 0px !important;
+	width: 100px !important;
+	vertical-align: middle !important;
+	text-align: right !important;
+	padding-right: 35px !important;
+		
+}
+
+input[type="submit"],input[type="button"],input[type="reset"],button
+	{
+	width:80px;
+	padding:5px;
 }
 
 .iceCmdBtn { /*
@@ -145,6 +168,7 @@ input:focus,textarea:focus {
     border: 1px solid;
     margin: 2px;*/
 	padding: 3px;
+	
 }
 
 /*
@@ -198,7 +222,7 @@ table.iceSelInpDate tbody tr td table {
 .iceSelInpDateInput {
 	width: 150px;
 	margin: 2px;
-	font-size: 11px;
+	font-size: 12px;
 }
 
 .iceSelInpDateOpenPopup {
@@ -445,7 +469,7 @@ input.iceSelInpDateClosePopup {
 .iceDatTblColHdr,.iceDatTblColHdr1,.iceDatTblColHdr2,.iceDatTblColGrpHdrCol,.iceDatTblFtr
 	{ /* was iceTblHeader */
 	text-align: center;
-	font: 11px Arial;
+	font: 12px Arial;
 	color: #484848;
 	padding: 5px;
 	font-weight: bold;
@@ -582,7 +606,7 @@ input.iceSelInpDateClosePopup {
 }
 
 /** html .iceDatPgrCol a {*/ /*width: 1%;*/ /*}*/
-	/* override the attributes for the currently selected page */
+/* override the attributes for the currently selected page */
 .iceDatPgrScrCol a {
 	color: #FFFFFF;
 	border: 1px solid #DBDBDB;
@@ -590,7 +614,7 @@ input.iceSelInpDateClosePopup {
 }
 
 /** html .iceDatPgrScrCol a {*/ /*width: 1%;*/ /*}*/
-	/* set the attributes for the mouseover on none-current pages */
+/* set the attributes for the mouseover on none-current pages */
 .iceDatPgrCol a:hover {
 	color: #000000;
 	border: 1px solid #FFA600;
@@ -1512,7 +1536,7 @@ input.iceSelInpDateClosePopup {
 	background-color: #FFFFFF;
 	margin: 0px;
 	padding: 0px;
-	font-size: 11px;
+	font-size: 12px;
 }
 
 .iceSelInpTxtList {
@@ -1933,7 +1957,7 @@ input.iceSelInpDateClosePopup {
 	padding: 4px;
 	text-align: center;
 	vertical-align: middle;
-	font: 11px Arial;
+	font: 12px Arial;
 	color: #484848;
 	font-weight: bold;
 }
@@ -2021,9 +2045,8 @@ input.iceSelInpDateClosePopup {
 }
 
 /* XP Disabled styles CSS Document  v1.0 mar 31 2006 */
-
 .iceCmdBtn-dis {
-		padding: 2px;
+	padding: 2px;
 	/*
 	background: #D4D4D4 url(../../images/portlet/header_bg.png) repeat-x 0 0
 		;
@@ -2058,7 +2081,7 @@ input.iceSelInpDateClosePopup {
 	cursor: default;
 	margin: 2px;
 	padding: 3px;
-	font: 11px Arial;
+	font: 12px Arial;
 	border: 1px dotted #CCCCCC;
 }
 
@@ -2134,7 +2157,7 @@ input.iceSelInpDateClosePopup {
 	border-bottom-width: 1px;*/
 }
 
-.bottonieraContainer {
+.Container {
 	width: 100%;
 	padding-top: 2px;
 	padding-right: 2px;
@@ -2155,7 +2178,7 @@ input.iceSelInpDateClosePopup {
 .label140 {
 	width: 140px;
 	margin-left: 1px;
-	display:inline-block;
+	display: inline-block;
 }
 
 .iceSelOneRb-dis {
@@ -2959,7 +2982,7 @@ Disabled classes for the calendar controls
 }
 
 .icePnlClpsblHdr,.icePnlClpsblHdr-dis {
-	font: 11px Arial;
+	font: 12px Arial;
 	color: #484848;
 	padding: 3px 0 1px 4px;
 	font-weight: bold;
@@ -2983,7 +3006,7 @@ Disabled classes for the calendar controls
 }
 
 .icePnlClpsblCnt,.icePnlClpsblCnt-dis {
-	font: 11px/ 17px Arial;
+	font: 12px/17px Arial;
 	color: #494949;
 	background: #f5f5f5;
 	padding: 4px 4px 4px 9px;
@@ -2995,7 +3018,7 @@ Disabled classes for the calendar controls
 }
 
 .icePnlClpsblCnt .icePnlClpsblHdr {
-	font: 11px Arial;
+	font: 12px Arial;
 	color: #484848;
 	padding: 0 0 0 0;
 	font-weight: bold;
@@ -3009,7 +3032,7 @@ Disabled classes for the calendar controls
 }
 
 .icePnlClpsblCnt .icePnlClpsblColpsdHdr {
-	font: 11px Arial;
+	font: 12px Arial;
 	color: #484848;
 	padding: 0 0 0 0;
 	font-weight: bold;
@@ -3037,7 +3060,7 @@ Disabled classes for the calendar controls
 }
 
 .icePnlClpsblColpsdHdr,.icePnlClpsblColpsdHdr-dis {
-	font: 11px Arial;
+	font: 12px Arial;
 	color: #484848;
 	padding: 3px 0 1px 4px;
 	font-weight: bold;
@@ -3084,8 +3107,7 @@ Disabled classes for the calendar controls
 }
 
 .icePnlClpsblHdr-dis div {
-	background: url( './css-images/PnlHdr_down_dis.gif' ) no-repeat top left
-		;
+	background: url( './css-images/PnlHdr_down_dis.gif' ) no-repeat top left;
 	padding: 5px 0 0 5px;
 	margin: -2px 0 0 -2px;
 	background-position: 3px 2px;
@@ -3216,7 +3238,7 @@ Disabled classes for the calendar controls
 	padding: 4px;
 	text-align: left;
 	vertical-align: middle;
-	font: 11px Arial;
+	font: 12px Arial;
 	color: #484848;
 	font-weight: bold;
 }
@@ -3273,12 +3295,20 @@ Disabled classes for the calendar controls
 }
 
 .fontSize11px {
-	font-size: 11px;
+	font-size: 12px;
 }
 
 .inputNote {
 	padding: 4px;
 	color: red;
+}
+
+.ice-blockui-overlay {
+    position: absolute;
+    background-color: white;
+    z-index: 28000;
+    opacity: 0.22;
+    filter: alpha(opacity = 22);
 }
 
 .div-left-inline-block {
@@ -3309,7 +3339,7 @@ Disabled classes for the calendar controls
 
 .iceHeaderColHrTblMaster {
 	text-align: center;
-	font: 11px Arial;
+	font: 12px Arial;
 	padding: 5px;
 	font-weight: bold;
 }
@@ -3325,7 +3355,7 @@ Disabled classes for the calendar controls
 
 .iceDatTblDetails {
 	margin-left: 25px;
-	magint-top: 15px :
+	magint-top: 15px:
 }
 
 /*

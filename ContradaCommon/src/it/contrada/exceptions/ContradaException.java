@@ -2,6 +2,8 @@ package it.contrada.exceptions;
 
 public class ContradaException extends Exception {
 
+
+	
 	/**
 	 * 
 	 */

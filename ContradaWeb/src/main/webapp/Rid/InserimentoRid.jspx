@@ -298,11 +298,12 @@
 
 
 					<ice:panelGroup styleClass="bottoniera">
-						<!-- 
+						
 						<ice:commandButton immediate="true" style="float:left;"
-							action="#{insRid.indietroOnClick}" value="Indietro" />-->
+							action="#{insRid.indietroOnClick}" value="Indietro" />
+							
 
-						<ice:commandButton style="float:left;"
+						<ice:commandButton style="float:left;margin-left:20px;"
 							action="#{insRid.proseguiOnClick}" value="Conferma" />
 					</ice:panelGroup>
 

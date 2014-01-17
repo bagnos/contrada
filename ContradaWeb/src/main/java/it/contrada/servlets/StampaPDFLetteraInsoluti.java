@@ -36,7 +36,7 @@ public class StampaPDFLetteraInsoluti extends HttpServlet {
 	 */
 	public StampaPDFLetteraInsoluti() {
 		super();
-		
+
 		// TODO Auto-generated constructor stub
 	}
 
@@ -53,7 +53,7 @@ public class StampaPDFLetteraInsoluti extends HttpServlet {
 
 		int annoDa = (Integer) request.getSession().getAttribute(
 				Costante.INSOLUTI_PDF_ANNO_DA_SESSION);
-		
+
 		int annoA = (Integer) request.getSession().getAttribute(
 				Costante.INSOLUTI_PDF_ANNO_A_SESSION);
 
@@ -71,7 +71,8 @@ public class StampaPDFLetteraInsoluti extends HttpServlet {
 
 			} else {
 				// le tessere sono ordinate per id famiglia
-				if (anags.get(anags.size()-1).getIdFamiglia() != tes.getIdFamiglia()) {
+				if (anags.get(anags.size() - 1).getIdFamiglia() != tes
+						.getIdFamiglia()) {
 					// famiglia mai inserita
 					aggiungi = true;
 				}
@@ -84,45 +85,34 @@ public class StampaPDFLetteraInsoluti extends HttpServlet {
 				anag.setIdFamiglia(tes.getIdFamiglia());
 				anag.getTessere().add(tes);
 				anags.add(anag);
-				
-			}
-			else
-			{
+
+			} else {
 				anag.getTessere().add(tes);
 			}
 
 		}
 
-
-		
-
 		PdfReport report = new PdfReport();
 		try {
-			PrintFile file = report.generaPdfLetteraInsoluti(anags, annoDa,annoA);
+			PrintFile file = report.generaPdfLetteraInsoluti(anags, annoDa,
+					annoA);
 
 			response.setContentType("application/pdf");
 			response.addHeader("Content-Disposition", "attachment; filename="
 					+ file.getNomeFile());
 			response.setContentLength((int) file.getFile().length());
 
-			FileInputStream fileInputStream = new FileInputStream(file
-					.getFile());
+			FileInputStream fileInputStream = new FileInputStream(
+					file.getFile());
 			OutputStream responseOutputStream = response.getOutputStream();
 			int bytes;
 			while ((bytes = fileInputStream.read()) != -1) {
 				responseOutputStream.write(bytes);
 			}
 
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			throw new ServletException(e);
-		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			throw new ServletException(e);
-		} catch (URISyntaxException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			throw new ServletException(e);
 		}
-
 	}
 }

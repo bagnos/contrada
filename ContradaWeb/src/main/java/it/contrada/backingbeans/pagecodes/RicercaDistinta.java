@@ -27,9 +27,14 @@ public class RicercaDistinta {
 	private boolean renderPopupDettaglio;
 	private int nrDistinta;
 	private String dataDistinta;
+	private String message;
 	
 	
 	
+
+	public String getMessage() {
+		return message;
+	}
 
 	public String getDataDistinta() {
 		return dataDistinta;
@@ -90,10 +95,7 @@ public class RicercaDistinta {
 	public RicercaDistinta() throws NumberFormatException,
 			ContradaExceptionBloccante {
 		initDDLAnni();
-		distinta = GestioneDistintaBD.ricercaDistintaPerAnno(anno);
-		renderPopupDettaglio=false;
-		
-
+		annoValueChange(null);		
 	}
 
 	private void initDDLAnni() throws NumberFormatException,
@@ -115,6 +117,11 @@ public class RicercaDistinta {
 			throws ContradaExceptionBloccante {
 		distinta = GestioneDistintaBD.ricercaDistintaPerAnno(anno);
 		renderPopupDettaglio=false;
+		message="";
+		if (distinta==null || distinta.isEmpty())
+		{
+			message="Nessuna distinta presente";
+		}
 	}
 
 	public void stampaOnClick(ActionEvent e) {

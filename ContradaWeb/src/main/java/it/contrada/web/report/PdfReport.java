@@ -1,10 +1,12 @@
 package it.contrada.web.report;
 
 import it.contrada.backingbeans.PrintFile;
+import it.contrada.backingbeans.pagecodes.ErrorPage;
 import it.contrada.dto.AnagraficaDTO;
 import it.contrada.dto.TesseraDTO;
 import it.contrada.dto.TesseraStampataDTO;
 import it.contrada.exceptions.ContradaExceptionBloccante;
+import it.contrada.util.BaseUtil;
 import it.contrada.util.Constanti;
 import it.contrada.web.util.Configuration;
 import it.contrada.web.util.Costante;
@@ -35,6 +37,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
@@ -62,6 +67,8 @@ public class PdfReport {
 	private final String XSL_LETTERA_TESSERE = "it/contrada/web/report/templateLetteraInvioTessera.xsl";
 	private final String XSL_LETTERA_INSOLUTI = "it/contrada/web/report/templateLetteraInsoluti.xsl";
 	private final String XSL_LETTERA_SOTTOSCRIZIONI = "it/contrada/web/report/templateLetteraSottoscrizioni.xsl";
+	private final String XSL_DISTINTA = "it/contrada/web/report/templateDistinta.xsl";
+
 	private final String FORMAT_IMPORTO_IT = "€ ###,##0.00"; //
 	private SimpleDateFormat formatDDMMYYYY = new SimpleDateFormat("ddMMyyyy");
 	private SimpleDateFormat formatDDMMYYYYEstesa = new SimpleDateFormat(
@@ -74,6 +81,8 @@ public class PdfReport {
 	private String widthCellContenuto = "width:320px";
 	private String barcodeFont = null;
 
+	private static Log log = LogFactory.getLog(PdfReport.class);
+
 	public PdfReport() {
 		nfImporto = NumberFormat.getNumberInstance(new Locale("it"));
 		formatterDecimalImportoIT = (DecimalFormat) nfImporto;
@@ -85,8 +94,8 @@ public class PdfReport {
 
 		PrintFile pFile = null;
 
-		String nomeFile = String.format("Etichette%s", formatDDMMYYYY
-				.format(Calendar.getInstance().getTime()));
+		String nomeFile = String.format("Etichette%s",
+				formatDDMMYYYY.format(Calendar.getInstance().getTime()));
 
 		File file = File.createTempFile(nomeFile, Constanti.EXT_FILE_PDF);
 
@@ -149,16 +158,14 @@ public class PdfReport {
 	}
 
 	public PrintFile generaPdfLettereInvioTessere(List<AnagraficaDTO> anags)
-			throws IOException, TransformerException, DocumentException,
-			URISyntaxException {
+			throws Exception {
 
 		return generaPdfLettera(anags, XSL_LETTERA_TESSERE);
 
 	}
 
 	public PrintFile generaPdfLetteraInsoluti(List<AnagraficaDTO> anags,
-			int annoDa, int annoA) throws IOException, TransformerException,
-			DocumentException, URISyntaxException {
+			int annoDa, int annoA) throws Exception{
 
 		return generaPdfLetteraConTessere(anags, XSL_LETTERA_INSOLUTI, annoDa,
 				annoA);
@@ -166,8 +173,7 @@ public class PdfReport {
 	}
 
 	public PrintFile generaPdfLetteraSottoscrizioni(List<AnagraficaDTO> anags)
-			throws IOException, TransformerException, DocumentException,
-			URISyntaxException {
+			throws Exception {
 
 		return generaPdfAnagraficheConPrincipale(anags,
 				XSL_LETTERA_SOTTOSCRIZIONI);
@@ -187,13 +193,12 @@ public class PdfReport {
 	 * @throws URISyntaxException
 	 */
 	private PrintFile generaPdfLettera(List<AnagraficaDTO> anags, String xsl)
-			throws IOException, TransformerException, DocumentException,
-			URISyntaxException {
+			throws Exception {
 
-		File xslFile = new File(PdfReport.class.getClassLoader().getResource(
-				xsl).toURI());
-		File imgComm = new File(PdfReport.class.getClassLoader().getResource(
-				"it/contrada/web/report/Commissione.gif").toURI());
+		File xslFile = new File(PdfReport.class.getClassLoader()
+				.getResource(xsl).toURI());
+		File imgComm = new File(PdfReport.class.getClassLoader()
+				.getResource("it/contrada/web/report/Commissione.gif").toURI());
 
 		File xmlTemp = File.createTempFile("xmlTemp", ".xml");
 		FileWriter fstream = new FileWriter(xmlTemp);
@@ -204,8 +209,8 @@ public class PdfReport {
 		String xmlSource = null;
 		PrintFile pFile = null;
 		pFile = new PrintFile();
-		String nomeFile = String.format("Lettere%s", formatDDMMYYYY
-				.format(Calendar.getInstance().getTime()));
+		String nomeFile = String.format("Lettere%s",
+				formatDDMMYYYY.format(Calendar.getInstance().getTime()));
 
 		String data = formatDDMMYYYYEstesa.format(Calendar.getInstance()
 				.getTime());
@@ -263,17 +268,107 @@ public class PdfReport {
 
 	}
 
+	public PrintFile generaPdfDistinta(int nrDistinta, int nrAnno, String data,
+			List<TesseraDTO> tessere,String utente) throws Exception {
+
+		int quotaTotale = 0;
+		int quotaPrivistaTotale = 0;
+
+		File xslFile = new File(PdfReport.class.getClassLoader()
+				.getResource(XSL_DISTINTA).toURI());
+
+		File xmlTemp = File.createTempFile("xmlTemp", ".xml");
+		FileWriter fstream = new FileWriter(xmlTemp);
+
+		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
+				new FileOutputStream(xmlTemp), "UTF8"));
+
+		out.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
+		out.write("<distinta>");
+		out.write("<nrDistinta>" + nrDistinta + "</nrDistinta>");
+		out.write("<nrAnno>" + nrAnno + "</nrAnno>");
+		out.write("<data>" + data + "</data>");
+		out.write("<utente>" + utente + "</utente>");
+		out.write("<tessere>");
+
+		for (TesseraDTO tessera : tessere) {
+			/*
+			 * <Intestatario>Simone Bagnolesi</Intestatario> <Indirizzo>Via
+			 * Aretina, 9</indirizzo> <Cap>53100 Siena</Cap> <Data>22 Ottobre
+			 * 2012</Data> <Famiglia>22<Famiglia>
+			 */
+			out.write("<tessera>");
+			out.write("<idAnag>");
+			out.write(Integer.valueOf(tessera.getIdAnag()).toString());
+			out.write("</idAnag>");
+
+			out.write("<cognome>");
+			out.write(tessera.getCognome());
+			out.write("</cognome>");
+
+			out.write("<nome>");
+			out.write(tessera.getNome());
+			out.write("</nome>");
+
+			out.write("<dsTipoTessera>");
+			out.write(tessera.getDsTipoTessera());
+			out.write("</dsTipoTessera>");
+
+			out.write("<dsIncasso>");
+			out.write(tessera.getDsIncasso());
+			out.write("</dsIncasso>");
+
+			out.write("<quota>");
+			out.write(BaseUtil.formatImporto(tessera.getQuota()));
+			out.write("</quota>");
+
+			out.write("<quotaIncassata>");
+			out.write(BaseUtil.formatImporto(tessera.getQuotaIncassata()));
+			out.write("</quotaIncassata>");
+
+			out.write("</tessera>");
+
+			quotaTotale += tessera.getQuotaIncassata();
+			quotaPrivistaTotale += tessera.getQuota();
+		}
+
+		out.write("</tessere>");
+
+		out.write("<quotaPrivistaTotale>"
+				+ BaseUtil.formatImporto(quotaPrivistaTotale)
+				+ "</quotaPrivistaTotale>");
+		out.write("<quotaTotale>" + BaseUtil.formatImporto(quotaTotale)
+				+ "</quotaTotale>");
+
+		out.write("</distinta>");
+		out.close();
+		fstream.close();
+
+		// scrivo il file xml temporaneo
+
+		File filePDF = xslXmlToHtml(xslFile, xmlTemp);
+
+		PrintFile pFile = new PrintFile();
+		String nomeFile = String.format("Distinta%s",
+				formatDDMMYYYY.format(Calendar.getInstance().getTime()));
+		pFile.setNomeFile(nomeFile);
+		pFile.setFile(filePDF);
+		pFile.setNomeFileCompleto(filePDF.getAbsolutePath());
+
+		return pFile;
+
+	}
+
 	private PrintFile generaPdfLetteraConTessere(List<AnagraficaDTO> anags,
-			String xsl, int annoDa, int annoA) throws IOException,
-			TransformerException, DocumentException, URISyntaxException {
+			String xsl, int annoDa, int annoA) throws Exception {
 
 		String annoStrDa = Integer.valueOf(annoDa).toString();
 		String annoStrA = Integer.valueOf(annoA).toString();
 
-		File xslFile = new File(PdfReport.class.getClassLoader().getResource(
-				xsl).toURI());
-		File imgComm = new File(PdfReport.class.getClassLoader().getResource(
-				"it/contrada/web/report/Commissione.gif").toURI());
+		File xslFile = new File(PdfReport.class.getClassLoader()
+				.getResource(xsl).toURI());
+		File imgComm = new File(PdfReport.class.getClassLoader()
+				.getResource("it/contrada/web/report/Commissione.gif").toURI());
 
 		File xmlTemp = File.createTempFile("xmlTemp", ".xml");
 		FileWriter fstream = new FileWriter(xmlTemp);
@@ -285,8 +380,8 @@ public class PdfReport {
 		String telefono = null;
 		PrintFile pFile = null;
 		pFile = new PrintFile();
-		String nomeFile = String.format("Lettere%s", formatDDMMYYYY
-				.format(Calendar.getInstance().getTime()));
+		String nomeFile = String.format("Lettere%s",
+				formatDDMMYYYY.format(Calendar.getInstance().getTime()));
 
 		String data = formatDDMMYYYYEstesa.format(Calendar.getInstance()
 				.getTime());
@@ -335,9 +430,9 @@ public class PdfReport {
 			out.write("</AnnoA>");
 
 			out.write("<Tel>");
-			telefono = String.format("%s %s", anag.getTxCell() != null ? anag
-					.getTxCell() : "", anag.getTxFisso() != null ? anag
-					.getTxFisso() : "");
+			telefono = String.format("%s %s",
+					anag.getTxCell() != null ? anag.getTxCell() : "",
+					anag.getTxFisso() != null ? anag.getTxFisso() : "");
 			out.write(telefono.trim());
 			out.write("</Tel>");
 
@@ -364,8 +459,8 @@ public class PdfReport {
 			for (TesseraDTO tes : anag.getTessere()) {
 				out.write("<Protettore>");
 				out.write("<Nominativo>");
-				out.write(String.format("%s %s", tes.getCognome(), tes
-						.getNome()));
+				out.write(String.format("%s %s", tes.getCognome(),
+						tes.getNome()));
 				out.write("</Nominativo>");
 				out.write("<Quota>");
 				out.write(nfImporto.format(Integer
@@ -375,9 +470,7 @@ public class PdfReport {
 			}
 			out.write("</Tessere>");
 			out.write("<Quota>");
-			out
-					.write(nfImporto.format((Double
-							.valueOf(anag.getQuota() / 100))));
+			out.write(nfImporto.format((Double.valueOf(anag.getQuota() / 100))));
 			out.write("</Quota>");
 
 			out.write("</Anagrafica>");
@@ -400,13 +493,12 @@ public class PdfReport {
 	}
 
 	private PrintFile generaPdfAnagraficheConPrincipale(
-			List<AnagraficaDTO> anags, String xsl) throws IOException,
-			TransformerException, DocumentException, URISyntaxException {
+			List<AnagraficaDTO> anags, String xsl) throws Exception {
 
-		File xslFile = new File(PdfReport.class.getClassLoader().getResource(
-				xsl).toURI());
-		File imgComm = new File(PdfReport.class.getClassLoader().getResource(
-				"it/contrada/web/report/Commissione.gif").toURI());
+		File xslFile = new File(PdfReport.class.getClassLoader()
+				.getResource(xsl).toURI());
+		File imgComm = new File(PdfReport.class.getClassLoader()
+				.getResource("it/contrada/web/report/Commissione.gif").toURI());
 
 		File xmlTemp = File.createTempFile("xmlTemp", ".xml");
 		FileWriter fstream = new FileWriter(xmlTemp);
@@ -418,8 +510,8 @@ public class PdfReport {
 		String telefono = null;
 		PrintFile pFile = null;
 		pFile = new PrintFile();
-		String nomeFile = String.format("Lettere%s", formatDDMMYYYY
-				.format(Calendar.getInstance().getTime()));
+		String nomeFile = String.format("Lettere%s",
+				formatDDMMYYYY.format(Calendar.getInstance().getTime()));
 
 		String data = formatDDMMYYYYEstesa.format(Calendar.getInstance()
 				.getTime());
@@ -498,8 +590,7 @@ public class PdfReport {
 
 	}
 
-	private File xslXmlToHtml(File xsl, File xml) throws IOException,
-			TransformerException, DocumentException {
+	private File xslXmlToHtml(File xsl, File xml) throws Exception {
 
 		// creo il file temporanei
 		File htmlTemp = File.createTempFile("htmlTemp", ".html");
@@ -520,8 +611,7 @@ public class PdfReport {
 
 	}
 
-	public File generatePdfFromHtml(File htmlTemp)
-			throws FileNotFoundException, IOException, DocumentException {
+	public File generatePdfFromHtml(File htmlTemp) throws Exception {
 
 		File pdfTemp = File.createTempFile("pdfTemp", ".pdf");
 		Document document = new Document(PageSize.A4, 30, 30, 5, 5);
@@ -537,11 +627,13 @@ public class PdfReport {
 
 			is = new FileInputStream(htmlTemp);
 
-			worker
-					.parseXHtml(pdfWriter, document, is, Charset
-							.forName("UTF-8"));
+			worker.parseXHtml(pdfWriter, document, is, Charset.forName("UTF-8"));
 
 			// worker.parseXHtml(pdfWriter, document, new FileReader(htmlTemp));
+
+		} catch (Exception e) {
+			log.error(e);
+			throw e;
 		} finally {
 			if (is != null)
 				is.close();
@@ -556,8 +648,7 @@ public class PdfReport {
 		return pdfTemp;
 	}
 
-	private File generatePdfFromHtml(String sourceHtml) throws IOException,
-			DocumentException {
+	private File generatePdfFromHtml(String sourceHtml) throws Exception {
 		// scrivo un file html temporaneo
 		File htmlTemp = File.createTempFile("htmlTemp", "html");
 		FileWriter fstream = new FileWriter(htmlTemp);
@@ -580,8 +671,8 @@ public class PdfReport {
 		Document document = null;
 		FileOutputStream fos = null;
 		try {
-			String nomeFile = String.format("Tessere%s", formatDDMMYYYY
-					.format(Calendar.getInstance().getTime()));
+			String nomeFile = String.format("Tessere%s",
+					formatDDMMYYYY.format(Calendar.getInstance().getTime()));
 
 			File file = File.createTempFile(nomeFile, Constanti.EXT_FILE_PDF);
 
@@ -648,8 +739,8 @@ public class PdfReport {
 		// final float LINE_SPACING = 4.5f;
 		final int BORDER = 0;
 
-		String tesseraAnno = String.format("%s-%d", Long.toString(tes
-				.getIdTessera()), tes.getAnno());
+		String tesseraAnno = String.format("%s-%d",
+				Long.toString(tes.getIdTessera()), tes.getAnno());
 
 		// creo la tabella con due colone
 		PdfPTable table = new PdfPTable(NUM_COLS_TABELLA_TESSERA);
@@ -691,13 +782,13 @@ public class PdfReport {
 		 */
 
 		// Nr. tessera, Nr. Anagrafica, Nr.Famiglia
-		pEsattore.add(new Phrase(String.format("\nAnag %s - Fam. %s", Long
-				.toString(tes.getIdAnagrafica()), Integer.toString(tes
-				.getIdFamiglia()))));
+		pEsattore.add(new Phrase(String.format("\nAnag %s - Fam. %s",
+				Long.toString(tes.getIdAnagrafica()),
+				Integer.toString(tes.getIdFamiglia()))));
 
 		// cognome e nome
-		pEsattore.add(new Phrase(String.format("\n%s %s", tes.getCognome(), tes
-				.getNome())));
+		pEsattore.add(new Phrase(String.format("\n%s %s", tes.getCognome(),
+				tes.getNome())));
 
 		// indirizzo
 		pEsattore.add(new Phrase(String.format("\n%s", tes.getIndirizzo())));
@@ -724,8 +815,8 @@ public class PdfReport {
 			pEsattore.add(new Phrase(String.format("\n%s ", tes.getNote())));
 		}
 		if (tes.getEsattore() != null && !tes.getEsattore().isEmpty()) {
-			pEsattore.add(new Phrase(String.format("\nEsattore:%s ", tes
-					.getEsattore())));
+			pEsattore.add(new Phrase(String.format("\nEsattore:%s ",
+					tes.getEsattore())));
 		}
 
 		pEsattore.add(new Phrase(String.format("\n%s ANNO %s", tes
@@ -782,13 +873,10 @@ public class PdfReport {
 		StringBuilder writer = new StringBuilder();
 
 		// tabella esterna
-		writer
-				.append("<html><head><meta content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\" ><meta http-equiv=\"X-UA-Compatible\" content=\"IE=8\" >");
-		writer
-				.append("<style type=\"text/css\"> @page {margin-top: 56px; margin-left: 75px; margin-right:68px; margin-bottom:68px}</style>");
+		writer.append("<html><head><meta content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\" ><meta http-equiv=\"X-UA-Compatible\" content=\"IE=8\" >");
+		writer.append("<style type=\"text/css\"> @page {margin-top: 56px; margin-left: 75px; margin-right:68px; margin-bottom:68px}</style>");
 
-		writer
-				.append("<body style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; font-size: 10px; color: blue;\">");
+		writer.append("<body style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; font-size: 10px; color: blue;\">");
 
 		writer
 
@@ -846,27 +934,25 @@ public class PdfReport {
 			TesseraStampataDTO tes) throws IOException {
 
 		writer.append("<tr>");
-		String tesseraAnno = String.format("%s-%d", Long.toString(tes
-				.getIdTessera()), tes.getAnno());
+		String tesseraAnno = String.format("%s-%d",
+				Long.toString(tes.getIdTessera()), tes.getAnno());
 
 		// cella contenuto esattore
 
-		writer
-				.append(String
-						.format(
-								"<td style=\"%s;%s;padding:15px;text-align:left;vertical-align:bottom;font-size:12px;color:black\">",
-								heightCellContenuto, widthCellContenuto));
+		writer.append(String
+				.format("<td style=\"%s;%s;padding:15px;text-align:left;vertical-align:bottom;font-size:12px;color:black\">",
+						heightCellContenuto, widthCellContenuto));
 		writer.append(String.format(" <font face='%s' size='6'>%s</font></br>",
 				barcodeFont, tesseraAnno));
-		writer.append(String.format("Nr. Tes. %s - Nr. Anag %s - ", Long
-				.toString(tes.getIdTessera()), Long.toString(tes
-				.getIdAnagrafica())));
-		writer.append(String.format("Nr. Fam. %s </br>", Integer.toString(tes
-				.getIdFamiglia())));
-		writer.append(String.format("%s %s</br>", tes.getCognome(), tes
-				.getNome()));
-		writer.append(String.format("%s</br> %s</br>", tes.getIndirizzo(), tes
-				.getCapProvincia()));
+		writer.append(String.format("Nr. Tes. %s - Nr. Anag %s - ",
+				Long.toString(tes.getIdTessera()),
+				Long.toString(tes.getIdAnagrafica())));
+		writer.append(String.format("Nr. Fam. %s </br>",
+				Integer.toString(tes.getIdFamiglia())));
+		writer.append(String.format("%s %s</br>", tes.getCognome(),
+				tes.getNome()));
+		writer.append(String.format("%s</br> %s</br>", tes.getIndirizzo(),
+				tes.getCapProvincia()));
 
 		if (tes.getFisso() != null && !tes.getFisso().isEmpty()) {
 			writer.append(String.format("%s ", tes.getFisso()));
@@ -881,37 +967,29 @@ public class PdfReport {
 			writer.append(String.format("</br>%s ", tes.getNote()));
 		}
 		if (tes.getEsattore() != null && !tes.getEsattore().isEmpty()) {
-			writer
-					.append(String.format("</br>Esattore:%s ", tes
-							.getEsattore()));
+			writer.append(String.format("</br>Esattore:%s ", tes.getEsattore()));
 		}
 
 		writer.append(String.format("</br>%s ANNO %s", tes.getDsTipoTessera()
 				.toUpperCase(), tes.getAnno()));
 
 		double importo = tes.getQuota() / 100;
-		writer
-				.append(String.format("</br>%s - %.2f", tes.getCarica(),
-						importo));
+		writer.append(String.format("</br>%s - %.2f", tes.getCarica(), importo));
 
 		writer.append("</td>");
 
 		// cella contenuto protettore
-		writer
-				.append(String
-						.format(
-								"<td style=\"%s;%s;padding:15px;text-align:left;vertical-align:bottom;color:blue;font-size:12px;font-weight:bold;\">",
-								heightCellContenuto, widthCellContenuto));
+		writer.append(String
+				.format("<td style=\"%s;%s;padding:15px;text-align:left;vertical-align:bottom;color:blue;font-size:12px;font-weight:bold;\">",
+						heightCellContenuto, widthCellContenuto));
 		writer.append(String.format("%s %s </br>", tes.getCognome()
 				.toUpperCase(), tes.getNome().toUpperCase()));
 		writer.append(String.format("%s ANNO %s", tes.getDsTipoTessera()
 				.toUpperCase(), tes.getAnno()));
-		writer
-				.append(String
-						.format(
-								"<span style=\"font-size:8px;font-weight:bold;\"></br>%s %s </span>",
-								tes.getCarica().toUpperCase(), Long
-										.toString(tes.getIdAnagrafica())));
+		writer.append(String
+				.format("<span style=\"font-size:8px;font-weight:bold;\"></br>%s %s </span>",
+						tes.getCarica().toUpperCase(),
+						Long.toString(tes.getIdAnagrafica())));
 		writer.append("</td>");
 
 	}

@@ -30,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		parameterType="java.util.HashMap">
 		select nr_distinta as nrDistinta,nr_anno_distinta as
 		nrAnno,tx_oper as txOper,tx_utente as txUtente,im_Distinta as
-		imDistinta,ts_inserimento as tsInserimento
+		imDistinta,ts_inserimento as tsInserimento,DATE_FORMAT(ts_inserimento,'%d-%m-%Y %T') as txTimeStamp
 		from
 		${database.schema}DISTINTA WHERE
 		NR_ANNO_DISTINTA=#{nrAnno}

@@ -1,10 +1,19 @@
 package it.contrada.servlets;
 
+import it.contrada.backingbeans.PrintFile;
 import it.contrada.businessdelegate.RicercaTipoTesseraBD;
 import it.contrada.dto.TesseraDTO;
-import it.contrada.interfaces.IRicercaTessera;
+import it.contrada.exceptions.ContradaExceptionBloccante;
+import it.contrada.exceptions.ContradaExceptionNonBloccante;
+import it.contrada.util.BaseUtil;
+import it.contrada.web.report.PdfReport;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.security.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -13,6 +22,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.TransformerException;
+
+import com.itextpdf.text.DocumentException;
 
 /**
  * Servlet implementation class StampaDistinta
@@ -35,152 +47,51 @@ public class StampaDistinta extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		int nrDinstinta;
+		int nrDistinta;
 		int nrAnno;
 		String data = null;
+		FileInputStream fileInputStream = null;
+		OutputStream responseOutputStream = null;
+		String utente=null;
 
 		// currencyOut = currencyFormatter.format(currency);
 
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		DecimalFormat df = new DecimalFormat(".00");
-
-		nrDinstinta = Integer.parseInt(request.getParameter("id"));
+		nrDistinta = Integer.parseInt(request.getParameter("id"));
 		nrAnno = Integer.parseInt(request.getParameter("anno"));
 
 		data = request.getParameter("data");
+		utente=request.getParameter("utente");
 
 		try {
 			List<TesseraDTO> tessere = RicercaTipoTesseraBD
-					.ricercaTesserePerDistinta(nrAnno, nrDinstinta);
+					.ricercaTesserePerDistinta(nrAnno, nrDistinta);
 
-			StringBuilder writer = new StringBuilder();
+			PdfReport rep = new PdfReport();
+			PrintFile file = rep.generaPdfDistinta(nrDistinta, nrAnno, data,
+					tessere,utente);
 
-			// tabella esterna
-			writer
-					.append("<html><META http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">");
-			writer
-					.append("<style type=\"text/css\"> @page {margin-top: 56px; margin-left: 75px; margin-right:68px; margin-bottom:68px}</style>");
+			response.setContentType("application/pdf");
+			response.addHeader("Content-Disposition", "attachment; filename="
+					+ file.getNomeFile());
+			response.setContentLength((int) file.getFile().length());
 
-			writer
-					.append("<body style='font-size: 12px;font-family: Arial, Helvetica, sans-serif;' \">");
-
-			writer
-					.append("<p style='font-size:24px;font-weight:bold;'>Nobile Contrada del Nicchio - Commissione Protettorato");
-			writer
-					.append("</br><span style='font-size:18px;font-weight:normal;'>Distinta "
-							+ nrDinstinta
-							+ " per l'anno "
-							+ nrAnno
-							+ " del "
-							+ data + "</span></p>");
-			writer.append("<hr>");
-
-			writer
-					.append("<table cellpadding='2px' style=\"padding: 0px;border:none;font-size:12px;text-align:left;width:100%\">");
-
-			writer.append("</tr>");
-
-			writer.append("<tr style='font-weight:bold'>");
-			writer.append("<td>");
-			writer.append("Cod.");
-			writer.append("</td>");
-			writer.append("<td>");
-			writer.append("Cognome");
-			writer.append("</td>");
-			writer.append("<td>");
-			writer.append("Nome");
-			writer.append("</td>");
-			writer.append("<td>");
-			writer.append("Tessera");
-			writer.append("</td>");
-			writer.append("<td>");
-			writer.append("Pagamento");
-			writer.append("</td>");
-			writer.append("<td>");
-			writer.append("Quota");
-			writer.append("</td>");
-			writer.append("<td>");
-			writer.append("Quota Incassata");
-			writer.append("</td>");
-
-			writer.append("</tr>");
-			writer.append("</tr>");
-
-			int quotaTotale = 0;
-			int quotaPrivistaTotale = 0;
-			for (TesseraDTO tessera : tessere) {
-				writer.append("<tr>");
-				writer.append("<td>");
-				writer.append(tessera.getIdAnag());
-				writer.append("</td>");
-				writer.append("<td>");
-				writer.append(tessera.getCognome());
-				writer.append("</td>");
-				writer.append("<td>");
-				writer.append(tessera.getNome());
-				writer.append("</td>");
-				writer.append("<td>");
-				writer.append(tessera.getDsTipoTessera());
-				writer.append("</td>");
-				writer.append("<td>");
-				writer.append(tessera.getDsIncasso());
-				writer.append("</td>");
-				writer.append("<td>");
-				writer.append(df
-						.format(((((double) tessera.getQuota()) / 100))));
-				writer.append("</td>");
-				writer.append("<td>");
-				writer
-						.append(df.format(((((double) tessera
-								.getQuotaIncassata()) / 100))));
-				writer.append("</td>");
-
-				writer.append("</tr>");
-				quotaTotale += tessera.getQuotaIncassata();
-				quotaPrivistaTotale += tessera.getQuota();
+			fileInputStream = new FileInputStream(file.getFile());
+			responseOutputStream = response.getOutputStream();
+			int bytes;
+			while ((bytes = fileInputStream.read()) != -1) {
+				responseOutputStream.write(bytes);
 			}
-
-			writer.append("<tr style='font-weight:bold'>");
-			writer.append("<td>");
-			writer.append("");
-			writer.append("</td>");
-			writer.append("<td>");
-			writer.append("");
-			writer.append("</td>");
-			writer.append("<td>");
-			writer.append("");
-			writer.append("</td>");
-			writer.append("<td>");
-			writer.append("");
-			writer.append("</td>");
-			writer.append("<td>");
-			writer.append("Totale &euro; : ");
-			writer.append("</td>");
-			writer.append("<td>");
-			writer.append(df.format(((double) quotaPrivistaTotale) / 100));
-
-			writer.append("</td>");
-			writer.append("<td>");
-			writer.append(df.format(((double) quotaTotale) / 100));
-
-			writer.append("</td>");
-
-			writer.append("</tr>");
-
-			writer.append("</table>");
-			writer
-					.append("<script language=\"JavaScript\">window.print()</script>");
-
-			writer.append("</body></html>");
-
-			request.setCharacterEncoding("UTF-8");
-
-			response.getWriter().print(writer.toString());
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-
+			throw new ServletException(e);
+		}  finally {
+			if (fileInputStream != null) {
+				fileInputStream.close();
+			}
+			if (responseOutputStream != null) {
+				responseOutputStream.close();
+			}
 		}
 
 	}

@@ -61,6 +61,8 @@ public interface ITesseraDAO {
 	public int aggiornaTessera(TesseraDTO tessera) throws Exception;
 
 	public int disattivaTessera(int idTessera) throws Exception;
+	
+	public int disattivaTesseraStorico(int idTessera) throws Exception;
 
 	public int disattivaTesseraByAnagrafica(int idAnagrafica) throws Exception;
 

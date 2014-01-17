@@ -162,6 +162,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="annoDa !=null and annoA!=null">
 			AND R.nr_ANNO BETWEEN #{annoDa} and #{annoA}
 		</if>
+		
 
 
 
@@ -348,8 +349,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		dsTessera,
 		r.tx_note as note,
 		coalesce(R.ID_FLUSSO_INCASSO_POSTE,R.NR_BOLLETTINO_MANUALE) AS nrBollettinoManuale,
-		ES.DS_ESATTORE as dsEsattore
-
+		ES.DS_ESATTORE as dsEsattore,
+ 		TS.FG_ATTIVA
 		FROM
 		${database.schema}TESSERA_STORICO TS
 		JOIN
@@ -393,16 +394,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 
 		</where>
-		and ts.fg_attiva=1
+		
 
 
 
-		GROUP BY
-		nrAnno,idAnagrafica,anagrafica,ds_tipo_incasso,imRata,tt.ds_tipo_tessera
+		GROUP BY nrAnno,idAnagrafica,anagrafica,ds_tipo_incasso,imRata,tt.ds_tipo_tessera
 
 
 		<if test="tipoPagamento!=null and tipoPagamento==3">
-			HAVING imRataIncassata=0
+			HAVING ts.fg_attiva=1 AND imRataIncassata=0
 		</if>
 
 		<if test="tipoPagamento!=null and tipoPagamento==2">
@@ -411,6 +411,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 		<if test="tipoPagamento!=null and tipoPagamento==1">
 			HAVING imRata&gt;imRataIncassata and imRataIncassata!=0
+		</if>
+		<if test="tipoPagamento==null">
+			HAVING TS.FG_ATTIVA=1 OR (TS.FG_ATTIVA=0 AND imRataIncassata!=0)
 		</if>
 
 		order by a.tx_cognome,a.tx_nome

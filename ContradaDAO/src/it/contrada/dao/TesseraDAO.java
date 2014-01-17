@@ -241,6 +241,13 @@ public class TesseraDAO extends SqlSessionDaoSupport implements ITesseraDAO {
 		return getSqlSessionTemplate().update(
 				"it.contrada.tessera.queries.disattivaTessera", idTessera);
 	}
+	
+	@Override
+	public int disattivaTesseraStorico(int idTessera) throws Exception {
+		// TODO Auto-generated method stub
+		return getSqlSessionTemplate().update(
+				"it.contrada.tessera.queries.disattivaTesseraStorico", idTessera);
+	}
 
 	@Override
 	public int getTesseraRendicontata(int idTessera) throws Exception {
@@ -504,5 +511,7 @@ public class TesseraDAO extends SqlSessionDaoSupport implements ITesseraDAO {
 		return (Integer) getSqlSessionTemplate().selectOne(
 				"it.contrada.tessera.queries.getAnnoInCorso");
 	}
+
+	
 
 }

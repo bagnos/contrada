@@ -84,6 +84,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			#{item}
 				</foreach>
 	</delete>
+	
+	<update id="disattivaTesseraStorico">
+		UPDATE
+		${database.schema}tessera_storico TS , (SELECT MAX(NR_ANNO) AS NR_ANNO FROM
+		${database.schema}TESSERA_STORICO where ID_TESSERA=#{idTessera})MAX
+		SET		
+		TS.FG_ATTIVA=0
+		WHERE
+		TS.ID_TESSERA=#{idTessera} AND	
+		TS.NR_ANNO=MAX.NR_ANNO 
+	</update>
 
 	<update id="aggiornaTipoTessera" parameterType="it.contrada.dominio.dto.TipoTesseraDTO">
 		UPDATE
@@ -336,6 +347,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 
 	</select>
+	
+
 
 
 
@@ -505,7 +518,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FG_ATTIVA = 0
 		WHERE ID_TESSERA=#{idTessera};	
 	</update>
-
+	
+	
 	<update id="disattivaTesseraByCdAnag">
 		UPDATE ${database.schema}TESSERA
 		SET

@@ -34,6 +34,7 @@ import it.contrada.dto.RidDTO;
 import it.contrada.dto.StradaDTO;
 import it.contrada.dto.TesseraDTO;
 import it.contrada.enumcontrada.TipoIncasso;
+import it.contrada.enumcontrada.TipoStatoAnagrafica;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
 import it.contrada.web.styles.StyleBean;
@@ -101,6 +102,15 @@ public class InsAnagrafica01 {
 	private String ricFamByCognome;
 	private Date dtFazzoletto;
 	List<CaricaTesseraDTO> caricheTessereDTO;
+	private boolean eliminaTessere;
+
+	public boolean isEliminaTessere() {
+		return eliminaTessere;
+	}
+
+	public void setEliminaTessere(boolean eliminaTessere) {
+		this.eliminaTessere = eliminaTessere;
+	}
 
 	public Date getDtFazzoletto() {
 		return dtFazzoletto;
@@ -751,8 +761,9 @@ public class InsAnagrafica01 {
 		// capItemPerComuneResidenza = getCaps(provinciaResidenza,
 		// comuneResidenza);
 		if (capItemPerComuneResidenza == null) {
-			capItemPerComuneResidenza = recuperaCaps(anagrafica
-					.getProvinciaResidenza(), anagrafica.getComuneResidenza());
+			capItemPerComuneResidenza = recuperaCaps(
+					anagrafica.getProvinciaResidenza(),
+					anagrafica.getComuneResidenza());
 		}
 		return capItemPerComuneResidenza;
 	}
@@ -936,8 +947,9 @@ public class InsAnagrafica01 {
 		List<TipoIncassoDTO> tipoIncassiDTO = incassoBD.elencaTipoIncasso();
 		if (tipoIncassiDTO != null) {
 			for (TipoIncassoDTO tipoIncassoDTO : tipoIncassiDTO) {
-				tipoRecapitoItem = new SelectItem(tipoIncassoDTO
-						.getIdTipoIncasso(), tipoIncassoDTO.getDsTipoIncasso());
+				tipoRecapitoItem = new SelectItem(
+						tipoIncassoDTO.getIdTipoIncasso(),
+						tipoIncassoDTO.getDsTipoIncasso());
 
 				tipoIncassiItem.add(tipoRecapitoItem);
 
@@ -977,8 +989,9 @@ public class InsAnagrafica01 {
 		setTessere(tesseraBD.elencaTipoTessera());
 		if (getTessere() != null) {
 			for (TipoTesseraDTO tipoTesseraDTO : getTessere()) {
-				tipoTesseraItem = new SelectItem(tipoTesseraDTO
-						.getIdTipoTessera(), tipoTesseraDTO.getDsTipoTessera());
+				tipoTesseraItem = new SelectItem(
+						tipoTesseraDTO.getIdTipoTessera(),
+						tipoTesseraDTO.getDsTipoTessera());
 				tipoTessereItem.add(tipoTesseraItem);
 
 			}
@@ -997,8 +1010,9 @@ public class InsAnagrafica01 {
 		setTessere(tesseraBD.ricercaTipoTesseraPerIncasso(idTipoIncasso));
 		if (getTessere() != null) {
 			for (TipoTesseraDTO tipoTesseraDTO : getTessere()) {
-				tipoTesseraItem = new SelectItem(tipoTesseraDTO
-						.getIdTipoTessera(), tipoTesseraDTO.getDsTipoTessera());
+				tipoTesseraItem = new SelectItem(
+						tipoTesseraDTO.getIdTipoTessera(),
+						tipoTesseraDTO.getDsTipoTessera());
 				tipoTessereItem.add(tipoTesseraItem);
 
 			}
@@ -1060,9 +1074,9 @@ public class InsAnagrafica01 {
 
 		if (tipoRateizzazioniDTO != null) {
 			for (TipoRateizzazioneDTO tipoRateizzazioneDTO : tipoRateizzazioniDTO) {
-				tipoRateizzazioneItem = new SelectItem(tipoRateizzazioneDTO
-						.getIdTipoRateizzazione(), tipoRateizzazioneDTO
-						.getDsTipoRateizzazione());
+				tipoRateizzazioneItem = new SelectItem(
+						tipoRateizzazioneDTO.getIdTipoRateizzazione(),
+						tipoRateizzazioneDTO.getDsTipoRateizzazione());
 				tipoRateizzazioniItem.add(tipoRateizzazioneItem);
 
 			}
@@ -1084,9 +1098,9 @@ public class InsAnagrafica01 {
 
 		if (tipoRateizzazioniDTO != null) {
 			for (TipoRateizzazioneDTO tipoRateizzazioneDTO : tipoRateizzazioniDTO) {
-				tipoRateizzazioneItem = new SelectItem(tipoRateizzazioneDTO
-						.getIdTipoRateizzazione(), tipoRateizzazioneDTO
-						.getDsTipoRateizzazione());
+				tipoRateizzazioneItem = new SelectItem(
+						tipoRateizzazioneDTO.getIdTipoRateizzazione(),
+						tipoRateizzazioneDTO.getDsTipoRateizzazione());
 				tipoRateizzazioniItem.add(tipoRateizzazioneItem);
 
 			}
@@ -1183,8 +1197,8 @@ public class InsAnagrafica01 {
 		if (comuniDTO != null) {
 			for (ComuneDTO comuneDTO : comuniDTO) {
 
-				comuneItem = new SelectItem(comuneDTO.getCdComune(), comuneDTO
-						.getDsComune());
+				comuneItem = new SelectItem(comuneDTO.getCdComune(),
+						comuneDTO.getDsComune());
 
 				comuniPerProvincia.add(comuneItem);
 
@@ -1208,8 +1222,8 @@ public class InsAnagrafica01 {
 		if (stradeDTO != null) {
 			for (StradaDTO stradaDTO : stradeDTO) {
 
-				stradaItem = new SelectItem(stradaDTO.getIdStrada(), stradaDTO
-						.getDsStrada());
+				stradaItem = new SelectItem(stradaDTO.getIdStrada(),
+						stradaDTO.getDsStrada());
 
 				stradePerCap.add(stradaItem);
 
@@ -1232,9 +1246,9 @@ public class InsAnagrafica01 {
 		if (statiAnagraficheDTO != null) {
 			for (TipoStatoAnagraficaDTO statoAnagraficheDTO : statiAnagraficheDTO) {
 
-				statoAnagraficaItem = new SelectItem(statoAnagraficheDTO
-						.getIdStatoAnagrafica(), statoAnagraficheDTO
-						.getDsStatoAnagrafica());
+				statoAnagraficaItem = new SelectItem(
+						statoAnagraficheDTO.getIdStatoAnagrafica(),
+						statoAnagraficheDTO.getDsStatoAnagrafica());
 
 				statiAnagraficaItem.add(statoAnagraficaItem);
 
@@ -1385,10 +1399,11 @@ public class InsAnagrafica01 {
 				}
 
 				// stradePerCap = recuperaStradePerCap(cap);
-				iniziallizzaLocalita(capItemPerComuneResidenza.get(0)
-						.getValue().toString(), cdProvincia, Integer
-						.parseInt(comuniResidenzaPerProvincia.get(0).getValue()
-								.toString()));
+				iniziallizzaLocalita(
+						capItemPerComuneResidenza.get(0).getValue().toString(),
+						cdProvincia,
+						Integer.parseInt(comuniResidenzaPerProvincia.get(0)
+								.getValue().toString()));
 				anagrafica.setIdLocalita(-1);
 				anagrafica.setIdStrada(null);
 				anagrafica.setDsStrada(null);
@@ -1777,8 +1792,8 @@ public class InsAnagrafica01 {
 		if (TipoIncasso.ESATTORE.getIncasso() == getIncasso()) {
 			tessera.setIdTipoEsattore(getEsattore());
 			for (SelectItem item : elencoTipoEsattore) {
-				if (item.getValue().toString().equals(
-						Integer.toString(getEsattore()))) {
+				if (item.getValue().toString()
+						.equals(Integer.toString(getEsattore()))) {
 					tessera.setDsEsattore(item.getLabel());
 					break;
 				}
@@ -1804,8 +1819,8 @@ public class InsAnagrafica01 {
 		}
 
 		for (SelectItem item : elencoModalitaPagamento) {
-			if (item.getValue().toString().equals(
-					Integer.toString(modalitaPagamento))) {
+			if (item.getValue().toString()
+					.equals(Integer.toString(modalitaPagamento))) {
 				tessera.setDsTipoRateizzazione(item.getLabel());
 				break;
 			}
@@ -1813,8 +1828,8 @@ public class InsAnagrafica01 {
 		}
 
 		for (SelectItem item : elencoTipoIncasso) {
-			if (item.getValue().toString().equals(
-					Integer.toString(getIncasso()))) {
+			if (item.getValue().toString()
+					.equals(Integer.toString(getIncasso()))) {
 				tessera.setDsIncasso(item.getLabel());
 				break;
 			}
@@ -1822,8 +1837,8 @@ public class InsAnagrafica01 {
 		}
 
 		for (SelectItem item : elencoTipoTessera) {
-			if (item.getValue().toString().equals(
-					Integer.toString(getTipoTessera()))) {
+			if (item.getValue().toString()
+					.equals(Integer.toString(getTipoTessera()))) {
 				tessera.setDsTipoTessera(item.getLabel());
 				break;
 			}
@@ -1833,8 +1848,8 @@ public class InsAnagrafica01 {
 		if (visibleCariche) {
 			tessera.setIdTipoCarica(getTipoCarica());
 			for (SelectItem item : elencoTipoCarica) {
-				if (item.getValue().toString().equals(
-						Integer.toString(getTipoCarica()))) {
+				if (item.getValue().toString()
+						.equals(Integer.toString(getTipoCarica()))) {
 					tessera.setDsTipoCarica(item.getLabel());
 					break;
 				}
@@ -1858,6 +1873,13 @@ public class InsAnagrafica01 {
 			return null;
 		} else
 			return null;
+	}
+	
+	
+	public String annullaOnClick() throws Exception
+	{
+		FacesUtils.redirectToUrl("RicercaAnagrafica.iface");
+		return null;
 	}
 
 	public String proseguiOnClick() throws IOException,
@@ -1929,6 +1951,14 @@ public class InsAnagrafica01 {
 
 				if (isAggiornamento()) {
 					// invocare Aggiornamento Anagrafica
+					if (anagrafica.getIdStatoAnagrafica() == TipoStatoAnagrafica.Deceduta
+							.getStatoAnagrafica() && eliminaTessere) {
+						if (getAnagrafica().getTessere() != null) {
+							for (TesseraDTO tes : getAnagrafica().getTessere()) {
+								tes.setFgAttiva(false);
+							}
+						}
+					}
 
 					GestioneAnagraficaBD.aggiornaAnagrafica(anagrafica, false);
 					// FacesUtils.redirectToUrl("RicercaAnagrafica.iface");
@@ -1984,8 +2014,8 @@ public class InsAnagrafica01 {
 	public void modificaTesseraOnClick(ActionEvent e)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 
-		tesDaModificare = (TesseraDTO) e.getComponent().getAttributes().get(
-				"idTessera");
+		tesDaModificare = (TesseraDTO) e.getComponent().getAttributes()
+				.get("idTessera");
 
 		tesDaModificare.setModificata(true);
 
@@ -1996,8 +2026,8 @@ public class InsAnagrafica01 {
 		setElencoTipoIncasso_modificata(recuperaTipoIncassi());
 
 		setElencoTipoRateizzazione_modifica(recuperaTipoRateizzazionePerTesseraIncasso(
-				tesDaModificare.getIdTipoTessera(), tesDaModificare
-						.getIdTipoIncasso()));
+				tesDaModificare.getIdTipoTessera(),
+				tesDaModificare.getIdTipoIncasso()));
 
 	}
 
@@ -2093,10 +2123,10 @@ public class InsAnagrafica01 {
 						.parseInt(getElencoTipoCarica_modificata().get(0)
 								.getValue().toString()));
 
-				tesDaModificare.setQuota(getQuotaPerCarica(tesDaModificare
-						.getIdTipoCarica(),
+				tesDaModificare.setQuota(getQuotaPerCarica(
+						tesDaModificare.getIdTipoCarica(),
 
-				caricheModificate));
+						caricheModificate));
 			} else {
 				Integer quotaTessera = getQuotaFromTipoTessera(tesDaModificare
 						.getIdTipoTessera());
@@ -2153,8 +2183,8 @@ public class InsAnagrafica01 {
 						.parseInt(getElencoTipoCarica_modificata().get(0)
 								.getValue().toString()));
 
-				tesDaModificare.setQuota(getQuotaPerCarica(tesDaModificare
-						.getIdTipoCarica(), caricheModificate));
+				tesDaModificare.setQuota(getQuotaPerCarica(
+						tesDaModificare.getIdTipoCarica(), caricheModificate));
 			} else {
 				Integer quotaTessera = getQuotaFromTipoTessera(tesDaModificare
 						.getIdTipoTessera());
@@ -2259,9 +2289,7 @@ public class InsAnagrafica01 {
 					listVie = new ArrayList<SelectItem>();
 
 					for (StradaDTO strada : listVieDTO) {
-						listVie
-								.add(new SelectItem(strada, strada
-										.getDsStrada()));
+						listVie.add(new SelectItem(strada, strada.getDsStrada()));
 					}
 
 				}
@@ -2378,8 +2406,7 @@ public class InsAnagrafica01 {
 		gestoriItem.add(new SelectItem(-1, "--- selezionare un gestore ---"));
 		for (GestoreDTO gestore : gestori) {
 			gestoriItem.add(new SelectItem(gestore.getIdGestore(), gestore
-					.getCognome()
-					+ " " + gestore.getNome()));
+					.getCognome() + " " + gestore.getNome()));
 		}
 	}
 
@@ -2505,22 +2532,22 @@ public class InsAnagrafica01 {
 		anagrafica.setStatoNascita(stato);
 		anagrafica.setStatoResidenza(stato);
 		anagrafica.setProvinciaNascita(Integer.parseInt(FacesContext
-				.getCurrentInstance().getExternalContext().getInitParameter(
-						"provinciaNascitaDefault")));
+				.getCurrentInstance().getExternalContext()
+				.getInitParameter("provinciaNascitaDefault")));
 		anagrafica.setComuneNascita(Integer.parseInt(FacesContext
-				.getCurrentInstance().getExternalContext().getInitParameter(
-						"comuneNascitaDefault")));
+				.getCurrentInstance().getExternalContext()
+				.getInitParameter("comuneNascitaDefault")));
 		anagrafica.setComuneResidenza(Integer.parseInt(FacesContext
-				.getCurrentInstance().getExternalContext().getInitParameter(
-						"comuneResidenzaDefault")));
+				.getCurrentInstance().getExternalContext()
+				.getInitParameter("comuneResidenzaDefault")));
 		anagrafica.setProvinciaResidenza(Integer.parseInt(FacesContext
-				.getCurrentInstance().getExternalContext().getInitParameter(
-						"provinciaResidenzaDefault")));
+				.getCurrentInstance().getExternalContext()
+				.getInitParameter("provinciaResidenzaDefault")));
 		anagrafica.setCapPost(FacesContext.getCurrentInstance()
 				.getExternalContext().getInitParameter("capResidenzaDefault"));
 		anagrafica.setIdStatoAnagrafica(Integer.parseInt(FacesContext
-				.getCurrentInstance().getExternalContext().getInitParameter(
-						"statoAnagraficaDefault")));
+				.getCurrentInstance().getExternalContext()
+				.getInitParameter("statoAnagraficaDefault")));
 		anagrafica.setIdLocalita(-1);
 		anagrafica.setRid(new RidDTO());
 

@@ -18,7 +18,8 @@
 					<ice:panelGrid border="0" columns="4">
 
 						<ice:outputText value="Anno"></ice:outputText>
-						<ice:selectOneMenu partialSubmit="true" id="lstAnni" valueChangeListener="#{rendicontazioneManuale.annoChange}"
+						<ice:selectOneMenu partialSubmit="true" id="lstAnni"
+							valueChangeListener="#{rendicontazioneManuale.annoChange}"
 							value="#{rendicontazioneManuale.anno}">
 							<f:selectItems value="#{rendicontazioneManuale.anni}" />
 						</ice:selectOneMenu>
@@ -67,9 +68,10 @@
 
 					</ice:panelGrid>
 
-					
+
 					<ice:dataTable border="1" value="#{rendicontazioneManuale.tessere}"
-						var="tessera" id="tesseraManuali" rows="#{styleBean.maxRowsTables}" 
+						var="tessera" id="tesseraManuali"
+						rows="#{styleBean.maxRowsTables}"
 						rendered="#{rendicontazioneManuale.visibleAnagrafiche}"
 						cellpadding="0" cellspacing="0">
 
@@ -170,7 +172,7 @@
 								<ice:message for="incasso"></ice:message>
 							</ice:panelGrid>
 						</ice:column>
-						
+
 						<ice:column id="Nr. Bollettino">
 							<f:facet name="header">
 								<ice:outputText value="Nr. Bollettino" />
@@ -215,26 +217,36 @@
 
 
 					</ice:dataTable>
-					
-					<ice:dataPaginator id="tabAnag" for="tesseraManuali" paginator="true" rendered="#{rendicontazioneManuale.visibleAnagrafiche}" fastStep="#{styleBean.fastStep}" paginatorMaxPages="#{StyleBean.paginatorMaxPages}">
+
+					<ice:dataPaginator id="tabAnag" for="tesseraManuali"
+						paginator="true"
+						rendered="#{rendicontazioneManuale.visibleAnagrafiche}"
+						fastStep="#{styleBean.fastStep}"
+						paginatorMaxPages="#{StyleBean.paginatorMaxPages}">
 						<f:facet name="first">
-							<ice:graphicImage url="#{styleBean.first}" style="border:none;" title="First Page"/>
+							<ice:graphicImage url="#{styleBean.first}" style="border:none;"
+								title="First Page" />
 						</f:facet>
 
 						<f:facet name="last">
-							<ice:graphicImage url="#{styleBean.last}" style="border:none;" title="Last Page"/>
+							<ice:graphicImage url="#{styleBean.last}" style="border:none;"
+								title="Last Page" />
 						</f:facet>
 						<f:facet name="previous">
-							<ice:graphicImage url="#{styleBean.previous}" style="border:none;" title="Previous Page"/>
+							<ice:graphicImage url="#{styleBean.previous}"
+								style="border:none;" title="Previous Page" />
 						</f:facet>
 						<f:facet name="fastforward">
-							<ice:graphicImage url="#{styleBean.fastforward}" style="border:none;" title="Fast Forward"/>
+							<ice:graphicImage url="#{styleBean.fastforward}"
+								style="border:none;" title="Fast Forward" />
 						</f:facet>
 						<f:facet name="fastrewind">
-							<ice:graphicImage url="#{styleBean.fastrewind}" style="border:none;" title="Fast Backwards"/>
+							<ice:graphicImage url="#{styleBean.fastrewind}"
+								style="border:none;" title="Fast Backwards" />
 						</f:facet>
 						<f:facet name="next">
-							<ice:graphicImage url="#{styleBean.next}" style="border:none;" title="Next Page"/>
+							<ice:graphicImage url="#{styleBean.next}" style="border:none;"
+								title="Next Page" />
 						</f:facet>
 
 
@@ -267,14 +279,20 @@
 						<ice:commandButton value="Conferma"
 							rendered="#{rendicontazioneManuale.visibleAnagrafiche}"
 							actionListener="#{rendicontazioneManuale.confermaAnnoClick}" />
-							
-							<ice:commandButton value="Annulla" 
+
+						<ice:commandButton value="Annulla"
 							rendered="#{rendicontazioneManuale.visibleAnagrafiche}"
 							actionListener="#{rendicontazioneManuale.annullaClick}" />
 
 					</ice:panelGrid>
 				</ice:panelGrid>
-				
+				<ice:panelGroup style="float:left;width:25px;" rendered="#{rendicontazioneManuale.renderStampaDistinta}">
+					<a
+						href="StampaDistinta.distinta?id=#{rendicontazioneManuale.distinta.nrDistinta}&amp;anno=#{rendicontazioneManuale.distinta.nrAnno}&amp;data=#{rendicontazioneManuale.distinta.txTimeStamp}&amp;utente=#{rendicontazioneManuale.distinta.txUtente}"
+						target="_blank"> <h:graphicImage style="border:none"
+							title="#{msgs.stampaDistinta}" url="#{styleBean.imgPrint}" />
+					</a>
+				</ice:panelGroup>
 				<ice:messages layout="table" globalOnly="true"></ice:messages>
 			</ice:form>
 		</ice:portlet>

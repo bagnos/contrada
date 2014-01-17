@@ -29,50 +29,50 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Session Bean implementation class GestioneAnagrafica
  */
- 
+
 public class GestioneAnagrafica implements IGestioneAnagrafica {
 
 	private static Log log = LogFactory.getLog(GestioneAnagrafica.class);
 
 	/**
-	 * @uml.property  name="famigliaDao"
-	 * @uml.associationEnd  
+	 * @uml.property name="famigliaDao"
+	 * @uml.associationEnd
 	 */
 	private IFamigliaDAO famigliaDao;
 
 	/**
-	 * @uml.property  name="anagraficaDao"
-	 * @uml.associationEnd  
+	 * @uml.property name="anagraficaDao"
+	 * @uml.associationEnd
 	 */
 	private IAnagrafeDAO anagraficaDao;
 
 	/**
-	 * @uml.property  name="tesseraDao"
-	 * @uml.associationEnd  
+	 * @uml.property name="tesseraDao"
+	 * @uml.associationEnd
 	 */
 	private ITesseraDAO tesseraDao;
 
 	/**
-	 * @uml.property  name="ridDao"
-	 * @uml.associationEnd  
+	 * @uml.property name="ridDao"
+	 * @uml.associationEnd
 	 */
 	private IRidDAO ridDao;
 
 	/**
-	 * @uml.property  name="operazioneBO"
-	 * @uml.associationEnd  
+	 * @uml.property name="operazioneBO"
+	 * @uml.associationEnd
 	 */
 	private Operazione operazioneBO;
 
 	/**
-	 * @uml.property  name="gestioneFamiglia"
-	 * @uml.associationEnd  
+	 * @uml.property name="gestioneFamiglia"
+	 * @uml.associationEnd
 	 */
 	private IGestioneFamiglia gestioneFamiglia;
 
 	/**
 	 * @return
-	 * @uml.property  name="famigliaDao"
+	 * @uml.property name="famigliaDao"
 	 */
 	public IFamigliaDAO getFamigliaDao() {
 		return famigliaDao;
@@ -80,7 +80,7 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 
 	/**
 	 * @param famigliaDao
-	 * @uml.property  name="famigliaDao"
+	 * @uml.property name="famigliaDao"
 	 */
 	public void setFamigliaDao(IFamigliaDAO famigliaDao) {
 		this.famigliaDao = famigliaDao;
@@ -88,7 +88,7 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 
 	/**
 	 * @return
-	 * @uml.property  name="anagraficaDao"
+	 * @uml.property name="anagraficaDao"
 	 */
 	public IAnagrafeDAO getAnagraficaDao() {
 		return anagraficaDao;
@@ -96,7 +96,7 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 
 	/**
 	 * @param anagraficaDao
-	 * @uml.property  name="anagraficaDao"
+	 * @uml.property name="anagraficaDao"
 	 */
 	public void setAnagraficaDao(IAnagrafeDAO anagraficaDao) {
 		this.anagraficaDao = anagraficaDao;
@@ -104,7 +104,7 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 
 	/**
 	 * @return
-	 * @uml.property  name="tesseraDao"
+	 * @uml.property name="tesseraDao"
 	 */
 	public ITesseraDAO getTesseraDao() {
 		return tesseraDao;
@@ -112,7 +112,7 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 
 	/**
 	 * @param tesseraDao
-	 * @uml.property  name="tesseraDao"
+	 * @uml.property name="tesseraDao"
 	 */
 	public void setTesseraDao(ITesseraDAO tesseraDao) {
 		this.tesseraDao = tesseraDao;
@@ -120,7 +120,7 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 
 	/**
 	 * @return
-	 * @uml.property  name="ridDao"
+	 * @uml.property name="ridDao"
 	 */
 	public IRidDAO getRidDao() {
 		return ridDao;
@@ -128,7 +128,7 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 
 	/**
 	 * @param ridDao
-	 * @uml.property  name="ridDao"
+	 * @uml.property name="ridDao"
 	 */
 	public void setRidDao(IRidDAO ridDao) {
 		this.ridDao = ridDao;
@@ -136,7 +136,7 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 
 	/**
 	 * @return
-	 * @uml.property  name="operazioneBO"
+	 * @uml.property name="operazioneBO"
 	 */
 	public Operazione getOperazioneBO() {
 		return operazioneBO;
@@ -144,7 +144,7 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 
 	/**
 	 * @param operazioneBO
-	 * @uml.property  name="operazioneBO"
+	 * @uml.property name="operazioneBO"
 	 */
 	public void setOperazioneBO(Operazione operazioneBO) {
 		this.operazioneBO = operazioneBO;
@@ -152,7 +152,7 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 
 	/**
 	 * @return
-	 * @uml.property  name="gestioneFamiglia"
+	 * @uml.property name="gestioneFamiglia"
 	 */
 	public IGestioneFamiglia getGestioneFamiglia() {
 		return gestioneFamiglia;
@@ -160,7 +160,7 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 
 	/**
 	 * @param gestioneFamiglia
-	 * @uml.property  name="gestioneFamiglia"
+	 * @uml.property name="gestioneFamiglia"
 	 */
 	public void setGestioneFamiglia(IGestioneFamiglia gestioneFamiglia) {
 		this.gestioneFamiglia = gestioneFamiglia;
@@ -186,16 +186,16 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 
 			OperazioneDTO operazioneDTO = operazioneBO.inserisciOperazione(
 					Utente.getUser(), String.format(
-							Constanti.OPERAZIONE_MODIFCA_ANAGRAFICA, anagrafica
-									.getCognome(), anagrafica.getNome()));
+							Constanti.OPERAZIONE_MODIFCA_ANAGRAFICA,
+							anagrafica.getCognome(), anagrafica.getNome()));
 			anagrafica.setOperazione(operazioneDTO);
 
 			if (anagrafica.isNuovaFamiglia()) {
 
 				anagrafica.setIdFamiglia(famigliaDao.inserisciFamiglia(null)
 						.getIdFamiglia());
-				LogUtil.logTraceMessage(log, "Famiglia Inserita:"
-						+ anagrafica.getIdFamiglia());
+				LogUtil.logTraceMessage(log,
+						"Famiglia Inserita:" + anagrafica.getIdFamiglia());
 			}
 			if (anagrafica.isNuovaFamiglia() || anagrafica.isCapoFamiglia()) {
 				// aggiorno il capo famiglia
@@ -212,14 +212,15 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 			if (anagrafica.getIdStatoAnagrafica() == TipoStatoAnagrafica.Cessata
 					.getStatoAnagrafica()) {
 				anagrafica.setIdFamiglia(null);
+
 			}
 
 			// aggiorno i dati anagrafici
 			rows = anagraficaDao.aggiornaAnagrafica(anagrafica);
 
 			if (rows == 0) {
-				throw new ContradaExceptionBloccante(DecodificaErrore
-						.getError("1"));
+				throw new ContradaExceptionBloccante(
+						DecodificaErrore.getError("1"));
 			} else {
 
 				LogUtil.logTraceMessage(log, "aggiornata l'anagrafica:"
@@ -242,23 +243,20 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 
 				// aggiorno le tessere
 				aggiornamentoTessere(anagrafica);
-				LogUtil
-						.logTraceMessage(
-								log,
-								"inserite, aggiornate ed eliminate le tessere si in Tessere che in Tessera_Storico");
+				LogUtil.logTraceMessage(
+						log,
+						"inserite, aggiornate ed eliminate le tessere si in Tessere che in Tessera_Storico");
 
 				// elimino e reinserisco i recapiti
 				// aggiornaRecapiti(anagrafica);
-				LogUtil
-						.logTraceMessage(log,
-								"inserite ed eliminati i recapiti");
+				LogUtil.logTraceMessage(log, "inserite ed eliminati i recapiti");
 
 				// aggiorno indirizzo a tutta la famiglia, solo se l'anagrafica
 				// non è stata cessata
 				if (anagrafica.getIdStatoAnagrafica() != TipoStatoAnagrafica.Cessata
 						.getStatoAnagrafica()) {
-					anagraficaDao.aggiornaIndirizzoAnagrafica(anagrafica
-							.getIdStrada(), anagrafica.getNrCivico(),
+					anagraficaDao.aggiornaIndirizzoAnagrafica(
+							anagrafica.getIdStrada(), anagrafica.getNrCivico(),
 							anagrafica.getIdFamiglia());
 
 					LogUtil.logTraceMessage(log,
@@ -291,11 +289,12 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 
 			verificaControlliFormaliInsAnagrafica(anagraficaDTO);
 
-			OperazioneDTO operazioneDTO = operazioneBO.inserisciOperazione(
-					Utente.getUser(), String
-							.format(Constanti.OPERAZIONE_INSERT_ANAGRAFICA,
-									anagraficaDTO.getCognome(), anagraficaDTO
-											.getNome()));
+			OperazioneDTO operazioneDTO = operazioneBO
+					.inserisciOperazione(Utente.getUser(),
+							String.format(
+									Constanti.OPERAZIONE_INSERT_ANAGRAFICA,
+									anagraficaDTO.getCognome(),
+									anagraficaDTO.getNome()));
 
 			anagraficaDTO.setOperazione(operazioneDTO);
 
@@ -319,8 +318,8 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 
 			anagraficaDTO = anagraficaDao.inserisciAnagrafica(anagraficaDTO);
 
-			LogUtil.logTraceMessage(log, String.format(
-					"Anagrafica inserita, %S ", anagraficaDTO));
+			LogUtil.logTraceMessage(log,
+					String.format("Anagrafica inserita, %S ", anagraficaDTO));
 
 			/*
 			 * if (anagraficaDTO.isNuovaFamiglia() ||
@@ -474,12 +473,20 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 				.getTesserePerAnagrafica(anagrafica.getIdAnagrafica());
 
 		if (anagrafica.getIdStatoAnagrafica() == TipoStatoAnagrafica.Cessata
-				.getStatoAnagrafica()) {
-			// se l'anagrafica è cessata si disattivano tutte le tessere
+				.getStatoAnagrafica()
+				|| anagrafica.getIdStatoAnagrafica() == TipoStatoAnagrafica.Sospesa
+						.getStatoAnagrafica()) {
+
+			//disattivazione tessere per sospesi o cessati
 			for (TesseraDTO tessera : tesserePresenti) {
-				tessera.setFgAttiva(false);
-				tesseraDao.aggiornaTessera(tessera);
-				tesseraDao.aggiornaTesseraStorico(tessera.getIdTessera());
+
+				// se l'anagrafica è cessata si disattivano anche le tessere correnti
+				if (anagrafica.getIdStatoAnagrafica() == TipoStatoAnagrafica.Cessata
+						.getStatoAnagrafica()) {
+					tesseraDao.disattivaTessera(tessera.getIdTessera());
+				}
+
+				tesseraDao.disattivaTesseraStorico(tessera.getIdTessera());
 			}
 
 		} else {
@@ -522,9 +529,8 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 				// tesseraDao.eliminaTesseraStorico(tes.getIdTessera());
 				// } else {
 				// tessera da disattivare, cancellazione logica
-				tesseraDao.disattivaTessera(tes.getIdTessera());
-				tes.setFgAttiva(false);
-				tesseraDao.aggiornaTesseraStorico(tes.getIdTessera());
+				tesseraDao.disattivaTessera(tes.getIdTessera());				
+				tesseraDao.disattivaTesseraStorico(tes.getIdTessera());
 				// }
 			}
 		}
@@ -548,24 +554,23 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 		}
 	}
 
-	public int aggiornaStatoAnagrafica(List<Integer> idAnagrafiche,int idStato)
+	public int aggiornaStatoAnagrafica(List<Integer> idAnagrafiche, int idStato)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 		// TODO Auto-generated method stub
 		try {
-			//si cessa l'anagrafica
-			int i=anagraficaDao.aggiornaStatoAnagrafica(idAnagrafiche, idStato);
-			
-			//si disattiva tutte le tessere per anagrafiche cessate
-			if (idStato==TipoStatoAnagrafica.Cessata.getStatoAnagrafica())
-			{
-				for (int anag:idAnagrafiche)
-				{
+			// si cessa l'anagrafica
+			int i = anagraficaDao.aggiornaStatoAnagrafica(idAnagrafiche,
+					idStato);
+
+			// si disattiva tutte le tessere per anagrafiche cessate
+			if (idStato == TipoStatoAnagrafica.Cessata.getStatoAnagrafica()) {
+				for (int anag : idAnagrafiche) {
 					tesseraDao.disattivaTesseraByAnagrafica(anag);
 					tesseraDao.aggiornaTesseraStoricoByAnagrafica(anag);
 				}
 			}
 			return i;
-			
+
 		} catch (Exception ex) {
 			log.error(ex);
 			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);

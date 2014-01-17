@@ -696,17 +696,11 @@ public class InserimentoRid {
 		return null;
 	}
 
-	public String indietroOnClick() {
+	public String indietroOnClick() throws IOException {
 
 		// HelperSession.removeFromSession(Costante.BACK_BEAN_INS_RID);
-		if (isInserimentoFromAnag())
-			return "INDIETRO_ANAG";
-		else if (isModificaRid()) {
-			return "INDIETRO";
-		} else {
-			return null;
-		}
-
+		FacesUtils.redirectToUrl("CercaRidModale.iface");
+		return null;
 	}
 
 	private void addMembriFromAnagrafica(AnagraficaDTO anag,
