@@ -1,0 +1,9 @@
+<span xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
+	<ice:panelGroup styleClass="#{bbean.styleClassInfoMessage}"
+		rendered="#{bbean.renderInfoMessage}">
+		<ice:outputText value="#{bbean.messaggioInfoMessage}" />
+		<ice:commandButton image="#{styleBean.imgClose}" immediate="true" style="float:right;margin-top:-10px" actionListener="#{bbean.chiudiInfoMessage}" title="Chiudi"></ice:commandButton>
+	</ice:panelGroup>
+</span>

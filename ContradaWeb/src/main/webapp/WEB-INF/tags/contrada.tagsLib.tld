@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib xmlns="http://taglib.paschiFACE.mps.it">
+	<tlib-version>1.0</tlib-version>
+	<jsp-version>1.2</jsp-version>
+	<short-name>nicchio</short-name>
+	<uri>http://taglib.contradanicchio.it</uri>
+	<display-name>Nicchio Taglib</display-name>
+
+
+	<tag>
+		<name>serviceInfoMessage</name>
+		<tag-class>ServiceInfoMessage.jspx</tag-class>
+		<body-content>JSP</body-content>
+		<description>
+			messaggi sulla view
+		</description>
+		<!-- Attributi estesi -->
+
+		<attribute>
+			<name>bbean</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+			<type>java.lang.boolean</type>
+			<description>
+				visibile o meno
+			</description>
+		</attribute>
+
+		
+	</tag>
+</taglib>
