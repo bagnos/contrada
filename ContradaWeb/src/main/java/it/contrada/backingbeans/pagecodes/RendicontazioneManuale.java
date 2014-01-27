@@ -11,19 +11,17 @@ import it.contrada.enumcontrada.TipoRata;
 import it.contrada.enumcontrada.TipoStatoRata;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
+import it.contrada.web.enumcontrada.TipoGravitaMessage;
 import it.contrada.web.util.Configuration;
 import it.contrada.web.util.ConverterContrada;
 import it.contrada.web.util.Errori;
 import it.contrada.web.util.RicercaAnagraficaUtil;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
@@ -31,9 +29,9 @@ import javax.faces.model.SelectItem;
 
 import com.icesoft.faces.component.selectinputtext.SelectInputText;
 
-public class RendicontazioneManuale {
+public class RendicontazioneManuale extends BaseView {
 	private List<SelectItem> anni;
-	private String messaggio;
+	
 	private String idAnagrafica;
 	private List<AnagraficaDTO> anagrafiche;
 	private boolean visibleAnagrafiche;
@@ -219,14 +217,7 @@ public class RendicontazioneManuale {
 		this.tessere = tessere;
 	}
 
-	public String getMessaggio() {
-		return messaggio;
-	}
-
-	public void setMessaggio(String messaggio) {
-		this.messaggio = messaggio;
-	}
-
+	
 	public String getIdAnagrafica() {
 		return idAnagrafica;
 	}
@@ -285,12 +276,9 @@ public class RendicontazioneManuale {
 
 		try {
 
-			setMessaggio(null);
-			if (getIdAnagrafica() == null || getIdAnagrafica().isEmpty()) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								Errori.ANAG_REQUIRED, Errori.ANAG_REQUIRED));
+			
+			if (getIdAnagrafica() == null || getIdAnagrafica().isEmpty()) {				
+				writeInfoMessage(TipoGravitaMessage.ERROR, Errori.ANAG_REQUIRED);				
 				return;
 			}
 			Integer idAnagrafica = Integer.parseInt(getIdAnagrafica());
@@ -327,21 +315,14 @@ public class RendicontazioneManuale {
 				
 				getTessere().addAll(0, tesseraAdd);
 			} else {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								Errori.TESSERE_NON_PRES,
-								Errori.TESSERE_NON_PRES));
+				writeInfoMessage(TipoGravitaMessage.ERROR, Errori.TESSERE_NON_PRES);				
 			}
 
 			setVisibleAnagrafiche(!getTessere().isEmpty());
 			setIdAnagrafica(null);
 			setDsAnagraficaTessera(null);
 		} catch (ContradaExceptionNonBloccante e) {
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e
-							.getMessage(), e.getMessage()));
+			writeInfoMessage(TipoGravitaMessage.ERROR, e.getMessage());			
 		}
 
 	}
@@ -374,11 +355,8 @@ public class RendicontazioneManuale {
 	{		
 		getTessere().clear();
 		visibleAnagrafiche=false;
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO,
-						null, null));
-		messaggio=null;
+		hideInfoMessage();		
+		
 	}
 
 	public void confermaAnnoClick(ActionEvent av)
@@ -416,9 +394,11 @@ public class RendicontazioneManuale {
 		     distinta.setTsInserimento(new Timestamp(date.getTime()));		     
 		     distinta.setTxTimeStamp(ConverterContrada.convertDateToString(date));
 
-			setMessaggio(String.format("Distinta numero %d,%s", distinta
-					.getNrDistinta(), distinta.getTxOper()));
 			
+		     
+		     writeInfoMessage(TipoGravitaMessage.SUCCESS, String.format("Distinta numero %d,%s", distinta
+						.getNrDistinta(), distinta.getTxOper()));
+		     
 			renderStampaDistinta=true;
 
 			tessere = new ArrayList<TesseraDTO>();
@@ -433,8 +413,8 @@ public class RendicontazioneManuale {
 							+ tessera.getIncasso());
 				}
 			}
-		} else {
-			messaggio = "Nessuna tessera rendicontata, inserire una quota incasso maggiore di zero";
+		} else {			
+			writeInfoMessage(TipoGravitaMessage.INFO, "Nessuna tessera rendicontata, inserire una quota incasso maggiore di zero");
 		}
 
 	}

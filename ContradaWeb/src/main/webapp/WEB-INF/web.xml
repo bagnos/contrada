@@ -6,6 +6,11 @@
 	<display-name>Archetype Created Web Application</display-name>
 
 	<context-param>
+		<param-name>facelets.LIBRARIES</param-name>
+		<param-value>/WEB-INF/tags/contrada.tagsLib.xml</param-value>
+	</context-param>
+
+	<context-param>
 		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
 		<param-value>server</param-value>
 	</context-param>
@@ -81,15 +86,15 @@
 		<param-name>statoAnagraficaDefault</param-name>
 		<param-value>1</param-value>
 	</context-param>
-	
-	<context-param>
-        <param-name>org.icefaces.blockUIOnSubmit</param-name>
-        <param-value>true</param-value>
-    </context-param>
 
+	<context-param>
+		<param-name>org.icefaces.blockUIOnSubmit</param-name>
+		<param-value>true</param-value>
+	</context-param>
 	<session-config>
-		<session-timeout>120</session-timeout>
+		<session-timeout>180</session-timeout>
 	</session-config>
+
 
 	<filter>
 		<filter-name>TimeoutFilter</filter-name>
@@ -112,8 +117,12 @@
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
 	<error-page>
-		<error-code>500</error-code>
-		<location>/errorPage.jspx</location>
+		<exception-type>java.lang.Throwable</exception-type> 
+		<location>/errorPage.jspx</location>		
+	</error-page>
+	<error-page>
+		<error-code>500</error-code> 
+		<location>/errorPage.jspx</location>		
 	</error-page>
 	<security-constraint>
 		<web-resource-collection>

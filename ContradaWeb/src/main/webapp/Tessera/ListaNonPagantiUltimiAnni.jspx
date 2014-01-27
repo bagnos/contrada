@@ -206,8 +206,8 @@
 							actionListener="#{ricercaTessereNonPaganti.ricercaListaNonPaganti}"></ice:commandButton>
 
 
-						<ice:commandButton value="Elimina Selezionati"
-							style="margin-left:10px;"
+						<ice:commandButton value="Elimina"
+							style="margin-left:10px;" title="Elimina Selezionati"
 							rendered="#{ricercaTessereNonPaganti.visibleAnagrafiche}"
 							panelConfirmation="delAll"
 							actionListener="#{ricercaTessereNonPaganti.eliminaSelezionati}"></ice:commandButton>

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IFlussoIncassoPosteDAO {
 
-	public List<IncassoPostaDTO> getFlussiIncassoPosta(int anno, java.sql.Date dtScadenza,List<Integer> tipoTessere) throws Exception;
+	public List<IncassoPostaDTO> getFlussiIncassoPosta(int anno, java.sql.Date dtScadenza,List<Integer> tipoTessere,List<Integer> tipoIncasso,List<Integer> tessereManuali) throws Exception;
 	public int insertIncassoPosta(List<IncassoPostaDTO> incassi) throws Exception;
 	public int insertFlussoIncassoPosta(FlussoIncassoPostaDTO flusso) throws Exception;
 	public int eliminaIncassiPosta(long idFlusso) throws Exception;

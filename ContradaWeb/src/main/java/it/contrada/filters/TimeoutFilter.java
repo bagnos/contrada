@@ -27,8 +27,8 @@ public class TimeoutFilter implements Filter {
 
 		if (suffix && (request.getUserPrincipal()==null || request.getUserPrincipal().getName() == null)) {
 			//response.sendRedirect(request.getContextPath()+"/login.html?target=_blank");
-			
-			res.getWriter().write("<script>window.top.location.reload();</script>");
+			response.setHeader("Content-Type", "text/html");
+			res.getWriter().write("<script type='text/javascript'>window.top.location.reload();</script>");
 		}
 
 		else {

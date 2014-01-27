@@ -19,6 +19,6 @@ public interface IRicercaRid {
 	public List<TipoStatoRidDTO> elencaStati() throws ContradaExceptionBloccante,ContradaExceptionNonBloccante;
 	public RidDTO ricercaPerId(int idRid) throws ContradaExceptionBloccante,ContradaExceptionNonBloccante;
 	public List<TipoIncassoDTO> elencaTipoIncassiRid() throws ContradaExceptionBloccante,ContradaExceptionNonBloccante;
-	public List<RidDTO> ricercaPerStato (List<Integer> cdStato) throws ContradaExceptionBloccante,ContradaExceptionNonBloccante;
+	public List<RidDTO> ricercaPerStato (List<Integer> cdStato,Integer idTipoTessera) throws ContradaExceptionBloccante,ContradaExceptionNonBloccante;
 	
 }

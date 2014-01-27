@@ -147,11 +147,11 @@ public class RicercaRid implements IRicercaRid {
 		}
 	}
 
-	public List<RidDTO> ricercaPerStato(List<Integer> cdStato)
+	public List<RidDTO> ricercaPerStato(List<Integer> cdStato,Integer idTipoTessera)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 		// TODO Auto-generated method stub
 		try {
-			return ridDao.getRidPerStato(cdStato);
+			return ridDao.getRidPerStato(cdStato,idTipoTessera);
 		} catch (Exception ex) {
 			log.error(ex);
 			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);

@@ -1,7 +1,7 @@
 package it.contrada.util;
 
 public class DecodificaMese {
-	private static String getMese(int i) {
+	public static String getMese(int i) {
 		switch (i) {
 		case 1:
 			return "GENNAIO";

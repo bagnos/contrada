@@ -19,6 +19,7 @@ public interface IAnagrafeDAO {
 	public List<AnagraficaDTO> getAnagraficaByCodiceFamiglia(long cdFamiglia) throws Exception ;
 	public int aggiornaAnagrafica(AnagraficaDTO anagraficaDTO) throws Exception ;
 	public int aggiornaStatoAnagrafica(List<Integer> idAnagrafiche, int idStato) throws Exception ;
+	public int aggiornaStatoAnagrafica(int idStato,int statoPrecedente) throws Exception ;
 	public int aggiornaGestore(List<AnagraficaDTO> anagrafiche) throws Exception ;
 	public int aggiornaIndirizzoAnagrafica(long idStrada,String nrCivico, int idFamiglia) throws Exception ;
 	public List<TipoStatoAnagraficaDTO> getStatiAnagrafica() throws Exception ;

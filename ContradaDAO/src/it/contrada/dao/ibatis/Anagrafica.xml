@@ -377,6 +377,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			#{item}
 				</foreach>
 	</update>
+	
+	<update id="updateAllStatoAnagrafica" parameterType="java.util.HashMap">
+		UPDATE
+		${database.schema}ANAGRAFICA
+		SET
+		ID_STATO_ANAGRAFICA=#{idStatoAnagrafica}
+		where ID_STATO_ANAGRAFICA=#{idStatoAnagraficaPrec}
+	</update>
 
 	<update id="updateAnagraficaByCdAnag" parameterType="it.contrada.dto.AnagraficaDTO">
 		UPDATE

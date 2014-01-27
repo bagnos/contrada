@@ -23,6 +23,7 @@ import it.contrada.dto.TesseraDTO;
 import it.contrada.enumcontrada.TipoStatoRid;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
+import it.contrada.web.enumcontrada.TipoGravitaMessage;
 import it.contrada.web.util.CalcolaCoordinateBancariePojo;
 import it.contrada.web.util.Costante;
 import it.contrada.web.util.Errori;
@@ -49,7 +50,7 @@ import javax.faces.model.SelectItem;
 
 import com.icesoft.faces.component.selectinputtext.SelectInputText;
 
-public class InserimentoRid {
+public class InserimentoRid extends BaseView {
 
 	private List<SelectItem> elencoTipoStatoRid;
 
@@ -85,6 +86,16 @@ public class InserimentoRid {
 	private List<SelectItem> anagraficheItem;
 	private Boolean modificaRid;
 	private boolean popupRid;
+	private List<TesseraDTO> tessere;
+	private boolean visibleTessere;
+
+	public boolean isVisibleTessere() {
+		return visibleTessere;
+	}
+
+	public List<TesseraDTO> getTessere() {
+		return tessere;
+	}
 
 	public boolean isPopupRid() {
 		return popupRid;
@@ -97,8 +108,6 @@ public class InserimentoRid {
 	public List<SelectItem> getAnagraficheItem() {
 		return anagraficheItem;
 	}
-
-	
 
 	public String getDsAnagraficaInRid() {
 		return dsAnagraficaInRid;
@@ -266,8 +275,8 @@ public class InserimentoRid {
 	public List<SelectItem> getCapComuniResidenza()
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 		if (capComuniResidenza == null) {
-			capComuniResidenza = recuperaCaps(rid.getProvinciaResidenza(), rid
-					.getComuneResidenza());
+			capComuniResidenza = recuperaCaps(rid.getProvinciaResidenza(),
+					rid.getComuneResidenza());
 		}
 		return capComuniResidenza;
 	}
@@ -285,8 +294,8 @@ public class InserimentoRid {
 		if (stradeDTO != null) {
 			for (StradaDTO stradaDTO : stradeDTO) {
 
-				stradaItem = new SelectItem(stradaDTO.getIdStrada(), stradaDTO
-						.getDsStrada());
+				stradaItem = new SelectItem(stradaDTO.getIdStrada(),
+						stradaDTO.getDsStrada());
 
 				stradePerCap.add(stradaItem);
 
@@ -335,9 +344,9 @@ public class InserimentoRid {
 
 		if (tipoRateizzazioniDTO != null) {
 			for (TipoRateizzazioneDTO tipoRateizzazioneDTO : tipoRateizzazioniDTO) {
-				tipoRateizzazioneItem = new SelectItem(tipoRateizzazioneDTO
-						.getIdTipoRateizzazione(), tipoRateizzazioneDTO
-						.getDsTipoRateizzazione());
+				tipoRateizzazioneItem = new SelectItem(
+						tipoRateizzazioneDTO.getIdTipoRateizzazione(),
+						tipoRateizzazioneDTO.getDsTipoRateizzazione());
 				tipoRateizzazioniItem.add(tipoRateizzazioneItem);
 
 			}
@@ -376,8 +385,8 @@ public class InserimentoRid {
 		List<TipoStatoRidDTO> statiRidDTO = ridBD.elencaStati();
 		if (statiRidDTO != null) {
 			for (TipoStatoRidDTO ridDTO : statiRidDTO) {
-				statoRidItem = new SelectItem(ridDTO.getIdStatoRid(), ridDTO
-						.getDsStatoRid());
+				statoRidItem = new SelectItem(ridDTO.getIdStatoRid(),
+						ridDTO.getDsStatoRid());
 				statiRidItem.add(statoRidItem);
 
 			}
@@ -422,8 +431,8 @@ public class InserimentoRid {
 		if (comuniDTO != null) {
 			for (ComuneDTO comuneDTO : comuniDTO) {
 
-				comuneItem = new SelectItem(comuneDTO.getCdComune(), comuneDTO
-						.getDsComune());
+				comuneItem = new SelectItem(comuneDTO.getCdComune(),
+						comuneDTO.getDsComune());
 
 				comuniPerProvincia.add(comuneItem);
 
@@ -497,13 +506,9 @@ public class InserimentoRid {
 				capComuniResidenza = recuperaCaps(cdProvincia, cdComune);
 				if (!capComuniResidenza.isEmpty()) {
 					cap = capComuniResidenza.get(0).getValue().toString();
-					/*
-					 * FacesContext.getCurrentInstance().getExternalContext()
-					 * .getRequestMap().put("capPost", cap);
-					 */
+
 				}
 
-				// stradePerCap = recuperaStradePerCap(cap);
 			}
 		}
 	}
@@ -519,20 +524,13 @@ public class InserimentoRid {
 
 				cap = event.getNewValue().toString();
 
-				/*
-				 * FacesContext.getCurrentInstance().getExternalContext()
-				 * .getRequestMap().put("capPost", cap);
-				 */
-
-				// stradePerCap = recuperaStradePerCap(cap);
-
 			}
 		}
 	}
 
 	public void eliminaAnagraficaOnClick(ActionEvent e) {
-		int idAnag = Integer.parseInt(e.getComponent().getAttributes().get(
-				"idAnagrafica").toString());
+		int idAnag = Integer.parseInt(e.getComponent().getAttributes()
+				.get("idAnagrafica").toString());
 		List<MembroRidDTO> recsToDelete = new ArrayList<MembroRidDTO>();
 
 		for (MembroRidDTO rec : getRid().getMembri()) {
@@ -572,10 +570,6 @@ public class InserimentoRid {
 							errore));
 		}
 
-		/*
-		 * if(!rid.getMembri().isEmpty()) { visibleAnagrafiche=true; }
-		 */
-
 	}
 
 	private boolean isInserimentoFromAnag() {
@@ -597,52 +591,35 @@ public class InserimentoRid {
 
 	}
 
-	private boolean isModificaRid() {
-
-		if (modificaRid == null) {
-			modificaRid = HelperSession.getFromRequest(Costante.PARM_MOD_RID) != null;
-		}
-
-		return modificaRid;
-
-	}
-
-	public String proseguiOnClick() throws ContradaExceptionBloccante,
-			ContradaExceptionNonBloccante, IOException {
-		renderMessIban = false;
+	private boolean verificaControlliFormali() {
 		String errore = null;
-
-		rid.setUser(FacesUtils.getUser());
-		
-		if (rid.getPaese()==null)
-		{
+		if (rid.getPaese() == null || rid.getPaese().isEmpty()) {
 			FacesContext.getCurrentInstance().addMessage(
 					"idPortlet:idForm:txtPaese",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Campo Obbligatorio",
-							"Campo Obbligatorio"));
-			return null;
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Campo Obbligatorio", "Campo Obbligatorio"));
+			return false;
 		}
 		rid.setPaese(rid.getPaese().toUpperCase().trim());
-		
-		if (rid.getCin()==null)
-		{
+
+		if (rid.getCin() == null || rid.getCin().isEmpty()) {
 			FacesContext.getCurrentInstance().addMessage(
-					"idForm:txtCin",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Campo Obbligatorio",
-							"Campo Obbligatorio"));
-			
-			return null;
+					"idPortlet:idForm:txtCin",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Campo Obbligatorio", "Campo Obbligatorio"));
+
+			return false;
 		}
 		rid.setCin(rid.getCin().toUpperCase().trim());
-		
-		if (rid.getCinAbi()==null)
-		{
+
+		if (rid.getCinAbi() == null && !rid.getCinAbi().isEmpty()) {
 			FacesContext.getCurrentInstance().addMessage(
-					"idForm:txtCinAbi",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Campo Obbligatorio",
-							"Campo Obbligatorio"));
-			return null;
+					"idPortlet:idForm:txtCinAbi",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Campo Obbligatorio", "Campo Obbligatorio"));
+			return false;
 		}
+
 		rid.setCinAbi(rid.getCinAbi().toUpperCase().trim());
 		rid.setNumeroCC(rid.getNumeroCC().toUpperCase().trim());
 
@@ -657,21 +634,39 @@ public class InserimentoRid {
 
 			errore = LoadBundleLanguage
 					.getMessage("errore.codiceIbanNonCorretto");
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, errore,
-							errore));
-			return null;
+			writeInfoMessage(TipoGravitaMessage.ERROR, errore);
+			return false;
 
 		}
 
 		if (rid.getMembri().isEmpty()) {
 			errore = LoadBundleLanguage.getMessage("errore.anagNonPres");
 
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, errore,
-							errore));
+			writeInfoMessage(TipoGravitaMessage.ERROR, errore);
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean isModificaRid() {
+
+		if (modificaRid == null) {
+			modificaRid = HelperSession.getFromRequest(Costante.PARM_MOD_RID) != null;
+		}
+
+		return modificaRid;
+
+	}
+
+	public String proseguiOnClick() throws ContradaExceptionBloccante,
+			ContradaExceptionNonBloccante, IOException {
+		renderMessIban = false;
+
+		rid.setUser(FacesUtils.getUser());
+
+		if (!verificaControlliFormali()) {
+			return null;
 		}
 
 		if (isRidFromInsertAnag()) {
@@ -685,7 +680,8 @@ public class InserimentoRid {
 			// o sono in modifica oppure in inserimento
 			if (isModificaRid()) {
 				GestioneRidBD.aggiornaRid(getRid());
-				return "INDIETRO";
+				FacesUtils.redirectToUrl("CercaRidModale.iface");
+				return null;
 			} else {
 				// inserimento nuovo rid
 				setRid(GestioneRidBD.inserisciRidConMembri(getRid()));
@@ -754,12 +750,11 @@ public class InserimentoRid {
 
 	public void calcolaIban(ActionEvent e) {
 		CalcolaCoordinateBancariePojo calcCor = new CalcolaCoordinateBancariePojo();
-		if (rid.getPaese()==null || rid.getPaese().isEmpty())
-		{
+		if (rid.getPaese() == null || rid.getPaese().isEmpty()) {
 			rid.setPaese("IT");
 		}
-		IbanDTO iban = calcCor.calcolaIban(rid.getPaese(), rid.getAbi(), rid
-				.getCab(), rid.getNumeroCC().toUpperCase());
+		IbanDTO iban = calcCor.calcolaIban(rid.getPaese(), rid.getAbi(),
+				rid.getCab(), rid.getNumeroCC().toUpperCase());
 		rid.setCinAbi(iban.getCodiceBban().substring(0, 1));
 		rid.setCin(iban.getCodiceControllo());
 		rid.setPaese(iban.getCodicePaese());

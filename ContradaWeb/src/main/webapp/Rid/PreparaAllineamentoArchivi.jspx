@@ -2,7 +2,8 @@
 <jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ice="http://www.icesoft.com/icefaces/component">
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:nicchio="http://taglib.contradanicchio.it">
 
 	<f:view>
 		<ice:portlet>
@@ -12,11 +13,12 @@
 					<ice:outputText value="Prepara Allineamento Archivi"
 						styleClass="labelPortletContainer"></ice:outputText>
 				</ice:panelGroup>
+				
+				<!-- INFO MESSAGE -->
+					<nicchio:serviceInfoMessage
+						bbean="#{preparaAllArchivi}"/>				
+				
 				<ice:panelGrid>
-
-
-
-
 					<ice:panelGrid columns="2"
 						rendered="#{preparaAllArchivi.visibleListRid==true}">
 
@@ -141,7 +143,7 @@
 						<ice:outputText value="#{preparaAllArchivi.nrDisposizioni}" />
 
 					</ice:panelGrid>
-					<ice:outputText value="#{preparaAllArchivi.note}" />
+					
 					<ice:panelGroup
 						rendered="#{preparaAllArchivi.visibleListRid==true}">
 						<ice:panelGroup style="float:left;">

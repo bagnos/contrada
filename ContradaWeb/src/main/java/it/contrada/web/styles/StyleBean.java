@@ -46,8 +46,13 @@ public class StyleBean {
 	private String imgPdf="/images/portlet/pdf_document.png";
 	private String imgLetter="/images/portlet/allegato.gif";
 	private String imgTessera="/images/portlet/contact_new.png";
+	private String imgClose="/images/portlet/close_white_cross.png";
 	
 	
+
+	public String getImgClose() {
+		return imgClose;
+	}
 
 	public String getImgTessera() {
 		return imgTessera;

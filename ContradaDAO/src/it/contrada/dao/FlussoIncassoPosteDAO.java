@@ -18,16 +18,25 @@ public class FlussoIncassoPosteDAO extends SqlSessionDaoSupport implements
 
 	@Override
 	public List<IncassoPostaDTO> getFlussiIncassoPosta(int anno,
-			Date dtScadenza, List<Integer> tipoTessere) {
+			Date dtScadenza, List<Integer> tipoTessere,
+			List<Integer> tipoIncasso, List<Integer> tessereManuali) {
 		// TODO Auto-generated method stub
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 		String dtScadenzaFormat = format.format(dtScadenza);
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
-		map.put("anno", anno);
+		map.put("anno", anno);		
 		map.put("dtScadenza", dtScadenzaFormat);
 		map.put("tipoTessere", tipoTessere);
+
+		if (tipoIncasso != null && !tipoIncasso.isEmpty()) {
+			map.put("tipoIncassi", tipoIncasso);
+		}
+
+		if (tessereManuali != null && !tessereManuali.isEmpty()) {
+			map.put("tessereManuali", tessereManuali);
+		}
 		return getSqlSessionTemplate().selectList(
 				"it.contrada.flussoposte.queries.getFlussoIncassoPoste", map);
 

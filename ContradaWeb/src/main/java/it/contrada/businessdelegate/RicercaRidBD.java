@@ -96,10 +96,10 @@ public class RicercaRidBD {
 		return ricercaRid.ricercaPerRid(idRid);
 	}
 	
-	public static List<RidDTO> ricercaPerStato(List<Integer> cdStato)
+	public static List<RidDTO> ricercaPerStato(List<Integer> cdStato,Integer idTipoTessera)
 	throws ContradaExceptionBloccante, ContradaExceptionNonBloccante
 	{
-		return ricercaRid.ricercaPerStato(cdStato);
+		return ricercaRid.ricercaPerStato(cdStato,idTipoTessera);
 	}
 
 }

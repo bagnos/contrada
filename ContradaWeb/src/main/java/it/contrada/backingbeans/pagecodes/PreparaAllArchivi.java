@@ -6,6 +6,7 @@ import it.contrada.dto.RidDTO;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
 import it.contrada.preautrid.dto.FlussoPreautInviatoDTO;
+import it.contrada.web.enumcontrada.TipoGravitaMessage;
 import it.contrada.web.util.Errori;
 import it.contrada.web.util.VerificaCoordinateBancariePojo;
 import it.contrada.web.util.VerificaDatiAnagraficiClientePojo;
@@ -22,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.icesoft.faces.context.effects.JavascriptContext;
 
-public class PreparaAllArchivi {
+public class PreparaAllArchivi extends BaseView {
 	private boolean visibleListRid;
 	private List<RidDTO> rids;
 	private int nrDisposizioni;
@@ -91,6 +92,7 @@ public class PreparaAllArchivi {
 
 	public PreparaAllArchivi() throws ContradaExceptionBloccante,
 			ContradaExceptionNonBloccante {
+		hideInfoMessage();
 		rids = GestioneFlussoBD.elencaRidDaAllineare();
 		labelCmdFlusso = "Prepara";
 		VerificaDatiAnagraficiClientePojo datiAnag = new VerificaDatiAnagraficiClientePojo();
@@ -117,7 +119,10 @@ public class PreparaAllArchivi {
 	public void preparaOnClick(ActionEvent av)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 
+		
 		try {
+			
+			hideInfoMessage();
 			if (preautDTO == null) {
 				// si genera il flusso per la prima volta
 				preautDTO = GestioneFlussoBD.preparaFlussoPreautRid(rids);
@@ -128,6 +133,7 @@ public class PreparaAllArchivi {
 			}
 			if (preautDTO == null) {
 				setNote("Nessuna preautorizzazione inviata");
+				writeInfoMessage(TipoGravitaMessage.INFO, note);
 
 			} else {
 				labelCmdFlusso = "Ristampa";
@@ -137,8 +143,11 @@ public class PreparaAllArchivi {
 						preautDTO.getNrDisposizioni()));
 
 				genereFilePreaut(preautDTO);
-
+				writeInfoMessage(TipoGravitaMessage.SUCCESS, note);
 			}
+			
+			
+			
 		} catch (Throwable e) {
 			if (e.getCause() != null
 					&& e.getCause() instanceof ContradaExceptionNonBloccante) {
@@ -146,6 +155,7 @@ public class PreparaAllArchivi {
 			} else {
 				setNote(Errori.TEMP_PROB_COLL);
 			}
+			writeInfoMessage(TipoGravitaMessage.ERROR, note);
 			log.error(e);
 			
 		}

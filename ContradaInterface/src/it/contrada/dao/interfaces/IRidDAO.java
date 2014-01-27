@@ -33,7 +33,7 @@ public interface IRidDAO {
 
 	public List<RidDTO> getRidCensiti() throws Exception;
 	
-	public List<RidDTO> getRidPerStato(List<Integer> cdStato) throws Exception;
+	public List<RidDTO> getRidPerStato(List<Integer> cdStato,Integer idTipoTessera) throws Exception;
 
 	public int aggiornaStatoRid(TipoStatoRid stato, TipoStatoRid statoPrec)
 			throws Exception;

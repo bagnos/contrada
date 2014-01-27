@@ -2,8 +2,10 @@
 <jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ice="http://www.icesoft.com/icefaces/component">
-	<jsp:directive.page contentType="text/html;charset=utf-8" />
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:nicchio="http://taglib.contradanicchio.it">
+	
+	 
 	<f:view>
 		<ice:portlet>
 			<ice:form>
@@ -32,14 +34,17 @@
 										tabindex="1">
 										<f:selectItems value="#{insAnagrafica01.statiAnagrafica}" />
 									</ice:selectOneMenu>
-									
-									
+									<!-- 
 									<ice:panelGroup style="float:right;display:inline;" rendered="#{insAnagrafica01.anagrafica.idStatoAnagrafica==3}">
-									<ice:selectBooleanCheckbox id="deltessere"
+									<ice:selectBooleanCheckbox id="deltessere" title="seleziona per eiliminare tutte le tessera in carico"
 										value="#{insAnagrafica01.eliminaTessere}"/>
 													
 									<ice:outputText value="Elimina Tessere" />
 									</ice:panelGroup>
+									-->
+									
+									
+									
 									
 									
 									<ice:panelGroup style="float:right;display:inline;"
@@ -137,7 +142,7 @@
 											<ice:outputText value="#{famiglia.idFamiglia}" />
 											<ice:outputText value="#{famiglia.nominativo}" />
 											<ice:outputText value="#{famiglia.dtNascita}">
-												<ice:convertDateTime pattern="dd/MM/yyyy" />
+												<f:convertDateTime pattern="dd/MM/yyyy" />
 											</ice:outputText>
 										</ice:panelGrid>
 									</f:facet>
@@ -537,9 +542,10 @@
 
 
 					</ice:panelTabSet>
-					<ice:outputText value="#{insAnagrafica01.messaggio}"
-						styleClass="inputNote"></ice:outputText>
-
+					<!-- INFO MESSAGE -->
+					<nicchio:serviceInfoMessage
+						bbean="#{insAnagrafica01}"/>
+				
 					<ice:panelGroup styleClass="bottoniera">
 
 					
@@ -547,7 +553,7 @@
 							action="#{insAnagrafica01.annullaOnClick}" value="Indietro" />
 						
 						
-						<ice:commandButton style="margin-left:20px"
+						<ice:commandButton 
 							action="#{insAnagrafica01.proseguiOnClick}" value="Conferma" />
 							
 						

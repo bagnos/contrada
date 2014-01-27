@@ -272,6 +272,17 @@ public class AnagrafeDAO extends SqlSessionDaoSupport implements IAnagrafeDAO {
 				"it.contrada.anagrafica.queries.updateStatoAnagrafica", map);
 
 	}
+	
+	@Override
+	public int aggiornaStatoAnagrafica(int idStatoAnagrafica, int idStatoAnagraficaPrec)
+			throws Exception {
+		// TODO Auto-generated method stub
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("idStatoAnagrafica", idStatoAnagrafica);
+		map.put("idStatoAnagraficaPrec", idStatoAnagraficaPrec);
+		return (Integer) getSqlSessionTemplate().update(
+				"it.contrada.anagrafica.queries.updateAllStatoAnagrafica", map);
+	}
 
 	@Override
 	public List<AnagraficaDTO> getVotanti(int idTipoTessera, Date dtElezione,
@@ -321,4 +332,6 @@ public class AnagrafeDAO extends SqlSessionDaoSupport implements IAnagrafeDAO {
 		return getSqlSessionTemplate().selectList(
 				"it.contrada.anagrafica.queries.getAnagraficheConPrincipale", parms);
 	}
+
+	
 }

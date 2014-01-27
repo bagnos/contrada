@@ -20,6 +20,7 @@ public class Errori {
 	public static final String CODICE_IBAN_NON_CORRETTO="codice iban non corretto";
 	public static final String TESSERE_NON_INSERITE="Inserire almeno una tessera";
 	public static final String FAMIGLIA_REQUIRED="Famiglia obbligatoria";
+	public static final String TESSERE_MEMORIA="Sono ammesse solo tessere alla memoria";
 	
 	
 	private Errori()

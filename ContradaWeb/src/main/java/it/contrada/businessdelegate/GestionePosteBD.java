@@ -43,11 +43,11 @@ public class GestionePosteBD {
 	}
 
 	public static FlussoIncassoPostaDTO produciFlussiIncassoPoste(int anno,
-			java.sql.Date dtScadenza, List<Integer> tipoTessere, String nomeFile)
+			java.sql.Date dtScadenza, List<Integer> tipoTessere, String nomeFile,List<Integer> tipoIncasso,List<Integer> tessereManuali)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 		FlussoIncassoPostaDTO incassi = gestionePoste
 				.produciFlussiIncassoPoste(anno, dtScadenza, tipoTessere,
-						nomeFile);
+						nomeFile,tipoIncasso,tessereManuali);
 		return incassi;
 	}
 

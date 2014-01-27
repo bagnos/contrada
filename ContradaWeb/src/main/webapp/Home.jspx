@@ -10,56 +10,44 @@
 <head>
 <title>Protettorato - Nobile Contrada del Nicchio</title>
 <script type="text/javascript">
-	document.getElementById('pagina').contentWindow.Ice
-			.onSendReceive(
-					'document:body',
-					function() {
-
-
-						top.document.getElementById('loadingSpan').style.visibility = "visible";
-
-						/*
-						top.document.getElementById('backgroundTransparency').style.display = "block";
-						top.document.getElementById('divbackgroundTransparency').style.display = "block";
-						 */
-
-					},
-					function() {
-
-						top.document.getElementById('loadingSpan').style.visibility = "hidden";
-						/*
-						top.document.getElementById('backgroundTransparency').style.display = "none";
-						top.document.getElementById('divbackgroundTransparency').style.display = "none";
-						 */
-
-					});
-
+	
 	function hideLoading() {
+
+		/*
+		var iframe = window.parent.document.getElementById('pagina');
+		var container = top.window;
+		iframe.style.height = container.offsetHeight + 'px';*/
+
 		hideTrasparency();
-		document.getElementById('pagina').style.display = "block";
 		document.getElementById('pagina').contentWindow.Ice
-		.onSendReceive(
+		.onServerError(
 				'document:body',
 				function() {
-
-
-					top.document.getElementById('loadingSpan').style.visibility = "visible";
-
-					/*
-					top.document.getElementById('backgroundTransparency').style.display = "block";
-					top.document.getElementById('divbackgroundTransparency').style.display = "block";
-					 */
-
-				},
-				function() {
-
 					top.document.getElementById('loadingSpan').style.visibility = "hidden";
-					/*
-					top.document.getElementById('backgroundTransparency').style.display = "none";
-					top.document.getElementById('divbackgroundTransparency').style.display = "none";
-					 */
-
 				});
+		document.getElementById('pagina').style.display = "block";
+		document.getElementById('pagina').contentWindow.Ice
+				.onSendReceive(
+						'document:body',
+						function() {
+
+							top.document.getElementById('loadingSpan').style.visibility = "visible";
+
+							/*
+							top.document.getElementById('backgroundTransparency').style.display = "block";
+							top.document.getElementById('divbackgroundTransparency').style.display = "block";
+							 */
+
+						},
+						function() {
+
+							top.document.getElementById('loadingSpan').style.visibility = "hidden";
+							/*
+							top.document.getElementById('backgroundTransparency').style.display = "none";
+							top.document.getElementById('divbackgroundTransparency').style.display = "none";
+							 */
+
+						});
 
 	}
 	function loadIFrame(page) {
@@ -219,7 +207,7 @@ margin-top: 10px;">
 						onclick="loadIFrame('./Poste/RiceviIncassoPoste.iface'); ">
 					</ice:menuItem>
 					<ice:menuItem id="RicercaIncassoPoste"
-						value="Ricerca Flusso IncassoPoste"
+						value="Ricerca Flusso Incasso Poste"
 						onclick="loadIFrame('./Poste/RicercaIncassoPoste.iface'); ">
 					</ice:menuItem>
 				</ice:menuItem>
@@ -301,10 +289,10 @@ margin-top: 10px;">
 
 
 		<!-- contenuto -->
-		<ice:panelGroup>
 
 
-			<!-- 
+
+		<!-- 
 				<div id="loading"
 				style="text-align: center; position: absolute; top: 50%; left: 45%;">
 
@@ -315,20 +303,20 @@ margin-top: 10px;">
 				</div>
 				  -->
 
-			<div id="backgroundTransparency"
-				style="left: 0px; top: 0px; width: 1276px; height: 1076px; display: none; filter: alpha(opacity =             30); position: absolute; z-index: 250021; cursor: wait;" />
-			<div id="divbackgroundTransparency"
-				style="text-align: center; top: 50%; left: 47%; display: none; position: absolute; z-index: 250022; cursor: wait;">
-				<img alt="" src="./images/portlet/loading_animation.gif" />
+		<div id="backgroundTransparency"
+			style="left: 0px; top: 0px; width: 1276px; height: 1076px; display: none; filter: alpha(opacity =                 30); position: absolute; z-index: 250021; cursor: wait;" />
+		<div id="divbackgroundTransparency"
+			style="text-align: center; top: 50%; left: 47%; display: none; position: absolute; z-index: 250022; cursor: wait;">
+			<img alt="" src="./images/portlet/loading_animation.gif" />
 
 
 
 
-			</div>
-			<!-- iframe -->
-			<iframe src="" width="100%" height="100%" frameborder="0"
-				style="display: none" onload="javascript:hideLoading();" id="pagina"></iframe>
-		</ice:panelGroup>
+		</div>
+		<!-- iframe -->
+		<iframe src="" width="100%" height="100%" frameborder="0"
+			style="display: none" onload="javascript:hideLoading();" id="pagina"></iframe>
+
 
 
 	</ice:form>

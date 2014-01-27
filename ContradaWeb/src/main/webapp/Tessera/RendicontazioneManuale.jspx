@@ -2,7 +2,8 @@
 <jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ice="http://www.icesoft.com/icefaces/component">
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:nicchio="http://taglib.contradanicchio.it">
 
 
 	<f:view>
@@ -14,6 +15,10 @@
 					<ice:outputText value="Rendicontazione Manuale"
 						styleClass="labelPortletContainer"></ice:outputText>
 				</ice:panelGroup>
+				<!-- INFO MESSAGE -->
+					<nicchio:serviceInfoMessage
+				bbean="#{rendicontazioneManuale}"/>
+				
 				<ice:panelGrid>
 					<ice:panelGrid border="0" columns="4">
 
@@ -58,7 +63,7 @@
 									<ice:outputText value="#{anagrafica.idAnagrafica}" />
 									<ice:outputText value="#{anagrafica.intestatario}" />
 									<ice:outputText value="#{anagrafica.dtNascita}">
-										<ice:convertDateTime pattern="dd/MM/yyyy" />
+										<f:convertDateTime pattern="dd/MM/yyyy" />
 									</ice:outputText>
 								</ice:panelGrid>
 							</f:facet>
@@ -274,7 +279,7 @@
 						<ice:inputText value="#{rendicontazioneManuale.daIncassare}"
 							converter="ImportoConverter" readonly="true" style="width: 86px"></ice:inputText>
 					</ice:panelGrid>
-					<ice:outputText value="#{rendicontazioneManuale.messaggio}"></ice:outputText>
+					
 					<ice:panelGrid columns="2">
 						<ice:commandButton value="Conferma"
 							rendered="#{rendicontazioneManuale.visibleAnagrafiche}"

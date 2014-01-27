@@ -12,5 +12,6 @@ public interface IGestioneAnagrafica {
 	public AnagraficaDTO inserisciAnagraficaConRid(AnagraficaDTO anagraficaDTO) throws ContradaExceptionBloccante, ContradaExceptionNonBloccante;
 	public int aggiornaGestore(List<AnagraficaDTO> anagrafiche) throws ContradaExceptionBloccante, ContradaExceptionNonBloccante;
 	public int aggiornaStatoAnagrafica(List<Integer> idAnagrafiche,int idStato) throws ContradaExceptionBloccante, ContradaExceptionNonBloccante;
+	
 }
   

@@ -203,7 +203,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     	TSUCC.ID_TIPO_CARICA=TC.ID_TIPO_CARICA_SUCC
 		WHERE
 		TC.ID_TIPO_CARICA_SUCC IS NOT NULL
-		AND A.ID_STATO_ANAGRAFICA =1
+		AND A.ID_STATO_ANAGRAFICA in (1,4)
 		AND
 		year(#{dataRif})-year(A.DT_NASCITA)>=TC.NR_ETA_MAX
 		order by a.tx_cognome,a.tx_nome

@@ -1,7 +1,10 @@
 package it.contrada.bean;
 
+import it.contrada.dao.AnagrafeDAO;
+import it.contrada.dao.interfaces.IAnagrafeDAO;
 import it.contrada.dao.interfaces.ITesseraDAO;
 import it.contrada.dominio.dto.TipoTesseraDTO;
+import it.contrada.enumcontrada.TipoStatoAnagrafica;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
 import it.contrada.interfaces.IGestioneTessera;
@@ -24,15 +27,20 @@ public class GestioneTessera implements IGestioneTessera {
 	private static Log log = LogFactory.getLog(GestioneTessera.class);
 
 	/**
-	 * @uml.property  name="tesseraDao"
-	 * @uml.associationEnd  
+	 * @uml.property name="tesseraDao"
+	 * @uml.associationEnd
 	 */
 	@Autowired
 	private ITesseraDAO tesseraDao;
+	private IAnagrafeDAO anagrafeDao;
+
+	public void setAnagrafeDao(IAnagrafeDAO anagrafeDao) {
+		this.anagrafeDao = anagrafeDao;
+	}
 
 	/**
 	 * @param tesseraDao
-	 * @uml.property  name="tesseraDao"
+	 * @uml.property name="tesseraDao"
 	 */
 	public void setTesseraDao(ITesseraDAO tesseraDao) {
 		this.tesseraDao = tesseraDao;
@@ -54,6 +62,11 @@ public class GestioneTessera implements IGestioneTessera {
 		// TODO Auto-generated method stub
 		int rows = 0;
 		try {
+			//riattivo le anagrafiche sopsese
+			anagrafeDao.aggiornaStatoAnagrafica(
+					TipoStatoAnagrafica.Attiva.getStatoAnagrafica(),
+					TipoStatoAnagrafica.Sospesa.getStatoAnagrafica());
+			
 			// si aggiornano le tessere con la nuova carica ed importo
 			rows = tesseraDao.allineaQuoteTessera(dataRif);
 			if (rows > 0) {
@@ -65,6 +78,7 @@ public class GestioneTessera implements IGestioneTessera {
 
 				tesseraDao.insertStoricoAnno(calendar
 						.get(GregorianCalendar.YEAR));
+				
 			}
 
 		} catch (ContradaExceptionBloccante ex) {

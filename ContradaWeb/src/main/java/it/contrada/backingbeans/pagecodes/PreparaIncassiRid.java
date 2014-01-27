@@ -7,19 +7,19 @@ import it.contrada.businessdelegate.RicercaRidBD;
 import it.contrada.dominio.dto.TipoIncassoDTO;
 import it.contrada.dominio.dto.TipoMeseDTO;
 import it.contrada.enumcontrada.TipoIncassoRid;
+import it.contrada.enumcontrada.TipoMeseIncasso;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
 import it.contrada.incassorid.dto.FlussoIncassoRidDTO;
 import it.contrada.incassorid.dto.IncassoRidDTO;
+import it.contrada.util.BaseUtil;
+import it.contrada.util.DecodificaMese;
+import it.contrada.web.enumcontrada.TipoGravitaMessage;
 import it.contrada.web.util.Configuration;
 import it.contrada.web.util.ConverterContrada;
-import it.contrada.web.util.Costante;
 import it.contrada.web.util.Errori;
-import it.contrada.web.util.FacesUtils;
-import it.contrada.web.util.FileTemp;
 import it.contrada.web.util.LoadBundleLanguage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -30,15 +30,13 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.icesoft.faces.context.effects.JavascriptContext;
-import com.mysql.jdbc.Messages;
 
-public class PreparaIncassiRid {
+public class PreparaIncassiRid extends BaseView {
 
 	private int incassoRid;
 	private int anno;
@@ -171,6 +169,7 @@ public class PreparaIncassiRid {
 		dtValuta.add(Calendar.DAY_OF_MONTH, ggValuta);
 
 		setDtValuta(new java.util.Date(dtValuta.getTimeInMillis()));
+		hideInfoMessage();
 	}
 
 	public void incassoRidOnChange(ValueChangeEvent e)
@@ -203,6 +202,8 @@ public class PreparaIncassiRid {
 	public void preparaOnClick(ActionEvent e)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 		note = "";
+		
+		hideInfoMessage();
 		try {
 			if (flusso == null) {
 				flusso = GestioneFlussoBD.preparaFlussoIncassiRid(anno, mese,
@@ -222,12 +223,13 @@ public class PreparaIncassiRid {
 			} else {
 				labelGeneraFlusso = LoadBundleLanguage.getMessage("ristampa");
 				disabledElimina = false;
-				note = String.format("inviate %d diposizioni, importo %s",
-						flusso.getNrIncassi(), ConverterContrada
-								.convertToImporto(flusso.getImFlusso()));				
+				
+				note = String.format("Inviate %d diposizioni, importo %s",
+						flusso.getNrIncassi(), BaseUtil.formatImporto(flusso.getImFlusso()));				
 				PrintFile file = new PrintFile();
 				file.setNomeFileCompleto(flusso.getNomeFile());
 				file.setNomeFile(flusso.getNomeFileSemplice());
+				writeInfoMessage(TipoGravitaMessage.SUCCESS, note);
 
 				keyDownloadFile = file.getNomeFile();
 
@@ -247,7 +249,8 @@ public class PreparaIncassiRid {
 				setNote(ex.getCause().getMessage());
 			} else {
 				setNote(Errori.TEMP_PROB_COLL);
-			}
+			}			
+			writeInfoMessage(TipoGravitaMessage.ERROR, note);
 			log.error(ex);
 		}
 	}
@@ -255,14 +258,16 @@ public class PreparaIncassiRid {
 	public void eliminaOnClick(ActionEvent e)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 		note = "";
+		hideInfoMessage();
 		GestioneFlussoBD.eliminaFlussoIncassiRid(anno, mese, getIncassoRid());
 
-		note = String.format("eliminato flusso per anno %d e mese %d", anno,
-				mese);
+		note = String.format("Eliminato flusso per anno %d e mese %s", anno,
+				TipoMeseIncasso.lookUpMeseByOrdinal(mese));
 		rids = null;
 		labelGeneraFlusso = LoadBundleLanguage.getMessage("prepara");
 		flusso=null;
 		disabledElimina = true;
+		writeInfoMessage(TipoGravitaMessage.SUCCESS, note);
 
 	}
 

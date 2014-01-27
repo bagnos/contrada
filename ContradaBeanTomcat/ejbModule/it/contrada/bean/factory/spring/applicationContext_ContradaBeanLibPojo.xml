@@ -76,6 +76,8 @@
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
+	
+	
 
 
 	<bean id="SqlMapClient" class="org.mybatis.spring.SqlSessionFactoryBean">

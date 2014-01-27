@@ -114,6 +114,8 @@ public class CercaRid {
 	public void cercaRidOnClick(ActionEvent event)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 
+	
+	
 		setMessaggio("");
 		rids = ricercaRid();
 		setVisibleListRid(rids != null && !rids.isEmpty());

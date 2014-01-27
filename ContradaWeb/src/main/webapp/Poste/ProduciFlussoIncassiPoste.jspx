@@ -8,35 +8,137 @@
 		<ice:portlet>
 			<ice:outputStyle href="#{styleBean.activeCss}" />
 			<ice:form>
-				<ice:panelGroup styleClass="portletContainer">
-					<ice:outputText value="Prepara Flusso Incassi Poste"
-						styleClass="labelPortletContainer"></ice:outputText>
-				</ice:panelGroup>
-				<ice:panelGrid style="text-align:left">
+				<ice:panelGroup>
+					<ice:panelGroup styleClass="portletContainer">
+						<ice:outputText value="Prepara Flusso Incassi Poste"
+							styleClass="labelPortletContainer"></ice:outputText>
+					</ice:panelGroup>
 
-					<ice:panelGrid columns="3">
-						<ice:outputText value="Data Scadenza"></ice:outputText>
+					<!-- radio button -->
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:selectOneRadio id="tipoFlusso" layout="spread" title="tipo di flusso da generare"
+							partialSubmit="true"
+							value="#{produciFlussoIncassiPoste.tipoFlusso}">
+							<f:selectItem itemValue="1" itemLabel="Bollettini ordinari" />
+							<f:selectItem itemValue="2"
+								itemLabel="Recupero insoluti fine anno" />
+							<f:selectItem itemValue="3"
+								itemLabel="Bollettini manuali" />
+						</ice:selectOneRadio>
+						<ice:panelGrid columns="3">
+							<ice:radio for="tipoFlusso" index="0" />
+							<ice:radio for="tipoFlusso" index="1" />
+							<ice:radio for="tipoFlusso" index="2" />
+						</ice:panelGrid>
+					</ice:panelGroup>
+
+					<!-- incassi -->
+					<ice:panelGroup styleClass="elementContainer"
+						rendered="#{produciFlussoIncassiPoste.tipoFlusso==2}">
+
+						<ice:selectManyCheckbox layout="pageDirection"
+							value="#{produciFlussoIncassiPoste.pagamentiSelected}">
+							<f:selectItems value="#{produciFlussoIncassiPoste.pagamenti}" />
+						</ice:selectManyCheckbox>
+					</ice:panelGroup>
+
+					<!-- inserimenterimento manuale -->
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="Anagrafica" styleClass="label140"></ice:outputText>
+
+						<ice:inputText id="txtNrAnag" style="width: 79px"
+							converter="IntegerConverter"
+							value="#{produciFlussoIncassiPoste.idAnagrafica}"></ice:inputText>
+
+						<ice:commandButton value="Aggiungi" partialSubmit="true" title="aggiungi anagrafica al flusso"
+							actionListener="#{produciFlussoIncassiPoste.aggiungiAnagraficaOnClick}"
+							id="btnAggAnag" />
+
+
+						<ice:dataTable border="0"
+							value="#{produciFlussoIncassiPoste.tessere}"
+							rendered="#{produciFlussoIncassiPoste.visibleTessere==true}"
+							var="tessera">
+
+							<ice:column id="column0">
+								<f:facet name="header">
+								</f:facet>
+								<ice:commandButton image="#{styleBean.elimina}" title="elimina tessera"
+									partialSubmit="true"
+									actionListener="#{produciFlussoIncassiPoste.eliminaAnagraficaOnClick}">
+									<f:attribute name="tessera" value="#{tessera}" />
+								</ice:commandButton>
+
+							</ice:column>
+							<ice:column id="column1">
+								<f:facet name="header">
+									<ice:outputText value="Anagrafica"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.idAnag}" />
+							</ice:column>
+							<ice:column id="column2">
+								<f:facet name="header">
+									<ice:outputText value="Cognome"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.cognome}" />
+							</ice:column>
+							<ice:column id="column3">
+								<f:facet name="header">
+									<ice:outputText value="Nome"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.nome}" />
+							</ice:column>
+							<ice:column id="column4">
+								<f:facet name="header">
+									<ice:outputText value="Quota"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.quota}"
+									converter="ImportoConverter" />
+							</ice:column>
+							<ice:column id="column5">
+								<f:facet name="header">
+									<ice:outputText value="Tessera"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.dsTipoTessera}" />
+							</ice:column>
+							<ice:column id="column6">
+								<f:facet name="header">
+									<ice:outputText value="Incasso"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.dsIncasso}" />
+							</ice:column>
+						</ice:dataTable>
+
+
+					</ice:panelGroup>
+
+					<!-- data scadenza -->
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="Data Scadenza" styleClass="label140"
+							style="float:left"></ice:outputText>
 						<ice:selectInputDate id="dtScadenza" required="true"
 							renderAsPopup="true" partialSubmit="false"
 							popupDateFormat="dd/MM/yyyy"
-							value="#{produciFlussoIncassiPoste.dtScadenza}"
-							style="width: 262px">
+							value="#{produciFlussoIncassiPoste.dtScadenza}">
 						</ice:selectInputDate>
-						<ice:message for="dtScadenza" />
-						<ice:outputText value="Anno"></ice:outputText>
+					</ice:panelGroup>
+
+					<!-- anni -->
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="Anno" styleClass="label140"></ice:outputText>
 						<ice:inputText id="anno" required="true"
 							value="#{produciFlussoIncassiPoste.anno}"></ice:inputText>
-						<ice:message for="dtNascita" />
-						<!-- 
-						<ice:outputText value="NomeFile" />
-						<ice:inputText id="nomeFile" required="true"
-							value="#{produciFlussoIncassiPoste.nomeFile}"
-							style="width: 260px"></ice:inputText>
-						<ice:message for="nomeFile" />
-						 -->
-					</ice:panelGrid>
 
-					<ice:panelGrid columns="3">
+						<!--  
+						<ice:outputText value="AnnoA" style="margin-left:20px;" styleClass="label140"
+							visible="#{produciFlussoIncassiPoste.tipoFlusso==2}"></ice:outputText>
+						<ice:inputText id="annoA" required="true"
+							visible="#{produciFlussoIncassiPoste.tipoFlusso==2}"
+							value="#{produciFlussoIncassiPoste.annoA}"></ice:inputText>-->
+					</ice:panelGroup>
+
+					<!-- bottoniera -->
+					<ice:panelGroup styleClass="bottoniera">
 						<ice:commandButton value="Prepara"
 							actionListener="#{produciFlussoIncassiPoste.preparaOnClick}"
 							disabled="#{produciFlussoIncassiPoste.disabledPrepara==true}" />
@@ -44,30 +146,25 @@
 						<ice:commandButton value="Conferma"
 							actionListener="#{produciFlussoIncassiPoste.confermaOnClick}"
 							disabled="#{produciFlussoIncassiPoste.disabledConferma==true}" />-->
-						<ice:commandButton value="Elimina"
+						<ice:commandButton value="Elimina" style="margin-left:20px"
 							actionListener="#{produciFlussoIncassiPoste.eliminaOnClick}"
 							disabled="#{produciFlussoIncassiPoste.disabledElimina==true}" />
 
 
-					</ice:panelGrid>
-					<ice:panelGrid columns="2"
-						rendered="#{produciFlussoIncassiPoste.visibleListPoste==true}">
+					</ice:panelGroup>
+					
+
+					<ice:panelGrid columns="4" style="margin-top:15px"
+						rendered="#{produciFlussoIncassiPoste.visibleExportPoste==true}">
+
 						<ice:outputText value="Nr. Disposizioni:" />
 						<ice:outputText
 							value="#{produciFlussoIncassiPoste.nrDisposizioni}" />
-
-					</ice:panelGrid>
-					<ice:panelGroup>
 						<ice:outputText value="#{produciFlussoIncassiPoste.note}"></ice:outputText>
-					</ice:panelGroup>
-
-					<ice:panelGrid columns="2"
-						rendered="#{produciFlussoIncassiPoste.visibleExportPoste==true}">
-
-						<ice:graphicImage url="#{styleBean.imgExcel}" />
-						<ice:dataExporter for="incassiPoste"
-							label="#{styleBean.labelExcel}" type="excel"
-							ignorePagination="true" />
+						
+						<ice:dataExporter for="incassiPoste" image="#{styleBean.imgExcel}"
+							label="#{styleBean.labelExcel}" type="excel" ignorePagination="true" />
+						
 
 					</ice:panelGrid>
 
@@ -298,7 +395,7 @@
 
 
 
-				</ice:panelGrid>
+				</ice:panelGroup>
 			</ice:form>
 
 		</ice:portlet>

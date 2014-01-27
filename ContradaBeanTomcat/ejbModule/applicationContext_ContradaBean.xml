@@ -149,6 +149,7 @@
 
 	<bean id="tesseraBO" class="it.contrada.bean.GestioneTessera">
 		<property name="tesseraDao" ref="tesseraDAO" />
+		<property name="anagrafeDao" ref="anagrafeDAO" />
 
 	</bean>
 	

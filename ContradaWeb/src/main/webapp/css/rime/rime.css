@@ -109,8 +109,7 @@ input:focus,textarea:focus {
 }
 
 .iceOutTxt,.iceOutLbl {
-	font-family: Arial, Helvetica, sans-serif;
-	color: #000000;
+	font-family: Arial, Helvetica, sans-serif;	
 	padding-left: 0px;
 	padding-right: 0px;
 	padding-top: 2px;
@@ -123,8 +122,8 @@ input:focus,textarea:focus {
 }
 
 .bottoniera {
-	margin-top: 5px;
-	
+	margin-top: 15px;
+
 	/*
 	border-top-width: 1px;
 	border-top-style: solid;
@@ -134,19 +133,19 @@ input:focus,textarea:focus {
 }
 
 .btn-protettorato {
-	background-image: url('../../images/portlet/btn_small_noIcona.gif') !important;
+	background-image: url('../../images/portlet/btn_small_noIcona.gif')
+		!important;
 	border: 0px !important;
 	width: 100px !important;
 	vertical-align: middle !important;
 	text-align: right !important;
 	padding-right: 35px !important;
-		
 }
 
-input[type="submit"],input[type="button"],input[type="reset"],button
-	{
-	width:80px;
-	padding:5px;
+input[type="submit"],input[type="button"],input[type="reset"],button {
+	width: 80px;
+	padding: 5px;
+	margin-right: 10px;
 }
 
 .iceCmdBtn { /*
@@ -168,7 +167,6 @@ input[type="submit"],input[type="button"],input[type="reset"],button
     border: 1px solid;
     margin: 2px;*/
 	padding: 3px;
-	
 }
 
 /*
@@ -1535,8 +1533,9 @@ input.iceSelInpDateClosePopup {
 	border: 1px solid #ABABAB;
 	background-color: #FFFFFF;
 	margin: 0px;
-	padding: 0px;
+	padding: 3px;
 	font-size: 12px;
+	width: 300px;
 }
 
 .iceSelInpTxtList {
@@ -2133,15 +2132,23 @@ input.iceSelInpDateClosePopup {
 
 .elementContainer {
 	width: 100%;
+	padding-top: 3px;
+	padding-right: 2px;
+	padding-bottom: 3px;
+	padding-left: 2px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #f5f5f5;
+	width: 100%;
+	clear: both;
+}
+
+.elementContainer-noborder {
+	width: 100%;
 	padding-top: 2px;
 	padding-right: 2px;
 	padding-bottom: 2px;
 	padding-left: 2px;
-	/*
-	margin-bottom: 2px;	
-	border-bottom-color: black;
-	border-bottom-style: solid;
-	border-bottom-width: 1px;*/
 }
 
 .noteContainer {
@@ -2179,6 +2186,40 @@ input.iceSelInpDateClosePopup {
 	width: 140px;
 	margin-left: 1px;
 	display: inline-block;
+}
+
+.info,.success,.warning,.error,.validation {
+	border: 1px solid;
+	margin: 10px 0px;
+	padding: 10px 10px 5px 50px;
+	background-repeat: no-repeat;
+	background-position: 10px center;
+	width:500px;
+	display:inline-block;
+}
+
+.info {
+	color: #00529B;
+	background-color: #BDE5F8;
+	background-image: url('./css-images/info.png');
+}
+
+.success {
+	color: #4F8A10;
+	background-color: #DFF2BF;
+	background-image: url('./css-images/success.png');
+}
+
+.warning {
+	color: #9F6000;
+	background-color: #FEEFB3;
+	background-image: url('./css-images/warning.png');
+}
+
+.error {
+	color: #D8000C;
+	background-color: #FFBABA;
+	background-image: url('./css-images/error.png');
 }
 
 .iceSelOneRb-dis {
@@ -3304,11 +3345,11 @@ Disabled classes for the calendar controls
 }
 
 .ice-blockui-overlay {
-    position: absolute;
-    background-color: white;
-    z-index: 28000;
-    opacity: 0.22;
-    filter: alpha(opacity = 22);
+	position: absolute;
+	background-color: white;
+	z-index: 28000;
+	opacity: 0.22;
+	filter: alpha(opacity =   22);
 }
 
 .div-left-inline-block {

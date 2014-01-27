@@ -9,6 +9,7 @@ import java.io.StringWriter;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.servlet.ServletException;
 
 import org.apache.commons.logging.Log;
@@ -25,6 +26,20 @@ public class ErrorPage {
 	private String errorMessage;
 	private String viewFrom;
 	private String stackTrace;
+	private boolean showStack=false;
+	private String link="Mostra Log";
+
+	public String getLink() {
+		return link;
+	}
+
+	public boolean isShowStack() {
+		return showStack;
+	}
+
+	public void setShowStack(boolean showStack) {
+		this.showStack = showStack;
+	}
 
 	public String getStackTrace() {
 		return stackTrace;
@@ -37,6 +52,16 @@ public class ErrorPage {
 	public String getErrorMessage() {
 		setErrors();
 		return errorMessage;
+	}
+	
+	public void showLog(ActionEvent e)
+	{
+		showStack=!showStack;
+		link="Mostra Log";
+		if (showStack)
+		{
+			link="Nascondi Log";
+		}
 	}
 
 	public void setErrors() {

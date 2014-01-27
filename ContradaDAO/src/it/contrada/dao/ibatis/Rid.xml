@@ -340,8 +340,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		rid.ID_RID AS nrRid,
 		upper(TX_INTESTATARIO) as intestatarioRid,
 		upper(RID.CD_FISC) as cdFiscale,
-		ID_STATO_RID
+		RID.ID_STATO_RID
 		as tipoStatoRid,
+		tsr.ds_stato_rid as dsStatoRid,
 		upper(coalesce(CD_NAZIONE,'')) as paese,
 		NR_CIN_EUROPEO
 		cin,
@@ -373,12 +374,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		t.fg_attiva=1
 		AND
 		A.ID_STATO_ANAGRAFICA NOT IN (2,4)
-		where
-		RID.id_stato_rid in
+		join 
+		${database.schema} tipo_stato_rid tsr on
+		rid.id_stato_rid=tsr.id_stato_rid
+		
+		<where>
+		<if test="tipoTessera!=null">		
+		T.ID_TIPO_TESSERA=#{tipoTessera} 
+		</if>
+		<if test="cdStato!=null">
+		 AND RID.id_stato_rid in
+		
 		<foreach item="item" index="index" collection="cdStato" open="("
 			separator="," close=")">
 			#{item}
 				</foreach>
+		</if>
+		</where>
 		order by intestatarioRid,nrRid;
 
 	</select>

@@ -13,6 +13,7 @@ import it.contrada.dto.TesseraStampataDTO;
 import it.contrada.enumcontrada.TipoIncasso;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
+import it.contrada.web.enumcontrada.TipoGravitaMessage;
 import it.contrada.web.util.Configuration;
 import it.contrada.web.util.Costante;
 import it.contrada.web.util.LoadBundleLanguage;
@@ -35,7 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.icesoft.faces.component.selectinputtext.SelectInputText;
 
-public class StampaTesseraView {
+public class StampaTesseraView extends BaseView {
 	private List<SelectItem> tipoTessereItems;
 	private List<SelectItem> annoItems;
 	private List<SelectItem> esattoriItems;
@@ -298,6 +299,7 @@ public class StampaTesseraView {
 			getStampaTesseraBean().setNote(
 					LoadBundleLanguage.getMessage("tessereNonPresenti"));
 			getStampaTesseraBean().setRenderNote(true);
+			writeInfoMessage(TipoGravitaMessage.INFO, getStampaTesseraBean().getNote());
 		}
 		
 		//imposto in sessione le tessere per la stampa pdf da servlet

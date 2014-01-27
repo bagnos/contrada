@@ -577,4 +577,10 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 		}
 	}
 
+	public int riattivaSospesi() throws ContradaExceptionBloccante,
+			ContradaExceptionNonBloccante {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

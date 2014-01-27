@@ -104,7 +104,7 @@
 							<p>
 								Monica Ciacci 3392740249
 								<br />
-								Paolo Paolini 3477780143
+								Simone Bagnolesi 3332965518
 								<br />
 								<br />
 								<xsl:if test="recuperoAnno='true'">

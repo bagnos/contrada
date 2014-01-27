@@ -37,6 +37,7 @@ import it.contrada.enumcontrada.TipoIncasso;
 import it.contrada.enumcontrada.TipoStatoAnagrafica;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
+import it.contrada.web.enumcontrada.TipoGravitaMessage;
 import it.contrada.web.styles.StyleBean;
 import it.contrada.web.util.Configuration;
 import it.contrada.web.util.Costante;
@@ -65,11 +66,13 @@ import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
+import org.eclipse.persistence.internal.jpa.parsing.SetNode;
+
 import com.icesoft.faces.component.ext.HtmlInputText;
 import com.icesoft.faces.component.ext.HtmlSelectOneMenu;
 import com.icesoft.faces.component.selectinputtext.SelectInputText;
 
-public class InsAnagrafica01 {
+public class InsAnagrafica01 extends BaseView {
 
 	private int tipoRecapito;
 	private String valueRecapito;
@@ -102,15 +105,15 @@ public class InsAnagrafica01 {
 	private String ricFamByCognome;
 	private Date dtFazzoletto;
 	List<CaricaTesseraDTO> caricheTessereDTO;
-	private boolean eliminaTessere;
 
-	public boolean isEliminaTessere() {
-		return eliminaTessere;
-	}
-
-	public void setEliminaTessere(boolean eliminaTessere) {
-		this.eliminaTessere = eliminaTessere;
-	}
+	/*
+	 * private boolean eliminaTessere;
+	 * 
+	 * public boolean isEliminaTessere() { return eliminaTessere; }
+	 * 
+	 * public void setEliminaTessere(boolean eliminaTessere) {
+	 * this.eliminaTessere = eliminaTessere; }
+	 */
 
 	public Date getDtFazzoletto() {
 		return dtFazzoletto;
@@ -1874,10 +1877,8 @@ public class InsAnagrafica01 {
 		} else
 			return null;
 	}
-	
-	
-	public String annullaOnClick() throws Exception
-	{
+
+	public String annullaOnClick() throws Exception {
 		FacesUtils.redirectToUrl("RicercaAnagrafica.iface");
 		return null;
 	}
@@ -1888,93 +1889,30 @@ public class InsAnagrafica01 {
 		messaggio = null;
 
 		try {
-			getAnagrafica().setUtente(FacesUtils.getUser());
 
-			if (getAnagrafica().isNuovaFamiglia() == false
-					&& getAnagrafica().getIdFamiglia() == null) {
-				messaggio = Errori.FAMIGLIA_REQUIRED;
+			if (!verificaControlliFormali()) {
+				writeInfoMessage(TipoGravitaMessage.ERROR, messaggio);
 				return null;
+
 			}
 
-			if (getAnagrafica().getTessere() == null
-					|| getAnagrafica().getTessere().isEmpty()) {
-				messaggio = Errori.TESSERE_NON_INSERITE;
+			normalizzaAngrafica();
+
+			// verifica se siamo in modalità modifica
+			if (isAggiornamento()) {
+				// invocare Aggiornamento Anagrafica
+				GestioneAnagraficaBD.aggiornaAnagrafica(anagrafica, false);
+				FacesUtils.redirectToUrl("RicercaAnagrafica.iface");
 				return null;
-			}
 
-			// aggiungo i membri rid partendo dalla tessere
-			addMembriToAnagrafica(getAnagrafica());
-
-			if (getAnagrafica().getIdLocalita() != null
-					&& getAnagrafica().getIdLocalita() == -1) {
-				getAnagrafica().setIdLocalita(null);
-			}
-
-			if (getAnagrafica().getIdGestore() != null
-					&& getAnagrafica().getIdGestore() == -1) {
-				getAnagrafica().setIdGestore(null);
-			}
-
-			if (isNuovoRid() && isAggiornamento() == false) {
-				// mettiamo in sessione anagDTO
-				HelperSession.putInSession(Costante.SESSION_ANAG_DTO,
-						anagrafica);
-
-				FacesUtils.redirectToUrl("../Rid/InserimentoRid.iface?"
-						+ Costante.RID_FROM_INSERT_ANAG + "=true");
-
-				return null;
-				// return "NUOVO_RID";
 			} else {
-				if (anagrafica.getComuneNascita() != null
-						&& anagrafica.getComuneNascita() == 0) {
-					anagrafica.setComuneNascita(null);
-				}
-				if (anagrafica.getProvinciaNascita() != null
-						&& anagrafica.getProvinciaNascita() == 0) {
-					anagrafica.setProvinciaNascita(null);
-				}
-				if (anagrafica.getStatoNascita() != null
-						&& anagrafica.getStatoNascita().trim().equals("")) {
-					anagrafica.setStatoNascita(null);
-				}
-
-				if (getAnagrafica().getTessere() != null) {
-					for (TesseraDTO tes : getAnagrafica().getTessere()) {
-						if (tes.getIdRid() != null && tes.getIdRid() == 0) {
-							tes.setIdRid(null);
-						}
-					}
-				}
-
-				// verifica se siamo in modalità modifica
-
-				if (isAggiornamento()) {
-					// invocare Aggiornamento Anagrafica
-					if (anagrafica.getIdStatoAnagrafica() == TipoStatoAnagrafica.Deceduta
-							.getStatoAnagrafica() && eliminaTessere) {
-						if (getAnagrafica().getTessere() != null) {
-							for (TesseraDTO tes : getAnagrafica().getTessere()) {
-								tes.setFgAttiva(false);
-							}
-						}
-					}
-
-					GestioneAnagraficaBD.aggiornaAnagrafica(anagrafica, false);
-					// FacesUtils.redirectToUrl("RicercaAnagrafica.iface");
-
-					FacesUtils.redirectToUrl("RicercaAnagrafica.iface");
-					return null;
-
-				} else {
-					// siamo in inserimento
-					anagrafica = GestioneAnagraficaBD
-							.inserisciAnagrafica(anagrafica);
-					popupAnag = true;
-
-				}
+				// siamo in inserimento
+				anagrafica = GestioneAnagraficaBD
+						.inserisciAnagrafica(anagrafica);
+				popupAnag = true;
 
 			}
+
 		} catch (ContradaExceptionNonBloccante e) {
 			// TODO: handle exception
 			messaggio = e.getMessage();
@@ -1982,8 +1920,96 @@ public class InsAnagrafica01 {
 			// TODO: handle exception
 			messaggio = e.getMessage();
 		}
+		writeInfoMessage(TipoGravitaMessage.ERROR, messaggio);
 		return null;
 
+	}
+
+	private boolean verificaControlliFormali() {
+		if (getAnagrafica().isNuovaFamiglia() == false
+				&& getAnagrafica().getIdFamiglia() == null) {
+			messaggio = Errori.FAMIGLIA_REQUIRED;
+			return false;
+		}
+
+		if (getAnagrafica().getIdStatoAnagrafica() == TipoStatoAnagrafica.Attiva
+				.getStatoAnagrafica()) {
+
+			if (getAnagrafica().getTessere() == null
+					|| getAnagrafica().getTessere().isEmpty()) {
+				messaggio = Errori.TESSERE_NON_INSERITE;
+				return false;
+			}
+
+			// aggiungo i membri rid partendo dalla tessere
+
+		}
+
+		if (!verificaTessereDeceduto()) {
+			messaggio = Errori.TESSERE_MEMORIA;
+			return false;
+		}
+
+		return true;
+
+	}
+
+	private void normalizzaAngrafica() {
+
+		getAnagrafica().setUtente(FacesUtils.getUser());
+
+		addMembriToAnagrafica(getAnagrafica());
+
+		if (getAnagrafica().getIdLocalita() != null
+				&& getAnagrafica().getIdLocalita() == -1) {
+			getAnagrafica().setIdLocalita(null);
+		}
+
+		if (getAnagrafica().getIdGestore() != null
+				&& getAnagrafica().getIdGestore() == -1) {
+			getAnagrafica().setIdGestore(null);
+		}
+
+		if (anagrafica.getComuneNascita() != null
+				&& anagrafica.getComuneNascita() == 0) {
+			anagrafica.setComuneNascita(null);
+		}
+		if (anagrafica.getProvinciaNascita() != null
+				&& anagrafica.getProvinciaNascita() == 0) {
+			anagrafica.setProvinciaNascita(null);
+		}
+		if (anagrafica.getStatoNascita() != null
+				&& anagrafica.getStatoNascita().trim().equals("")) {
+			anagrafica.setStatoNascita(null);
+		}
+
+		normalizzaTessereRid();
+	}
+
+	private void normalizzaTessereRid() {
+		if (getAnagrafica().getTessere() != null) {
+			for (TesseraDTO tes : getAnagrafica().getTessere()) {
+				if (tes.getIdRid() != null && tes.getIdRid() == 0) {
+					tes.setIdRid(null);
+				}
+			}
+		}
+	}
+
+	private boolean verificaTessereDeceduto() {
+		if (anagrafica.getIdStatoAnagrafica() == TipoStatoAnagrafica.Deceduta
+				.getStatoAnagrafica()) {
+			if (getAnagrafica().getTessere() != null) {
+				for (TesseraDTO tes : getAnagrafica().getTessere()) {
+					if (!(tes.getIdTipoCarica() == 9
+							|| tes.getIdTipoCarica() == 23 || tes
+								.getIdTipoCarica() == 19)) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
 	}
 
 	private void addMembriToAnagrafica(AnagraficaDTO anag) {
@@ -1997,15 +2023,17 @@ public class InsAnagrafica01 {
 
 			if (it.contrada.enumcontrada.TipoIncasso.RID.getIncasso() == tessera
 					.getIdTipoIncasso()) {
-				membro = new MembroRidDTO();
-				membro.setCognome(anag.getCognome());
-				membro.setNome(anag.getNome());
-				membro.setQuota(tessera.getQuota());
-				membro.setTessera(tessera.getDsTipoTessera());
-				membro.setModalita(tessera.getDsTipoRateizzazione());
-				membro.setIdAnagrafica(anag.getIdAnagrafica());
-				membro.setIdTessera(tessera.getIdTessera());
-				anag.getRid().getMembri().add(membro);
+				if (tessera.getFgAttiva()) {
+					membro = new MembroRidDTO();
+					membro.setCognome(anag.getCognome());
+					membro.setNome(anag.getNome());
+					membro.setQuota(tessera.getQuota());
+					membro.setTessera(tessera.getDsTipoTessera());
+					membro.setModalita(tessera.getDsTipoRateizzazione());
+					membro.setIdAnagrafica(anag.getIdAnagrafica());
+					membro.setIdTessera(tessera.getIdTessera());
+					anag.getRid().getMembri().add(membro);
+				}
 			}
 		}
 

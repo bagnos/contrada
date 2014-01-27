@@ -25,8 +25,8 @@ public class AnagraficaResource {
 		
 			List<AnagraficaDTO> anags = RicercaAnagraficaBD
 					.ricercaAnagraficaPerCognomeNome(cognome, nome);
-			throw new ContradaExceptionBloccante("aaaaa");
-			//return anags;
+			
+			return anags;
 		
 	}
 	

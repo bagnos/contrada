@@ -1,7 +1,9 @@
 package it.contrada.backingbeans.pagecodes;
 
 import it.contrada.businessdelegate.RicercaRidBD;
+import it.contrada.businessdelegate.RicercaTipoTesseraBD;
 import it.contrada.dominio.dto.TipoStatoRidDTO;
+import it.contrada.dominio.dto.TipoTesseraDTO;
 import it.contrada.dto.RidDTO;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
@@ -19,6 +21,47 @@ public class ListaRidView {
 	private boolean visibleRid;
 	private int nrAnagrafiche;
 	private double impTotale;
+	private List<Integer> idStati;
+	private List<SelectItem> tipoTessere;
+	private Integer tipoTessera;
+
+	public Integer getTipoTessera() {
+		return tipoTessera;
+	}
+
+	public void setTipoTessera(Integer tipoTessera) {
+		this.tipoTessera = tipoTessera;
+	}
+
+	public List<SelectItem> getTipoTessere() throws ContradaExceptionBloccante,
+			ContradaExceptionNonBloccante {
+
+		if (tipoTessere == null) {
+
+			tipoTessere = new ArrayList<SelectItem>();		
+
+			List<TipoTesseraDTO> tipoTessereDTO = null;
+			tipoTessereDTO = RicercaTipoTesseraBD.elencaTipoTessera();
+
+			tipoTessere.add(new SelectItem("-1","-- Selezionare --"));
+			for (TipoTesseraDTO tt : tipoTessereDTO) {
+				tipoTessere.add(new SelectItem(tt.getIdTipoTessera(), tt
+						.getDsTipoTessera()));
+
+			}
+			// protettorato
+			tipoTessera = 1;
+		}
+		return tipoTessere;
+	}
+
+	public List<Integer> getIdStati() {
+		return idStati;
+	}
+
+	public void setIdStati(List<Integer> idStati) {
+		this.idStati = idStati;
+	}
 
 	public double getImpTotale() {
 		return impTotale;
@@ -68,14 +111,17 @@ public class ListaRidView {
 
 	public void cercaClick(ActionEvent e) throws ContradaExceptionBloccante,
 			ContradaExceptionNonBloccante {
-		List<Integer> stati = new ArrayList<Integer>();
-		stati.add(cdStato);
-		rid = RicercaRidBD.ricercaPerStato(stati);
-		
+
+		if (tipoTessera==-1)
+		{
+			tipoTessera=null;
+		}
+		rid = RicercaRidBD.ricercaPerStato(idStati,tipoTessera);
+
 		visibleRid = !rid.isEmpty();
-		impTotale=0;
+		impTotale = 0;
 		for (RidDTO ridDTO : rid) {
-			impTotale+=ridDTO.getQuota();
+			impTotale += ridDTO.getQuota();
 		}
 	}
 

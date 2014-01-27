@@ -117,8 +117,6 @@ public class RidDAO extends SqlSessionDaoSupport implements IRidDAO {
 				"it.contrada.rid.queries.getRidCensiti");
 
 	}
-	
-	
 
 	@Override
 	public int aggiornaStatoRid(TipoStatoRid stato, TipoStatoRid statoPrec)
@@ -220,15 +218,14 @@ public class RidDAO extends SqlSessionDaoSupport implements IRidDAO {
 		List<MembroRidDTO> membri = null;
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("matchCognome",matchCognome + "%");
+		map.put("matchCognome", matchCognome + "%");
 		membri = getSqlSessionTemplate().selectList(
 				"it.contrada.rid.queries.getMembriPerCognomeParziale", map);
 
 		return membri;
 
 	}
-	
-	
+
 	@Override
 	public List<MembroRidDTO> getMembroPerCognomeNomeParziale(String cognome,
 			String nome) throws Exception {
@@ -286,16 +283,19 @@ public class RidDAO extends SqlSessionDaoSupport implements IRidDAO {
 	}
 
 	@Override
-	public List<RidDTO> getRidPerStato(List<Integer> cdStato) throws Exception {
+	public List<RidDTO> getRidPerStato(List<Integer> cdStato,Integer tipoTessera) throws Exception {
 		// TODO Auto-generated method stub
-		Hashtable<String, Object> par=new Hashtable<String, Object>();
-		par.put("cdStato", cdStato);
-		
-		
-		return getSqlSessionTemplate().selectList(
-		"it.contrada.rid.queries.getRidPerStato",par);
-	}
+		Hashtable<String, Object> par = new Hashtable<String, Object>();
+		if (!cdStato.isEmpty()) {
+			par.put("cdStato", cdStato);
+		}
+		if (tipoTessera!=null)
+		{
+			par.put("tipoTessera", tipoTessera);
+		}
 
-	
+		return getSqlSessionTemplate().selectList(
+				"it.contrada.rid.queries.getRidPerStato", par);
+	}
 
 }

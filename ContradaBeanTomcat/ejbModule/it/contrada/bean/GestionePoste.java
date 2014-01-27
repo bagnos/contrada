@@ -31,6 +31,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -158,7 +159,9 @@ public class GestionePoste implements IGestionePoste {
 	public GestionePoste() {
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	
+	
 	/**
 	 * @throws ContradaExceptionBloccante
 	 * @throws ContradaExceptionNonBloccante
@@ -166,7 +169,7 @@ public class GestionePoste implements IGestionePoste {
 	 */
 	@SuppressWarnings("unchecked")
 	public FlussoIncassoPostaDTO produciFlussiIncassoPoste(int anno,
-			java.sql.Date dtScadenza, List<Integer> tipoTessere, String nomeFile)
+			java.sql.Date dtScadenza, List<Integer> tipoTessere, String nomeFile,List<Integer> tipoIncasso,List<Integer> tessereManuali)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 		// TODO Auto-generated method stub
 
@@ -187,7 +190,7 @@ public class GestionePoste implements IGestionePoste {
 			verificaProduciFlussiIncassoPoste(anno, dtScadenza);
 
 			List<IncassoPostaDTO> flussoEsteso = flussoPostaDao
-					.getFlussiIncassoPosta(anno, dtScadenza, tipoTessere);
+					.getFlussiIncassoPosta(anno, dtScadenza, tipoTessere,tipoIncasso,tessereManuali);
 			List<IncassoPostaDTO> flussoRaggruppato = new ArrayList<IncassoPostaDTO>();
 			flussoOut.setIncassiPerAnag(flussoEsteso);
 			flussoOut.setIncassi(flussoRaggruppato);
@@ -353,9 +356,9 @@ public class GestionePoste implements IGestionePoste {
 					.getError("27"));
 		}
 
-		if (anno != Calendar.getInstance().get(Calendar.YEAR)) {
+		if (anno > Calendar.getInstance().get(Calendar.YEAR)) {
 			throw new ContradaExceptionNonBloccante(DecodificaErrore
-					.getError("29"));
+					.getError("27"));
 		}
 
 	}
@@ -507,4 +510,6 @@ public class GestionePoste implements IGestionePoste {
 					.getError("5018"), e);
 		}
 	}
+
+	
 }
