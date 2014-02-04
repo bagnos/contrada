@@ -12,8 +12,29 @@ public class GestoreDTO implements Serializable {
 	private String nome;
 	private String cognome;
 	private List<Integer> anagrafiche;
+	private String note;
+	private String mail;
+	private String cell;
 	
 	
+	public String getMail() {
+		return mail;
+	}
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+	public String getCell() {
+		return cell;
+	}
+	public void setCell(String cell) {
+		this.cell = cell;
+	}
+	public String getNote() {
+		return note;
+	}
+	public void setNote(String note) {
+		this.note = note;
+	}
 	public List<Integer> getAnagrafiche() {
 		return anagrafiche;
 	}

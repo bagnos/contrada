@@ -1,9 +1,28 @@
 <span xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ice="http://www.icesoft.com/icefaces/component">
-	<ice:panelGroup styleClass="#{bbean.styleClassInfoMessage}"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"> 
+	
+	<ice:panelGroup
+		styleClass="#{bbean.styleClassInfoMessage}"
 		rendered="#{bbean.renderInfoMessage}">
 		<ice:outputText value="#{bbean.messaggioInfoMessage}" />
-		<ice:commandButton image="#{styleBean.imgClose}" immediate="true" style="float:right;margin-top:-10px" actionListener="#{bbean.chiudiInfoMessage}" title="Chiudi"></ice:commandButton>
+		
+		<ice:commandButton image="#{styleBean.imgClose}" immediate="true"
+			style="float:right;margin-top:-10px"
+			actionListener="#{bbean.chiudiInfoMessage}" title="Chiudi"></ice:commandButton>
+
+		<ice:commandButton image="#{styleBean.dettagli}"
+			rendered="#{bbean.renderImgLog}" immediate="true"
+			style="float:right;margin-top:-10px"
+			actionListener="#{bbean.showLog}" title="#{bbean.titleLog}"></ice:commandButton>
 	</ice:panelGroup>
+	
+	 <ice:panelGroup id="mylog" style="width:100%"
+		rendered="#{bbean.renderStackTrace}">
+		<ice:panelGroup>
+			<ice:inputTextarea disabled="true" style="width:60%;" rows="20"
+				value="#{bbean.stackTrace}"></ice:inputTextarea>
+		</ice:panelGroup>
+	</ice:panelGroup>
+
 </span>

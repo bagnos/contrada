@@ -9,4 +9,8 @@ import java.util.List;
 public interface IGestioneGestore {
 
 	public List<GestoreDTO> elencaGestori() throws ContradaExceptionNonBloccante,ContradaExceptionBloccante;
+	
+	public int insertGestore(GestoreDTO gestore) throws ContradaExceptionNonBloccante,ContradaExceptionBloccante;
+	
+	public int deleteGestore(int idGestore) throws ContradaExceptionNonBloccante,ContradaExceptionBloccante;
 }

@@ -20,7 +20,30 @@ public class MembroRidDTO implements Serializable {
 	private int idTipoIncassoRid;
 	private String dsTipoIncassoRid;
 	private String nominativo;
+	private String mail;
+	private int idStatoRid;
+	private Integer idTipoTessera;
 	
+	
+
+	public Integer getIdTipoTessera() {
+		return idTipoTessera;
+	}
+	public void setIdTipoTessera(Integer idTipoTessera) {
+		this.idTipoTessera = idTipoTessera;
+	}
+	public int getIdStatoRid() {
+		return idStatoRid;
+	}
+	public void setIdStatoRid(int idStatoRid) {
+		this.idStatoRid = idStatoRid;
+	}
+	public String getMail() {
+		return mail;
+	}
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
 	public String getNominativo() {
 		return nominativo;
 	}

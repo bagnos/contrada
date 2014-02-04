@@ -58,222 +58,139 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class GestioneFlusso implements IGestioneFlusso {
 
-	/**
-	 * @uml.property  name="rateizzazioneDAO"
-	 * @uml.associationEnd  
-	 */
+	
 	@Autowired
 	IRateizzazioneDAO rateizzazioneDAO;
 
-	/**
-	 * @uml.property  name="flussoRidAddebitoDAO"
-	 * @uml.associationEnd  
-	 */
+	
 	@Autowired
 	IFlussoRidIncassoDAO flussoRidAddebitoDAO;
 
-	/**
-	 * @uml.property  name="parametriContradaDAO"
-	 * @uml.associationEnd  
-	 */
+	
 	@Autowired
 	IParametriContradaDAO parametriContradaDAO;
 
-	/**
-	 * @uml.property  name="ridDAO"
-	 * @uml.associationEnd  
-	 */
+	
 	@Autowired
 	IRidDAO ridDAO;
 
-	/**
-	 * @uml.property  name="flussoPreautorizzazioniRidDAO"
-	 * @uml.associationEnd  
-	 */
+	
 	@Autowired
 	IFlussoPreautorizzazioniRidDAO flussoPreautorizzazioniRidDAO;
 
-	/**
-	 * @uml.property  name="flussoEsitoDAO"
-	 * @uml.associationEnd  
-	 */
+	
 	@Autowired
 	IFlussoEsitiDAO flussoEsitoDAO;
 
-	/**
-	 * @uml.property  name="ricezionePreaut"
-	 * @uml.associationEnd  
-	 */
+	
 	@Autowired
 	RicezioneFlussoPreautorizzazioneRid ricezionePreaut;
 
-	/**
-	 * @uml.property  name="ricezioneIncassiRid"
-	 * @uml.associationEnd  
-	 */
+	
 	@Autowired
 	RicezioneFlussoIncassiRid ricezioneIncassiRid;
 
-	/**
-	 * @uml.property  name="operazioneBO"
-	 * @uml.associationEnd  
-	 */
+	
 	@Autowired
 	private Operazione operazioneBO;
 
 	private static Log log = LogFactory.getLog(GestioneFlusso.class);
 
-	/**
-	 * @param operazioneBO
-	 * @uml.property  name="operazioneBO"
-	 */
+	
 	public void setOperazioneBO(Operazione operazioneBO) {
 		this.operazioneBO = operazioneBO;
 	}
 
-	/**
-	 * @return
-	 * @uml.property  name="rateizzazioneDAO"
-	 */
+	
 	public IRateizzazioneDAO getRateizzazioneDAO() {
 		return rateizzazioneDAO;
 	}
 
-	/**
-	 * @param rateizzazioneDAO
-	 * @uml.property  name="rateizzazioneDAO"
-	 */
+	
 	public void setRateizzazioneDAO(IRateizzazioneDAO rateizzazioneDAO) {
 		this.rateizzazioneDAO = rateizzazioneDAO;
 	}
 
-	/**
-	 * @return
-	 * @uml.property  name="flussoRidAddebitoDAO"
-	 */
+	
 	public IFlussoRidIncassoDAO getFlussoRidAddebitoDAO() {
 		return flussoRidAddebitoDAO;
 	}
 
-	/**
-	 * @param flussoRidAddebitoDAO
-	 * @uml.property  name="flussoRidAddebitoDAO"
-	 */
+	
 	public void setFlussoRidAddebitoDAO(
 			IFlussoRidIncassoDAO flussoRidAddebitoDAO) {
 		this.flussoRidAddebitoDAO = flussoRidAddebitoDAO;
 	}
 
-	/**
-	 * @return
-	 * @uml.property  name="parametriContradaDAO"
-	 */
+	
 	public IParametriContradaDAO getParametriContradaDAO() {
 		return parametriContradaDAO;
 	}
 
-	/**
-	 * @param parametriContradaDAO
-	 * @uml.property  name="parametriContradaDAO"
-	 */
+	
 	public void setParametriContradaDAO(
 			IParametriContradaDAO parametriContradaDAO) {
 		this.parametriContradaDAO = parametriContradaDAO;
 	}
 
-	/**
-	 * @return
-	 * @uml.property  name="ridDAO"
-	 */
+	
 	public IRidDAO getRidDAO() {
 		return ridDAO;
 	}
 
-	/**
-	 * @param ridDAO
-	 * @uml.property  name="ridDAO"
-	 */
+	
 	public void setRidDAO(IRidDAO ridDAO) {
 		this.ridDAO = ridDAO;
 	}
 
-	/**
-	 * @return
-	 * @uml.property  name="flussoPreautorizzazioniRidDAO"
-	 */
+	
 	public IFlussoPreautorizzazioniRidDAO getFlussoPreautorizzazioniRidDAO() {
 		return flussoPreautorizzazioniRidDAO;
 	}
 
-	/**
-	 * @param flussoPreautorizzazioniRidDAO
-	 * @uml.property  name="flussoPreautorizzazioniRidDAO"
-	 */
 	public void setFlussoPreautorizzazioniRidDAO(
 			IFlussoPreautorizzazioniRidDAO flussoPreautorizzazioniRidDAO) {
 		this.flussoPreautorizzazioniRidDAO = flussoPreautorizzazioniRidDAO;
 	}
 
-	/**
-	 * @return
-	 * @uml.property  name="flussoEsitoDAO"
-	 */
+	
 	public IFlussoEsitiDAO getFlussoEsitoDAO() {
 		return flussoEsitoDAO;
 	}
 
-	/**
-	 * @param flussoEsitoDAO
-	 * @uml.property  name="flussoEsitoDAO"
-	 */
+	
 	public void setFlussoEsitoDAO(IFlussoEsitiDAO flussoEsitoDAO) {
 		this.flussoEsitoDAO = flussoEsitoDAO;
 	}
 
-	/**
-	 * @return
-	 * @uml.property  name="ricezionePreaut"
-	 */
+	
 	public RicezioneFlussoPreautorizzazioneRid getRicezionePreaut() {
 		return ricezionePreaut;
 	}
 
-	/**
-	 * @param ricezionePreaut
-	 * @uml.property  name="ricezionePreaut"
-	 */
+	
 	public void setRicezionePreaut(
 			RicezioneFlussoPreautorizzazioneRid ricezionePreaut) {
 		this.ricezionePreaut = ricezionePreaut;
 	}
 
-	/**
-	 * @return
-	 * @uml.property  name="ricezioneIncassiRid"
-	 */
+	
 	public RicezioneFlussoIncassiRid getRicezioneIncassiRid() {
 		return ricezioneIncassiRid;
 	}
 
-	/**
-	 * @param ricezioneIncassiRid
-	 * @uml.property  name="ricezioneIncassiRid"
-	 */
+	
 	public void setRicezioneIncassiRid(
 			RicezioneFlussoIncassiRid ricezioneIncassiRid) {
 		this.ricezioneIncassiRid = ricezioneIncassiRid;
 	}
 
-	/**
-	 * Default constructor.
-	 */
+	
 	public GestioneFlusso() {
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @see IGestioneFlussi#preparaFlussoIncassi(int, int, TipoIncassoRid)
-	 */
+	
 	public FlussoIncassoRidDTO preparaFlussoIncassiRid(int anno, int mese,
 			int tipoIncassoRid, java.sql.Date dtValuta)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
@@ -694,6 +611,7 @@ public class GestioneFlusso implements IGestioneFlusso {
 				for (DisposizioneIncassoRidRicezioneDTO disp : flusso
 						.getDisposizioni()) {
 
+				
 					causale = Integer.parseInt(disp.getRec10().getCausale());
 
 					dsCausale = "";
@@ -715,7 +633,15 @@ public class GestioneFlusso implements IGestioneFlusso {
 							.getCodiceClienteDebitore());
 
 					disp.setIdRid(idRid.intValue());
-
+					
+					//INSERISCO LE ANGRAFICA ATTACCATE ALLA DISPOSIZIONE
+					
+					RidDTO ridDTO=ridDAO.getRid(idRid.intValue());
+					disp.setIdStatoRid(ridDTO.getTipoStatoRid());
+					disp.setMembri(ridDTO.getMembri());
+					disp.setAbi(ridDTO.getAbi().toString());
+					disp.setCab(ridDTO.getCab().toString());
+					disp.setConto(ridDTO.getNumeroCC());
 					/*
 					 * dtValuta = new java.sql.Date(formatddMMyy.parse(
 					 * disp.getRec10().getDtScadenzaOriginaria()) .getTime());

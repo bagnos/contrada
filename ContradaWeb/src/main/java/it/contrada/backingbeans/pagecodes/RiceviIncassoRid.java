@@ -5,22 +5,24 @@ import it.contrada.businessdelegate.GestioneFlussoBD;
 import it.contrada.businessdelegate.RicercaFlussoBD;
 import it.contrada.dominio.dto.TipoCasualiIncassoRidDTO;
 import it.contrada.dto.FlussoEsitoDTO;
+import it.contrada.dto.MembroRidDTO;
 import it.contrada.enumcontrada.TipoFlusso;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
 import it.contrada.incassorid.dto.DisposizioneIncassoRidRicezioneDTO;
 import it.contrada.incassorid.dto.RicezioneFlussoIncassoRidDTO;
+import it.contrada.mail.RidMail;
+import it.contrada.web.enumcontrada.TipoGravitaMessage;
 import it.contrada.web.util.Configuration;
 import it.contrada.web.util.ContradaSelectItem;
 import it.contrada.web.util.Costante;
 import it.contrada.web.util.Errori;
 
-import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.EventObject;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.faces.event.ActionEvent;
@@ -29,9 +31,8 @@ import javax.faces.model.SelectItem;
 
 import com.icesoft.faces.component.inputfile.FileInfo;
 import com.icesoft.faces.component.inputfile.InputFile;
-import com.icesoft.faces.component.inputfile.InputFileProgressEvent;
 
-public class RiceviIncassoRid {
+public class RiceviIncassoRid extends BaseView {
 
 	private boolean visibleListRid;
 	private List<DisposizioneIncassoRidRicezioneDTO> rids;
@@ -216,23 +217,17 @@ public class RiceviIncassoRid {
 		this.causale = causale;
 	}
 
-	
-
 	public RiceviIncassoRid() throws ContradaExceptionBloccante,
 			ContradaExceptionNonBloccante {
 		// TODO Auto-generated constructor stub
 		/*
-		String dir = Configuration.getProperty("pathUploadIncassoRid");
-		dir = dir.replaceAll("<anno>", Integer.toString(GregorianCalendar
-				.getInstance().get(GregorianCalendar.YEAR)));
-		File file = new File(dir);
-		if (!file.exists()) {
-			if (!file.mkdirs()) {
-				throw new ContradaExceptionNonBloccante(
-						Errori.DIR_INCASSO_RID_NON_CREATA);
-			}
-		}
-		setPathUpload(dir);*/
+		 * String dir = Configuration.getProperty("pathUploadIncassoRid"); dir =
+		 * dir.replaceAll("<anno>", Integer.toString(GregorianCalendar
+		 * .getInstance().get(GregorianCalendar.YEAR))); File file = new
+		 * File(dir); if (!file.exists()) { if (!file.mkdirs()) { throw new
+		 * ContradaExceptionNonBloccante( Errori.DIR_INCASSO_RID_NON_CREATA); }
+		 * } setPathUpload(dir);
+		 */
 
 		formatddMMyy = new SimpleDateFormat("dd/MM/yyyy");
 		formatddMMyyhhmm = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -247,38 +242,52 @@ public class RiceviIncassoRid {
 
 	public void eleboraOnClick(ActionEvent ev)
 			throws ContradaExceptionNonBloccante, ContradaExceptionBloccante,
-			ParseException {
-		InputFile inputFile = (InputFile) ev.getSource();
+			ParseException, IOException {
+		try {
+			InputFile inputFile = (InputFile) ev.getSource();
 
-		if (inputFile.getFileInfo().isSaved()) {
-			currentFile = inputFile.getFileInfo();
+			if (inputFile.getFileInfo().isSaved()) {
+				currentFile = inputFile.getFileInfo();
 
-			String file = currentFile.getPhysicalPath();
-			List<RicezioneFlussoIncassoRidDTO> flussi = GestioneFlussoBD
-					.riceviFlussoIncassiRid(file);
+				String file = currentFile.getPhysicalPath();
+				List<RicezioneFlussoIncassoRidDTO> flussi = GestioneFlussoBD
+						.riceviFlussoIncassiRid(file);
 
-			List<DisposizioneIncassoRidRicezioneDTO> dispIncassi = new ArrayList<DisposizioneIncassoRidRicezioneDTO>();
+				List<DisposizioneIncassoRidRicezioneDTO> dispIncassi = new ArrayList<DisposizioneIncassoRidRicezioneDTO>();
+				
+				
+				for (RicezioneFlussoIncassoRidDTO flusso : flussi) {
 
-			for (RicezioneFlussoIncassoRidDTO flusso : flussi) {
-				dispIncassi.addAll(flusso.getDisposizioni());
-			}
+					RidMail.InviaMailSospesiRataRid(flusso.getDisposizioni());
 
-			setRids(dispIncassi);
-			ridsFiltrati = dispIncassi;
+					dispIncassi.addAll(flusso.getDisposizioni());
+				}
+				
 
-			if (dispIncassi.isEmpty()) {
-				setNote("Nessuna disposizione elaborata");
-				setVisibleListRid(false);
+				setRids(dispIncassi);
+				ridsFiltrati = dispIncassi;
+
+				if (dispIncassi.isEmpty()) {
+					setNote("Nessuna disposizione elaborata");
+					writeInfoMessage(TipoGravitaMessage.INFO,
+							"Nessuna disposizione elaborata");
+					setVisibleListRid(false);
+				} else {
+					setVisibleListRid(true);
+
+					loadEsiti();
+					setCausale(Costante.CD_CAUSALE_ESITI_TUTTI);
+					setNrDisposizioni(dispIncassi.size());
+					writeInfoMessage(TipoGravitaMessage.SUCCESS, String.format(
+							"Elaborate %d disposizioni", dispIncassi.size()));
+				}
 			} else {
-				setVisibleListRid(true);
-			}
+				writeInfoMessage(TipoGravitaMessage.ERROR,
+						Errori.FILE_RID_ESITI_NON_CARICATO);
 
-			loadEsiti();
-			setCausale(Costante.CD_CAUSALE_ESITI_TUTTI);
-			setNrDisposizioni(dispIncassi.size());
-		} else {
-			throw new ContradaExceptionNonBloccante(
-					Errori.FILE_RID_ESITI_NON_CARICATO);
+			}
+		} catch (Exception e) {
+			writeErrorMessage("Errore elborazione ricezione flussi rid", e);
 		}
 
 	}
@@ -337,13 +346,9 @@ public class RiceviIncassoRid {
 		InputFile ifile = (InputFile) event.getSource();
 		fileProgress = ifile.getFileInfo().getPercent();
 	}
-	
+
 	public void progressListener() {
-		
+
 	}
-	
-	
-	
-	
 
 }

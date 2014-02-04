@@ -36,17 +36,26 @@ public class RidDTO implements Serializable {
 	private boolean invioPreaut;
 	private String anagraficaMembro;
 	private String recapitoMembro;
-	private Double quota;
+	private Integer quota;
 	private String dsTessera;
 	private OperazioneDTO operazione;
 	private String user;
 	private java.util.Date dtCensimento;
+	private String esitoMail;
 	
 	
 	
 	
 	
 	
+
+	public String getEsitoMail() {
+		return esitoMail;
+	}
+
+	public void setEsitoMail(String esitoMail) {
+		this.esitoMail = esitoMail;
+	}
 
 	public java.util.Date getDtCensimento() {
 		return dtCensimento;
@@ -80,11 +89,11 @@ public class RidDTO implements Serializable {
 		this.recapitoMembro = recapitoMembro;
 	}
 
-	public Double getQuota() {
+	public Integer getQuota() {
 		return quota;
 	}
 
-	public void setQuota(Double quota) {
+	public void setQuota(Integer quota) {
 		this.quota = quota;
 	}
 

@@ -335,9 +335,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		resultType="it.contrada.dto.AnagraficaDTO">
 		SELECT
 		A.ID_ANAGRAFICA as idAnagrafica,
+		A.TX_NOME AS NOME,
+		A.TX_COGNOME AS COGNOME,
 		concat(A.TX_COGNOME,'
 		',A.TX_NOME) as intestatario,
-		A.DT_NASCITA as dtNascita
+		A.DT_NASCITA as dtNascita,
+		A.TX_MAIL as mail,
+		A.TX_CELL as txCell
 		FROM
 		${database.schema}ANAGRAFICA A
 		WHERE A.TX_COGNOME LIKE

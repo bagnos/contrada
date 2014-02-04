@@ -1,0 +1,9 @@
+GENTILE <COGNOME> <NOME>,
+
+ti segnaliamo che, dai nostri controlli contabili, l'incasso tramite RID bancario sul conto <CONTO> intestato a <INTESTATARIO> non è andato a buon fine.
+
+L'importo pari a euro <IMPORTO> è relativo a <MOTIVAZIONE>.
+
+Ci risultano alcuni problemi di allineamento sulle coordinate bancarie.
+
+Ti chiediamo di contattare il prima possibile la Commissione Protettorato per sistemare e verificare le tue coordinate bancarie.

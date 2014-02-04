@@ -3,57 +3,50 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ice="http://www.icesoft.com/icefaces/component">
-
+	<jsp:directive.page contentType="text/html;charset=utf-8" />
 	<f:view>
-		<script type="text/javascript">
-			function toggleLog(link) {
+		<html>
+<head>
 
-				var id = "myform:mylog";
-				var element = document.getElementById(id);
+<script type="text/javascript">
+	top.document.getElementById('loadingSpan').style.visibility = "hidden";
+	top.document.getElementById('backgroundTransparency').style.display = "none";
+	
+</script>
 
-				if (element) {
-					var display = element.style.display;
 
-					if (display == "none") {
-						element.style.display = "block";
-						link.innerText = "Chiudi Log";
+</head>
+<body>
 
-					} else {
-						element.style.display = "none";
-						link.innerText = "Mostra Log";
 
-					}
-				}
-			}
-			top.document.getElementById('loadingSpan').style.visibility = "hidden";
-		</script>
-		<ice:form id="myform">
-			<ice:outputStyle href="#{styleBean.activeCss}" />
-			<ice:panelGrid columns="1"
-				style="border-color:DarkRed;border-style:solid;width:100%;heigth:100%">
-				<ice:panelGroup>
-					<ice:graphicImage url="/images/portlet/Icon_messaggio_warning.png"></ice:graphicImage>
-					<ice:outputText value="ATTENZIONE: si è verificato un errore!"
-						style="font-size:20px"></ice:outputText>
-				</ice:panelGroup>
-				<ice:outputText value=""></ice:outputText>
-				<ice:outputText value="#{errorPage.errorMessage}"
-					style="font-size:16px"></ice:outputText>
+	
 
-				<a style="color:#333333;" href="javascript:;" onclick="toggleLog(this);">Mostra
-					Log</a>
-			</ice:panelGrid>
 
-			<ice:panelGroup id="mylog" style="width:100%;display:none">
-
-				<ice:inputTextarea disabled="true" id="mystack" style="width:80%;"
-					rows="20" value="#{errorPage.stackTrace}"></ice:inputTextarea>
+		<ice:outputStyle href="#{styleBean.activeCss}" />
+		<ice:panelGrid columns="1" 
+			style="border-color:DarkRed;border-style:solid;width:100%;heigth:100%">
+			<ice:panelGroup>
+				<ice:graphicImage url="/images/portlet/Icon_messaggio_warning.png"></ice:graphicImage>
+				<ice:outputText value="ATTENZIONE: si è verificato un errore!"
+					style="font-size:20px"></ice:outputText>
 			</ice:panelGroup>
+			<ice:outputText value=""></ice:outputText>
+			<ice:outputText onmouseover="document.getElementById('mylog').style.display='block'"  value="#{errorPage.errorMessage}" 
+				style="font-size:16px"></ice:outputText>
 
+			 
+		
+			 
 
+		</ice:panelGrid>
+		<ice:panelGroup id="mylog" style="width:100%;display:none" onmouseout="document.getElementById('mylog').style.display='none'">
+		
+			<ice:inputTextarea disabled="true" id="mystack" style="width:80%;"
+				rows="20" value="#{errorPage.stackTrace}"></ice:inputTextarea>
+		</ice:panelGroup>
 
-		</ice:form>
-
-
+	
+</body>
+		</html>
 	</f:view>
 </jsp:root>

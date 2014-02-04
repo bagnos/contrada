@@ -5,11 +5,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="it.contrada.gestore.queries">
 
 	<select id="getGestori" resultType="it.contrada.dto.GestoreDTO">
-		SELECT G.id_gestore as
-		idGestore, g.tx_nome as nome, g.tx_cognome as cognome
-		FROM ${database.schema}GESTORE G 
-		 
-</select>
+		SELECT g.id_gestore as
+		idGestore, a.tx_nome as nome, a.tx_cognome as cognome,g.tx_note as
+		note, a.tx_mail as mail, a.tx_cell as cell
+		FROM ${database.schema}GESTORE g, ${database.schema}ANAGRAFICA a
+		WHERE A.ID_ANAGRAFICA=G.ID_GESTORE
+
+	</select>
+	
+	<insert id="insertGestore" parameterType="it.contrada.dto.GestoreDTO">
+	INSERT INTO ${database.schema}GESTORE (ID_GESTORE,TX_NOTE)
+	VALUES(#{idGestore},#{note})
+	</insert>
+	
+	<insert id="deleteGestore" parameterType="java.util.HashMap" >
+	DELETE FROM ${database.schema}GESTORE WHERE ID_GESTORE=#{idGestore}
+	</insert>
 
 
 </mapper>

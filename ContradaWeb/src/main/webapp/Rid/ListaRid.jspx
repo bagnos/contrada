@@ -2,7 +2,8 @@
 <jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ice="http://www.icesoft.com/icefaces/component">
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:nicchio="http://taglib.contradanicchio.it">
 	<jsp:directive.page contentType="text/html;charset=utf-8" />
 	<f:view>
 		<ice:portlet>
@@ -13,29 +14,30 @@
 						<ice:outputText value="Lista Rid"
 							styleClass="labelPortletContainer"></ice:outputText>
 					</ice:panelGroup>
-
+					<!-- INFO MESSAGE -->
+					<nicchio:serviceInfoMessage bbean="#{listaRidView}" />
 
 					<ice:panelGroup styleClass="elementContainer">
-						<ice:outputText styleClass="label140"
-							value="Tipo Tessera:" />
+						<ice:outputText styleClass="label140" value="Tipo Tessera:" />
 						<ice:selectOneMenu value="#{listaRidView.tipoTessera}">
 							<f:selectItems value="#{listaRidView.tipoTessere}" />
 						</ice:selectOneMenu>
 					</ice:panelGroup>
 
 					<ice:panelGroup styleClass="elementContainer">
-						<ice:outputText value="Selezionare lo Stato del RID"
-							></ice:outputText>
-						<ice:selectManyCheckbox id="statoRid" layout="pageDirection" 
+						<ice:outputText value="Selezionare lo Stato del RID"></ice:outputText>
+						<ice:selectManyCheckbox id="statoRid" layout="pageDirection"
 							value="#{listaRidView.idStati}">
 							<f:selectItems value="#{listaRidView.stati}" />
 						</ice:selectManyCheckbox>
 						<ice:message for="statoRid"></ice:message>
-						
+
 					</ice:panelGroup>
 					<ice:panelGroup styleClass="bottoniera">
-					<ice:commandButton style="margin-left:5px;" value="Cerca"
+						<ice:commandButton  value="Cerca"
 							actionListener="#{listaRidView.cercaClick}"></ice:commandButton>
+						<ice:commandButton  value="Invia Mail" rendered="#{listaRidView.renderInvia}"
+							actionListener="#{listaRidView.inviaMailClick}"></ice:commandButton>
 					</ice:panelGroup>
 
 
@@ -47,7 +49,7 @@
 							<ice:outputText value="#{listaRidView.nrAnagrafiche}"></ice:outputText>
 							<ice:outputText value="Importo Totale:"></ice:outputText>
 							<ice:outputText value="#{listaRidView.impTotale}">
-								<f:convertNumber type="currency" />
+
 							</ice:outputText>
 							<ice:graphicImage url="#{styleBean.imgExcel}" />
 							<ice:dataExporter for="rids" label="#{styleBean.labelExcel}"
@@ -113,8 +115,9 @@
 								</f:facet>
 								<ice:outputText value="#{rid.recapitoMembro}" />
 							</ice:column>
-							
-							<ice:column id="tessera" rendered="#{listaRidView.tipoTessera==null}">
+
+							<ice:column id="tessera"
+								rendered="#{listaRidView.tipoTessera==null}">
 								<f:facet name="header">
 									<ice:outputText value="Tessera" />
 								</f:facet>
@@ -137,6 +140,14 @@
 								<ice:outputText value="#{rid.note}"
 									rendered="#{rid.tipoStatoRid!=1}">
 									<f:convertNumber type="currency" />
+								</ice:outputText>
+							</ice:column>
+							<ice:column id="Mail" rendered="#{listaRidView.renderInvia}">
+								<f:facet name="header">
+									<ice:outputText value="Mail" />
+								</f:facet>
+								<ice:outputText value="#{rid.esitoMail}"			>
+								
 								</ice:outputText>
 							</ice:column>
 

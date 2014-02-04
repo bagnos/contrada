@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:nicchio="http://taglib.contradanicchio.it">
+	<jsp:directive.page contentType="text/html;charset=utf-8" />
+	<f:view>
+		<ice:portlet>
+			<ice:outputStyle href="#{styleBean.activeCss}" />
+			<ice:form>
+
+
+				<ice:panelGroup>
+					<ice:panelGroup styleClass="portletContainer">
+						<ice:outputText value="Inserisci Gestore"
+							styleClass="labelPortletContainer"></ice:outputText>
+					</ice:panelGroup>
+					<!-- INFO MESSAGE -->
+					<nicchio:serviceInfoMessage bbean="#{inserisciGestoreView}" />
+					<!-- ANNO -->
+
+					<!-- ANAGRAFICA -->
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="#{msgs.anagrafica}" styleClass="label140"></ice:outputText>
+						<ice:inputText style="width: 79px" converter="IntegerConverter"
+							value="#{inserisciGestoreView.idAnagrafica}"></ice:inputText>
+					
+					
+						<ice:outputText value="#{msgs.cercaAnagrafica}"
+							style="margin-left:5px"></ice:outputText>
+						<ice:selectInputText rows="10" style="display:inline" size="40"
+							listValue="#{inserisciGestoreView.anagraficheItems}"
+							listVar="anagrafica" partialSubmit="true"
+							valueChangeListener="#{inserisciGestoreView.updateListAnagrafiche}"
+							value="#{inserisciGestoreView.dsAnagrafica}">
+							<f:facet name="selectInputText">
+								<ice:panelGrid columns="3">
+									<ice:outputText value="#{anagrafica.idAnagrafica}" />
+									<ice:outputText value="#{anagrafica.intestatario}" />
+									<ice:outputText value="#{anagrafica.dtNascita}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</ice:outputText>
+								</ice:panelGrid>
+							</f:facet>
+
+						</ice:selectInputText>
+					</ice:panelGroup>
+					
+					<!-- NOTE -->
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="note" styleClass="label140"></ice:outputText>
+						<ice:inputText style="width: 279px" maxlength="100"
+							value="#{inserisciGestoreView.note}"></ice:inputText>
+						<ice:commandButton value="#{msgs.aggiungi}" partialSubmit="true"
+							style="display:inline-block"
+							actionListener="#{inserisciGestoreView.addAnagraficaOnClick}"
+							id="btnAggAnag" />
+					</ice:panelGroup>
+
+					<!-- tabella anagrafiche -->
+					<ice:panelGroup
+						rendered="#{inserisciGestoreView.visibleAnagrafiche}">
+						<ice:dataTable border="0" rows="#{styleBean.maxRowsTables}"
+							id="anagrafiche" value="#{inserisciGestoreView.anagraficheTable}"
+							var="anagrafica">
+
+							<ice:column id="column0">
+								<f:facet name="header">
+								</f:facet>
+								<ice:commandButton image="#{styleBean.elimina}" title="elimina"
+									partialSubmit="true"
+									actionListener="#{inserisciGestoreView.eliminaAnagraficaOnClick}">
+									<f:attribute name="anagrafica" value="#{anagrafica}" />
+								</ice:commandButton>
+
+							</ice:column>
+
+							<ice:column id="column1">
+								<f:facet name="header">
+									<ice:outputText value="Nr. Anagrafica"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{anagrafica.idGestore}" />
+							</ice:column>
+							<ice:column id="column2">
+								<f:facet name="header">
+									<ice:outputText value="Cognome"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{anagrafica.cognome}" />
+							</ice:column>
+							<ice:column id="column3">
+								<f:facet name="header">
+									<ice:outputText value="Nome"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{anagrafica.nome}" />
+							</ice:column>
+							<ice:column id="column5">
+								<f:facet name="header">
+									<ice:outputText value="Mail"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{anagrafica.mail}" />
+							</ice:column>
+							<ice:column id="column6">
+								<f:facet name="header">
+									<ice:outputText value="Tel"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{anagrafica.cell}" />
+							</ice:column>
+							<ice:column id="column4">
+								<f:facet name="header">
+									<ice:outputText value="Note"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{anagrafica.note}" />
+							</ice:column>
+						</ice:dataTable>
+						<ice:dataPaginator for="anagrafiche" paginator="true"
+							fastStep="#{styleBean.fastStep}"
+							paginatorMaxPages="#{StyleBean.paginatorMaxPages}">
+							<f:facet name="first">
+								<ice:graphicImage url="#{styleBean.first}" style="border:none;"
+									title="First Page" />
+							</f:facet>
+
+							<f:facet name="last">
+								<ice:graphicImage url="#{styleBean.last}" style="border:none;"
+									title="Last Page" />
+							</f:facet>
+							<f:facet name="previous">
+								<ice:graphicImage url="#{styleBean.previous}"
+									style="border:none;" title="Previous Page" />
+							</f:facet>
+							<f:facet name="fastforward">
+								<ice:graphicImage url="#{styleBean.fastforward}"
+									style="border:none;" title="Fast Forward" />
+							</f:facet>
+							<f:facet name="fastrewind">
+								<ice:graphicImage url="#{styleBean.fastrewind}"
+									style="border:none;" title="Fast Backwards" />
+							</f:facet>
+							<f:facet name="next">
+								<ice:graphicImage url="#{styleBean.next}" style="border:none;"
+									title="Next Page" />
+							</f:facet>
+
+
+						</ice:dataPaginator>
+
+					</ice:panelGroup>
+
+
+
+
+				</ice:panelGroup>
+
+
+			</ice:form>
+		</ice:portlet>
+	</f:view>
+
+</jsp:root>

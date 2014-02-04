@@ -4,26 +4,42 @@ import it.contrada.businessdelegate.RicercaRidBD;
 import it.contrada.businessdelegate.RicercaTipoTesseraBD;
 import it.contrada.dominio.dto.TipoStatoRidDTO;
 import it.contrada.dominio.dto.TipoTesseraDTO;
+import it.contrada.dto.MembroRidDTO;
 import it.contrada.dto.RidDTO;
+import it.contrada.enumcontrada.TipoStatoRid;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
+import it.contrada.mail.RidMail;
+import it.contrada.web.enumcontrada.TipoGravitaMessage;
+import it.contrada.web.util.ConverterContrada;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
-public class ListaRidView {
+public class ListaRidView extends BaseView {
 	private int cdStato;
 	private List<SelectItem> stati;
 	private List<RidDTO> rid;
 	private boolean visibleRid;
 	private int nrAnagrafiche;
-	private double impTotale;
-	private List<Integer> idStati;
+	private Integer impTotale;
+	private List<String> idStati;
 	private List<SelectItem> tipoTessere;
 	private Integer tipoTessera;
+	private boolean renderInvia;
+	private String dsTessera;
+
+	public boolean isRenderInvia() {
+		return renderInvia;
+	}
+
+	public void setRenderInvia(boolean renderInvia) {
+		this.renderInvia = renderInvia;
+	}
 
 	public Integer getTipoTessera() {
 		return tipoTessera;
@@ -38,12 +54,12 @@ public class ListaRidView {
 
 		if (tipoTessere == null) {
 
-			tipoTessere = new ArrayList<SelectItem>();		
+			tipoTessere = new ArrayList<SelectItem>();
 
 			List<TipoTesseraDTO> tipoTessereDTO = null;
 			tipoTessereDTO = RicercaTipoTesseraBD.elencaTipoTessera();
 
-			tipoTessere.add(new SelectItem("-1","-- Selezionare --"));
+			tipoTessere.add(new SelectItem("-1", "-- Selezionare --"));
 			for (TipoTesseraDTO tt : tipoTessereDTO) {
 				tipoTessere.add(new SelectItem(tt.getIdTipoTessera(), tt
 						.getDsTipoTessera()));
@@ -55,16 +71,20 @@ public class ListaRidView {
 		return tipoTessere;
 	}
 
-	public List<Integer> getIdStati() {
+	public List<String> getIdStati() {
 		return idStati;
 	}
 
-	public void setIdStati(List<Integer> idStati) {
+	public void setIdStati(List<String> idStati) {
 		this.idStati = idStati;
 	}
 
-	public double getImpTotale() {
-		return impTotale;
+	public String getImpTotale() {
+		if (impTotale != null) {
+			return ConverterContrada.convertToImporto(impTotale);
+		}
+		return ConverterContrada.convertToImporto(Integer.valueOf("0"));
+
 	}
 
 	public int getNrAnagrafiche() {
@@ -109,19 +129,54 @@ public class ListaRidView {
 		this.stati = stati;
 	}
 
+	public void inviaMailClick(ActionEvent e1) throws ContradaExceptionBloccante, IOException {
+		try {
+			RidMail.InviaMailSospesiRid(rid,dsTessera);
+			writeInfoMessage(TipoGravitaMessage.SUCCESS, "Mail inviata con successo");
+		} catch (Exception e) {		
+			writeErrorMessage("Errore nell'invio della mail", e);
+		}
+	}
+
 	public void cercaClick(ActionEvent e) throws ContradaExceptionBloccante,
 			ContradaExceptionNonBloccante {
 
-		if (tipoTessera==-1)
-		{
-			tipoTessera=null;
+		if (tipoTessera == -1) {
+			tipoTessera = null;
+			dsTessera="Protettorato";			
 		}
-		rid = RicercaRidBD.ricercaPerStato(idStati,tipoTessera);
+		else
+		{
+			for (SelectItem item:tipoTessere)
+			{
+				if (Integer.valueOf(item.getValue().toString()).intValue()==tipoTessera.intValue())
+				{
+					dsTessera=item.getLabel();
+				}
+			}
+		}
+		List<Integer> idIntStati=new ArrayList<Integer>();
+		for (String idStato:idStati)
+		{
+			idIntStati.add(Integer.parseInt(idStato));
+		}
+		rid = RicercaRidBD.ricercaPerStato(idIntStati, tipoTessera);
 
 		visibleRid = !rid.isEmpty();
 		impTotale = 0;
 		for (RidDTO ridDTO : rid) {
-			impTotale += ridDTO.getQuota();
+			if (ridDTO.getMembri() != null) {
+				for (MembroRidDTO m : ridDTO.getMembri()) {
+					impTotale += m.getQuota();
+				}
+			}
+		}
+		
+		for (Integer idintStato:idIntStati)
+		{
+			renderInvia=(idintStato.intValue()==TipoStatoRid.Sospesa.getStatoRid())?true:false;
+					
+
 		}
 	}
 

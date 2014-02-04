@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:nicchio="http://taglib.contradanicchio.it">
+	<jsp:directive.page contentType="text/html;charset=utf-8" />
+	<f:view>
+		<ice:portlet>
+			<ice:outputStyle href="#{styleBean.activeCss}" />
+			<ice:form>
+
+
+				<ice:panelGroup>
+					<ice:panelGroup styleClass="portletContainer">
+						<ice:outputText value="#{msgs.invioMail}"
+							styleClass="labelPortletContainer"></ice:outputText>
+					</ice:panelGroup>
+					<!-- INFO MESSAGE -->
+					<nicchio:serviceInfoMessage bbean="#{invioMailView}" />
+
+					<!-- TO -->
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="To" styleClass="label140"></ice:outputText>
+						<ice:inputTextarea required="true" value="#{invioMailView.to}"
+							rows="2" id="to" style="width:60%"></ice:inputTextarea>
+						<ice:message for="to"></ice:message>
+					</ice:panelGroup>
+
+					<!-- SUBJECT -->
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="Subject" styleClass="label140"></ice:outputText>
+						<ice:inputText required="true" value="#{invioMailView.subject}"
+							id="subject" maxlength="60" size="60"></ice:inputText>
+						<ice:message for="subject"></ice:message>
+					</ice:panelGroup>
+
+					<!-- CONTENT -->
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="Content" styleClass="label140"></ice:outputText>
+						<ice:inputTextarea id="content" required="true"
+							value="#{invioMailView.content}" rows="15" style="width:50%"></ice:inputTextarea>
+						<ice:message for="content"></ice:message>
+					</ice:panelGroup>
+
+					<!-- CONFIGURAZIONE -->
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="From" styleClass="label140"></ice:outputText>
+						<ice:inputText required="false" size="100" value="#{invioMailView.from}" />
+					</ice:panelGroup>
+					
+					<!-- 
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="user" styleClass="label140"></ice:outputText>
+						<ice:inputText required="false" size="40" value="#{invioMailView.username}" />
+					</ice:panelGroup>
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="psw"  styleClass="label140" />
+						<ice:inputText required="false" size="40" value="#{invioMailView.psw}" />
+					</ice:panelGroup>
+					<ice:panelGroup styleClass="elementContainer">
+						<ice:outputText value="port" styleClass="label140" />
+						<ice:inputText  required="false" value="#{invioMailView.port}" />
+					</ice:panelGroup>
+					<ice:panelGroup styleClass="elementContainer" >
+						<ice:outputText value="serverSMTP" styleClass="label140" />
+						<ice:inputText   required="false" size="40"
+							value="#{invioMailView.serverSMPT}" />
+					</ice:panelGroup>
+					-->
+
+				
+
+				<ice:panelGroup styleClass="bottoniera">
+					<ice:panelGroup>
+						<ice:commandButton value="#{msgs.invia}"
+							actionListener="#{invioMailView.inviaMail}"></ice:commandButton>
+
+
+
+					</ice:panelGroup>
+				</ice:panelGroup>
+				</ice:panelGroup>
+
+
+			</ice:form>
+		</ice:portlet>
+	</f:view>
+
+</jsp:root>

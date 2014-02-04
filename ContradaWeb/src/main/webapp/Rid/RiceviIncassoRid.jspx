@@ -2,7 +2,8 @@
 <jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ice="http://www.icesoft.com/icefaces/component">
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:nicchio="http://taglib.contradanicchio.it">
 
 	<!--  <script language="JavaScript" type="text/javascript">  function HandleFileButtonClick()  { alert("cazzo");   document.getElementById("myFile").click();    document.getElementById("fileInput").value = document.getElementById("myFile").value;  }  </script>-->
 	<f:view>
@@ -13,6 +14,9 @@
 					<ice:outputText value="Ricevi Incassi Rid"
 						styleClass="labelPortletContainer"></ice:outputText>
 				</ice:panelGroup>
+				<!-- INFO MESSAGE -->
+					<nicchio:serviceInfoMessage
+						bbean="#{riceviIncassoRid}" />
 				<ice:panelGrid>
 
 					<ice:panelGrid rendered="#{riceviIncassoRid.visibleEsiti}">
@@ -63,13 +67,11 @@
 
 						<ice:inputFile label="Elabora" fileNamePattern=".+\.txt"
 							actionListener="#{riceviIncassoRid.eleboraOnClick}"
-							 progressListener="#{riceviIncassoRid.progressListener}"
-							id="inputFileComponent" 
-							immediate="false" submitOnUpload="postUpload"></ice:inputFile>
+							progressListener="#{riceviIncassoRid.progressListener}"
+							id="inputFileComponent" immediate="false"
+							submitOnUpload="postUpload"></ice:inputFile>
 						<ice:message for="inputFileComponent" />
-						<ice:outputProgress
-							
-							value="#{riceviIncassoRid.fileProgress}" />
+						<ice:outputProgress value="#{riceviIncassoRid.fileProgress}" />
 
 						<ice:outputText value="#{riceviIncassoRid.note}" />
 
@@ -109,7 +111,7 @@
 							<f:facet name="header">
 								<ice:outputText value="Flusso"></ice:outputText>
 							</f:facet>
-							<ice:outputText value="#{rid.rec50.segmento2}" />
+							<ice:outputText value="#{rid.rec50.segmento1}" />
 						</ice:column>
 						<ice:column id="Intestatario">
 							<f:facet name="header">
@@ -156,6 +158,12 @@
 							</f:facet>
 							<ice:outputText value="#{rid.tipoStatoRid}" />
 						</ice:column>
+						<ice:column id="Mail"> 
+							<f:facet name="header">
+								<ice:outputText value="Mail"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{rid.esitoMail}" />
+						</ice:column>
 					</ice:dataTable>
 					<ice:dataPaginator id="tabAnag" for="incassi" paginator="true"
 						rendered="#{riceviIncassoRid.visibleListRid==true}"
@@ -190,13 +198,7 @@
 
 					</ice:dataPaginator>
 
-					<ice:panelGrid columns="2"
-						rendered="#{riceviIncassoRid.visibleListRid==true}">
-						<ice:outputText value="Nr. Disposizioni:" />
-						<ice:outputText value="#{riceviIncassoRid.nrDisposizioni}" />
-
-					</ice:panelGrid>
-
+					
 				</ice:panelGrid>
 
 			</ice:form>

@@ -34,8 +34,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<id property="modalita" column="dsTipoRateizzazione" />
 			<id property="tessera" column="dsTipoTessera" />
 			<id property="idTessera" column="idTessera" />
+			<id property="idTipoTessera" column="idTipoTessera" />
+			
+			<id property="mail" column="mail" />
 			<id column="ID_TIPO_INCASSO_RID" property="idTipoIncassoRid" />
 			<id column="DS_CAUSALE" property="dsTipoIncassoRid" />
+			
 		</collection>
 
 
@@ -100,10 +104,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="getMembriRid" resultType="it.contrada.dto.MembroRidDTO">
 		select A.TX_NOME as
-		nome,A.ID_ANAGRAFICA as idAnagrafica, A.TX_COGNOME
-		as cognome,R.ID_RID
-		as
-		idRid,R.TX_INTESTATARIO as intestatario
+		nome,A.ID_ANAGRAFICA as idAnagrafica, 
+		A.TX_COGNOME as cognome,R.ID_RID as idRid,A.TX_MAIL as mail,
+		R.TX_INTESTATARIO as intestatario, r.id_stato_rid as idStatoRid
 		from
 		${database.schema}anagrafica A, ${database.schema}tessera t,
 		${database.schema}rid R
@@ -193,38 +196,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${database.schema}tipo_stato_rid TS
 </select>
 
-	<select id="getRidConMembri" resultType="it.contrada.dto.RidDTO"
+	<select id="getRidConMembri" parameterType="java.util.HashMap" resultType="it.contrada.dto.RidDTO" 
 		resultMap="ridResultMap">
 		SELECT A.TX_NOME as nome,
-		A.ID_ANAGRAFICA as
-		idAnagrafica,
+		A.ID_ANAGRAFICA as idAnagrafica,
 		A.TX_COGNOME as cognome,
 		A.TX_NOME as nome,
-		T.ID_TESSERA as
-		idTessera,
-		T.ID_TIPO_INCASSO as
-		idTipoIncasso,
-		TI.DS_TIPO_INCASSO as
-		dsIncasso,
-		T.TX_NOTE_ESAZIONE as
-		dsNote,
-		TT.ID_TIPO_TESSERA as
-		idTipoTessera,
-		TT.DS_TIPO_TESSERA as
-		dsTipoTessera,
-		TR.ID_TIPO_RATEIZZAZIONE as
-		idTipoRateizzazione,
+		A.TX_MAIL as mail,
+		T.ID_TESSERA as	idTessera,
+		T.ID_TIPO_INCASSO as idTipoIncasso,
+		TI.DS_TIPO_INCASSO as dsIncasso,
+		T.TX_NOTE_ESAZIONE as dsNote,
+		TT.ID_TIPO_TESSERA as idTipoTessera,
+		TT.DS_TIPO_TESSERA as dsTipoTessera,
+		TR.ID_TIPO_RATEIZZAZIONE as idTipoRateizzazione,
 		TR.ds_TIPO_RATEIZZAZIONE as dsTipoRateizzazione,
 		T.IM_TESSERA as quota,
 		T.ID_RID AS idRid,
-		TT.FG_ATTIVA,
+		TT.FG_ATTIVA,		
 		RID.TX_INTESTATARIO,
 		RID.CD_FISC AS
 		cdFiscRid,
 		RID.ID_STATO_RID,
-
-		RID.CD_NAZIONE as
-		cdNazioneRid,
+		RID.CD_NAZIONE as cdNazioneRid,
 		RID.NR_CIN_EUROPEO,
 		RID.CD_ABI,
 		RID.CD_CAB,
@@ -266,13 +260,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 		)RFP ON
 		RFP.ID_RID=RID.ID_RID
-		WHERE
-		RID.ID_RID=#{idRid}
-		AND
-		T.ID_TIPO_INCASSO=1 AND
-		A.ID_STATO_ANAGRAFICA NOT IN(2)
 		
+		<where>		
+		A.ID_STATO_ANAGRAFICA NOT IN(2)		
 		AND TT.FG_ATTIVA=1
+		<if test="tipoTessera!=null">		
+		AND T.ID_TIPO_TESSERA=#{tipoTessera} 
+		</if>
+		<if test="idRid!=null">
+		AND RID.ID_RID=#{idRid}
+		</if>		
+		<if test="cdStato!=null">
+		 AND RID.id_stato_rid in		
+		<foreach item="item" index="index" collection="cdStato" open="("
+			separator="," close=")">
+			#{item}
+				</foreach>
+		</if>
+		</where>
 	</select>
 
 
@@ -281,24 +286,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		parameterType="java.util.HashMap">
 		SELECT
 		ID_RID AS nrRid,
-		upper(TX_INTESTATARIO) as
-		intestatarioRid,
+		upper(TX_INTESTATARIO) as intestatarioRid,
 		upper(CD_FISC) as cdFiscale,
-		R.ID_STATO_RID
-		as
-		tipoStatoRid,
+		R.ID_STATO_RID as tipoStatoRid,
 		RS.DS_STATO_RID as dsStatoRid,
 		upper(CD_NAZIONE) as paese,
-		NR_CIN_EUROPEO
-		cin,
+		NR_CIN_EUROPEO	cin,
 		CD_ABI abi,
 		CD_CAB as cab,
-		NR_CIN as
-		cinAbi,
-		upper(NR_CONTO) as
-		numeroCC,
+		NR_CIN as cinAbi,
+		upper(NR_CONTO) as numeroCC,
 		TX_NOTE as note
-
+		
 		FROM ${database.schema}RID R
 		JOIN ${database.schema}TIPO_STATO_RID RS
 		ON
@@ -340,27 +339,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		rid.ID_RID AS nrRid,
 		upper(TX_INTESTATARIO) as intestatarioRid,
 		upper(RID.CD_FISC) as cdFiscale,
-		RID.ID_STATO_RID
-		as tipoStatoRid,
+		RID.ID_STATO_RID as tipoStatoRid,
 		tsr.ds_stato_rid as dsStatoRid,
 		upper(coalesce(CD_NAZIONE,'')) as paese,
-		NR_CIN_EUROPEO
-		cin,
+		NR_CIN_EUROPEO cin,
 		CD_ABI abi,
 		CD_CAB as cab,
-		NR_CIN as
-		cinAbi,
-		upper(coalesce(NR_CONTO,'')) as
-		numeroCC,
-		rid.TX_NOTE as note,
-		concat(A.TX_COGNOME,' ', A.TX_NOME) As
-		anagraficaMembro,
-		trim(concat(COALESCE(A.TX_MAIL,''),' ',
-		COALESCE(A.TX_CELL,''),' ',COALESCE(A.TX_FISSO,''))) As
-		recapitoMembro,
+		NR_CIN as cinAbi,
+		upper(coalesce(NR_CONTO,'')) as numeroCC, rid.TX_NOTE as note, concat(A.TX_COGNOME,' ', A.TX_NOME) As anagraficaMembro,
+		trim(concat(COALESCE(A.TX_MAIL,''),' ',	COALESCE(A.TX_CELL,''),' ',COALESCE(A.TX_FISSO,''))) As	recapitoMembro,
 		tt.ds_tipo_tessera as dsTessera,
-		t.im_tessera/100 as
-		quota
+		t.im_tessera/100 as	quota
 		FROM
 		${database.schema}RID join ${database.schema}TESSERA T
 		ON

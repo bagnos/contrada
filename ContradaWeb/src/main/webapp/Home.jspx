@@ -9,8 +9,7 @@
 		<html>
 <head>
 <title>Protettorato - Nobile Contrada del Nicchio</title>
-<script type="text/javascript">
-	
+<script type="text/javascript" >
 	function hideLoading() {
 
 		/*
@@ -19,19 +18,24 @@
 		iframe.style.height = container.offsetHeight + 'px';*/
 
 		hideTrasparency();
+
+		document.getElementById('pagina').style.display = "block";	
+		
 		document.getElementById('pagina').contentWindow.Ice
-		.onServerError(
-				'document:body',
-				function() {
+				.onServerError('document:body',function(myStatusCode, myResponseTxt, myResponseDOM) {					
 					top.document.getElementById('loadingSpan').style.visibility = "hidden";
+					top.document.getElementById('backgroundTransparency').style.display = "none";			
+
 				});
-		document.getElementById('pagina').style.display = "block";
+
 		document.getElementById('pagina').contentWindow.Ice
 				.onSendReceive(
 						'document:body',
 						function() {
 
 							top.document.getElementById('loadingSpan').style.visibility = "visible";
+							top.document
+									.getElementById('backgroundTransparency').style.display = "block";
 
 							/*
 							top.document.getElementById('backgroundTransparency').style.display = "block";
@@ -42,6 +46,8 @@
 						function() {
 
 							top.document.getElementById('loadingSpan').style.visibility = "hidden";
+							top.document
+									.getElementById('backgroundTransparency').style.display = "none";
 							/*
 							top.document.getElementById('backgroundTransparency').style.display = "none";
 							top.document.getElementById('divbackgroundTransparency').style.display = "none";
@@ -76,7 +82,7 @@
 
 
 </head>
-<body onload="loadIFrame('./HomeContent.iface'); ">
+<body onload="loadIFrame('./HomeContent.iface'); " >
 
 
 	<ice:form>
@@ -222,7 +228,10 @@ margin-top: 10px;">
 				<!-- rete -->
 				<ice:menuItem value="Rete" id="rete">
 					<ice:menuItem id="AssegnaGestore" value="Assegna Gestore"
-						onclick="loadIFrame('./Anagrafica/AssegnaGestore.iface'); ">
+						onclick="loadIFrame('./Rete/AssegnaGestore.iface'); ">
+					</ice:menuItem>
+					<ice:menuItem id="InserisciGestore" value="Inserisci Gestore"
+						onclick="loadIFrame('./Rete/InserisciGestore.iface'); ">
 					</ice:menuItem>
 				</ice:menuItem>
 
@@ -274,6 +283,13 @@ margin-top: 10px;">
 					</ice:menuItem>
 				</ice:menuItem>
 
+				<!-- mail -->
+				<ice:menuItem value="Comunicazione" id="comunicazione">
+					<ice:menuItem id="mail" value="Invia Mail"
+						onclick="loadIFrame('./Mail/InvioMail.iface'); ">
+					</ice:menuItem>
+				</ice:menuItem>
+
 
 				<!-- utente -->
 				<ice:menuItem value="Utente" id="utente">
@@ -304,7 +320,7 @@ margin-top: 10px;">
 				  -->
 
 		<div id="backgroundTransparency"
-			style="left: 0px; top: 0px; width: 1276px; height: 1076px; display: none; filter: alpha(opacity =                 30); position: absolute; z-index: 250021; cursor: wait;" />
+			style="left: 0px; top: 0px; width: 100%; height: 100%; display: none; filter: alpha(opacity =                   30); position: absolute; z-index: 250021; cursor: wait;" />
 		<div id="divbackgroundTransparency"
 			style="text-align: center; top: 50%; left: 47%; display: none; position: absolute; z-index: 250022; cursor: wait;">
 			<img alt="" src="./images/portlet/loading_animation.gif" />

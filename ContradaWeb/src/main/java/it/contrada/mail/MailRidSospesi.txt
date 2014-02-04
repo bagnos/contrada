@@ -1,0 +1,7 @@
+GENTILE <COGNOME> <NOME>,
+
+ti segnaliamo che, dai nostri controlli contabili, il tuo RID bancario sul conto <CONTO> intestato a <INTESTATARIO> è stato Sospeso.
+
+Sul tuo incasso RID, relativo al pagamento del <TESSERA>, ci risultano alcuni problemi di allineamento sulle coordinate bancarie.
+
+Ti chiediamo di contattare il prima possibile la Commissione Protettorato per sistemare e verificare le tue coordinate bancarie.

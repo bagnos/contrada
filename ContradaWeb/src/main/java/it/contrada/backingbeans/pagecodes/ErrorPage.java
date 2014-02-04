@@ -1,8 +1,7 @@
 package it.contrada.backingbeans.pagecodes;
 
-import it.contrada.exceptions.ContradaExceptionBloccante;
-import it.contrada.exceptions.ContradaExceptionNonBloccante;
 import it.contrada.web.util.Errori;
+import it.contrada.web.util.Javascript;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -15,19 +14,21 @@ import javax.servlet.ServletException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.icesoft.faces.context.effects.JavascriptContext;
+
 public class ErrorPage {
 
 	private static Log log = LogFactory.getLog(ErrorPage.class);
 
 	public ErrorPage() {
-
+		apppendJavaScript();
 	}
 
 	private String errorMessage;
 	private String viewFrom;
 	private String stackTrace;
-	private boolean showStack=false;
-	private String link="Mostra Log";
+	private boolean showStack = false;
+	private String link = "Mostra Log";
 
 	public String getLink() {
 		return link;
@@ -53,62 +54,76 @@ public class ErrorPage {
 		setErrors();
 		return errorMessage;
 	}
-	
-	public void showLog(ActionEvent e)
-	{
-		showStack=!showStack;
-		link="Mostra Log";
-		if (showStack)
-		{
-			link="Nascondi Log";
+
+	public void showLog(ActionEvent e) {
+		showStack = !showStack;
+		link = "Mostra Log";
+		if (showStack) {
+			link = "Nascondi Log";
 		}
+	}
+
+	private void apppendJavaScript() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("top.document.getElementById('loadingSpan').style.visibility = 'hidden';");
+		sb.append("top.document.getElementById('backgroundTransparency').style.display = 'none';");
+		
+		sb.append("function toggle(id, id2) {");
+		sb.append("var toggle_one = document.getElementById(id);");
+		sb.append("var toggle_two = document.getElementById(id2);");
+		sb.append("	if (toggle_one.style.display == 'block') {");
+		sb.append("toggle_one.style.display = 'none';");
+		sb.append("} else {");
+		sb.append("toggle_one.style.display = 'block';");
+		sb.append("}");
+		sb.append("}");
+		JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), sb.toString());
+
 	}
 
 	public void setErrors() {
 		// Get the current JSF context
-		FacesContext context = FacesContext.getCurrentInstance();
-		Map requestMap = context.getExternalContext().getRequestMap();
-		String src = FacesContext.getCurrentInstance().getViewRoot()
-				.getViewId();
+		try {
 
-		// Fetch the exception
+			FacesContext context = FacesContext.getCurrentInstance();
+			Map requestMap = context.getExternalContext().getRequestMap();
+			String src = FacesContext.getCurrentInstance().getViewRoot()
+					.getViewId();
 
-		Object exc = requestMap.get("javax.servlet.error.exception");
+			// Fetch the exception
 
-		if (exc==null)
-		{
-			exc="Temporanei probolemi di collegamento";
-			return;
-		}
-		
-		if (exc instanceof Throwable) {
+			Object exc = requestMap.get("javax.servlet.error.exception");
 
-			Throwable ex = ((Throwable) requestMap
-					.get("javax.servlet.error.exception"));
-
-			if (ex instanceof ContradaExceptionNonBloccante) {
-				errorMessage = ((ContradaExceptionNonBloccante) ex)
-						.getMessage();
-			} else if (ex instanceof ContradaExceptionBloccante) {
-				errorMessage = ((ContradaExceptionBloccante) ex).getMessage();
-			} else {
-				errorMessage = Errori.TEMP_PROB_COLL;
+			if (exc == null) {
+				exc = "Temporanei probolemi di collegamento";
+				return;
 			}
 
-			StringWriter writer = new StringWriter();
-			PrintWriter pw = new PrintWriter(writer);
+			if (exc instanceof Throwable) {
 
-			// Fill the stack trace into the write
-			fillStackTrace(ex, pw);
+				Throwable ex = ((Throwable) requestMap
+						.get("javax.servlet.error.exception"));
 
-			ex.printStackTrace(pw);
+				errorMessage = Errori.TEMP_PROB_COLL;
 
-			stackTrace = writer.toString();
-		} else {
-			stackTrace=exc.toString();
+				StringWriter writer = new StringWriter();
+				PrintWriter pw = new PrintWriter(writer);
+
+				// Fill the stack trace into the write
+				fillStackTrace(ex, pw);
+
+				ex.printStackTrace(pw);
+
+				stackTrace = writer.toString();
+			} else {
+				stackTrace = exc.toString();
+			}
+
+			log.error(stackTrace);
+	
+		} catch (Throwable e) {
+			log.error("errore nel caricamento della pagina di errore", e);
 		}
-
-		log.error(stackTrace);
 
 	}
 

@@ -1,8 +1,10 @@
 package it.contrada.incassorid.dto;
 
-import java.io.Serializable;
-
+import it.contrada.dto.MembroRidDTO;
 import it.contrada.enumcontrada.TipoStatoRid;
+
+import java.io.Serializable;
+import java.util.List;
 
 public class DisposizioneIncassoRidRicezioneDTO implements Serializable{
 	
@@ -20,9 +22,52 @@ public class DisposizioneIncassoRidRicezioneDTO implements Serializable{
 	private TipoStatoRid tipoStatoRid;
 	private int idRid;
 	private String stato;
+	private List<MembroRidDTO> membri;
+	private String esitoMail;
+	private int idStatoRid;
+	private String abi;
+	private String cab;
+	private String conto;
 	
 	
 	
+	
+	public int getIdStatoRid() {
+		return idStatoRid;
+	}
+	public void setIdStatoRid(int idStatoRid) {
+		this.idStatoRid = idStatoRid;
+	}
+	public String getAbi() {
+		return abi;
+	}
+	public void setAbi(String abi) {
+		this.abi = abi;
+	}
+	public String getCab() {
+		return cab;
+	}
+	public void setCab(String cab) {
+		this.cab = cab;
+	}
+	public String getConto() {
+		return conto;
+	}
+	public void setConto(String conto) {
+		this.conto = conto;
+	}
+	public String getEsitoMail() {
+		return esitoMail;
+	}
+	public void setEsitoMail(String esitoMail) {
+		this.esitoMail = esitoMail;
+	}
+	public List<MembroRidDTO> getMembri() {
+		return membri;
+	}
+	public void setMembri(List<MembroRidDTO> membri) {
+		this.membri = membri;
+	}
 	public String getStato() {
 		return stato;
 	}

@@ -133,9 +133,9 @@ public class RicezioneFlussoIncassiRid {
 	private Record30DTO decodificaRecord_30(String record) {
 		Record30DTO rec30 = new Record30DTO();
 		rec30.setNumeroProgressivo(Integer.valueOf(record.substring(3, 10)));
-		rec30.setSegmento1(record.substring(10, 40).trim());
-		rec30.setSegmento2(record.substring(40, 70).trim());
-		rec30.setSegmento3(record.substring(70, 100).trim());
+		rec30.setSegmento1(record.substring(10, 100).trim());
+		//rec30.setSegmento2(record.substring(40, 70).trim());
+		//rec30.setSegmento3(record.substring(70, 100).trim());
 		return rec30;
 	}
 
@@ -143,9 +143,7 @@ public class RicezioneFlussoIncassiRid {
 		Record50DTO rec50 = new Record50DTO();
 		rec50.setNumeroProgressivo(Integer.valueOf(record.substring(3, 10)
 				.trim()));
-		rec50.setSegmento1(record.substring(10, 40).trim());
-		rec50.setSegmento2(record.substring(40, 70).trim());
-
+		rec50.setSegmento1(record.substring(10, 100).trim());
 		return rec50;
 	}
 

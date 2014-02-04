@@ -255,6 +255,20 @@
   <managed-bean-class>it.contrada.backingbeans.pagecodes.StampaDocumenti</managed-bean-class>
   <managed-bean-scope>request</managed-bean-scope>
  </managed-bean>
+ <managed-bean>
+  <managed-bean-name>invioMailView</managed-bean-name>
+  <managed-bean-class>it.contrada.backingbeans.pagecodes.InvioMailView</managed-bean-class>
+  <managed-bean-scope>request</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>inserisciGestoreView</managed-bean-name>
+  <managed-bean-class>it.contrada.backingbeans.pagecodes.InserisciGestoreView</managed-bean-class>
+  <managed-bean-scope>request</managed-bean-scope>
+ </managed-bean>
+ 
+ 
+ 
+ 
  <!--
 		<managed-bean> <managed-bean-name>comuneNascita</managed-bean-name>
 		<managed-bean-class>it.contrada.backingbeans.Comune</managed-bean-class>

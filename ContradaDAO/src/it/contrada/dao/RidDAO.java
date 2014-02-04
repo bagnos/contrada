@@ -99,8 +99,11 @@ public class RidDAO extends SqlSessionDaoSupport implements IRidDAO {
 	@Override
 	public RidDTO getRid(int idRid) throws Exception {
 		// TODO Auto-generated method stub
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("idRid", idRid);
 		List<RidDTO> rids = getSqlSessionTemplate().selectList(
-				"it.contrada.rid.queries.getRidConMembri", idRid);
+				"it.contrada.rid.queries.getRidConMembri", map);
 		if (rids.isEmpty()) {
 			return null;
 		} else {
@@ -295,7 +298,7 @@ public class RidDAO extends SqlSessionDaoSupport implements IRidDAO {
 		}
 
 		return getSqlSessionTemplate().selectList(
-				"it.contrada.rid.queries.getRidPerStato", par);
+				"it.contrada.rid.queries.getRidConMembri", par);
 	}
 
 }
