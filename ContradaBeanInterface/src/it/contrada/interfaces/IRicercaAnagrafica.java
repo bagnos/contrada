@@ -67,4 +67,7 @@ public interface IRicercaAnagrafica {
 
 	public List<AnagraficaDTO> ricercaAnagraficheConPrincipale(List<Integer> statiAnagrafica)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante;
+	
+	public List<AnagraficaDTO> ricercaAnagrafichePerGestore(int idGestore)
+			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante;
 }

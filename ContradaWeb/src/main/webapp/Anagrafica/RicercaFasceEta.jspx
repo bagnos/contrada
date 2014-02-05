@@ -119,6 +119,32 @@
 									<f:convertDateTime pattern="dd/MM/yyyy" />
 								</ice:outputText>
 							</ice:column>
+							
+							<ice:column id="EMAIL">
+								<f:facet name="header">
+									<ice:outputText value="Email" />
+								</f:facet>
+								<ice:outputText value="#{anagrafica.txMail}">
+									
+								</ice:outputText>
+							</ice:column>
+							
+							<ice:column id="CELL">
+								<f:facet name="header">
+									<ice:outputText value="Cell" />
+								</f:facet>
+								<ice:outputText value="#{anagrafica.txCell}">									
+								</ice:outputText>
+							</ice:column>
+							
+							
+							<ice:column id="FISSO	">
+								<f:facet name="header">
+									<ice:outputText value="Fisso" />
+								</f:facet>
+								<ice:outputText value="#{anagrafica.txFisso}">									
+								</ice:outputText>
+							</ice:column>
 
 
 						</ice:dataTable>

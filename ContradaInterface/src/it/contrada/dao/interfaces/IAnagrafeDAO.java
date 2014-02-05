@@ -14,6 +14,7 @@ public interface IAnagrafeDAO {
 	public AnagraficaDTO inserisciAnagrafica(AnagraficaDTO anagraficaDTO) throws Exception ;
 	public List<AnagraficaDTO> getAnagraficaByCognomeNome(String cognome, String nome) throws Exception ;
 	public List<AnagraficaDTO> getAnagraficaByCognome(String cognome) throws Exception ;
+	public List<AnagraficaDTO> getAnagraficaByGestore(int idGestore) throws Exception ;
 	
 	public AnagraficaDTO getAnagraficaByCodiceAnagrafica(long cdAnag) throws Exception ;
 	public List<AnagraficaDTO> getAnagraficaByCodiceFamiglia(long cdFamiglia) throws Exception ;

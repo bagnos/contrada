@@ -2141,6 +2141,7 @@ input.iceSelInpDateClosePopup {
 	border-bottom-color: #f5f5f5;
 	width: 100%;
 	clear: both;
+	overflow: auto;
 }
 
 .elementContainer-noborder {
@@ -2186,6 +2187,7 @@ input.iceSelInpDateClosePopup {
 	width: 140px;
 	margin-left: 1px;
 	display: inline-block;
+	float: left;
 }
 
 .info,.success,.warning,.error,.validation {

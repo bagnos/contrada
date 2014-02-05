@@ -2,7 +2,8 @@
 <jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ice="http://www.icesoft.com/icefaces/component">
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:nicchio="http://taglib.contradanicchio.it">
 
 	<f:view>
 
@@ -14,197 +15,349 @@
 						<ice:outputText value="#{msgs.GESTIONE_RETE}"
 							styleClass="labelPortletContainer"></ice:outputText>
 					</ice:panelGroup>
-
-
-					<!-- imposta residenza -->
+					<!-- INFO MESSAGE -->
+					<nicchio:serviceInfoMessage bbean="#{ricercaAnagPerResidenzaView}" />
 					<ice:panelGroup styleClass="elementContainer">
-						<ice:outputText value="#{msgs.provincia}" styleClass="label140"></ice:outputText>
-						<ice:selectOneMenu
-							value="#{ricercaAnagPerResidenzaView.cdProvincia}"
-							partialSubmit="true">
-							<f:selectItems
-								value="#{ricercaAnagPerResidenzaView.provincieItems}" />
-						</ice:selectOneMenu>
+						<h:outputText for="assegnazione"  styleClass="label140"
+							value="Assegnazione" />
+						<ice:panelGroup style="float:left;width:300px">
+							<ice:selectOneRadio partialSubmit="true" immediate="true"
+								id="assegnazione"
+								value="#{ricercaAnagPerResidenzaView.idAssegnazione}"
+								required="true" layout="lineDirection">
+								<f:selectItem itemValue="0" itemLabel="Manuale" />
+								<f:selectItem itemValue="1" itemLabel="Residenza" />
+							</ice:selectOneRadio>
+						</ice:panelGroup>
 					</ice:panelGroup>
-					<!-- INSERIMENTO STRADA -->
-					<ice:panelGroup>
+
+					<!-- ASSEGNAZIONE MANUALE -->
+					<ice:panelGroup
+						rendered="#{ricercaAnagPerResidenzaView.idAssegnazione==0}">
+						<!-- GESTORE -->
 						<ice:panelGroup styleClass="elementContainer">
-							<ice:outputText value="#{msgs.cap}" styleClass="label140"></ice:outputText>
-							<ice:selectInputText rows="10" width="300" id="capAuto"
-								style="display:inline; margin-left:1px;width:220px"
-								listValue="#{ricercaAnagPerResidenzaView.capItems}"
-								listVar="cap" partialSubmit="true" 
-								valueChangeListener="#{ricercaAnagPerResidenzaView.updateListCap}"
-								value="#{stradarioBean.dsCap}" required="true">
-								<f:facet name="selectInputText">
-									<ice:panelGrid columns="1">
-										<ice:outputText value="#{cap.dsCap}" />
-
-									</ice:panelGrid>
-								</f:facet>
-
-							</ice:selectInputText>
-							<ice:message for="capAuto" />
-						</ice:panelGroup>
-						<ice:panelGroup styleClass="elementContainer">
-
-							<ice:outputText value="#{msgs.localita}" styleClass="label140"></ice:outputText>
-							<ice:selectOneMenu value="#{ricercaAnagPerResidenzaView.idLocalita}" partialSubmit="true" valueChangeListener="#{ricercaAnagPerResidenzaView.localitaValueChange}">
-							<f:selectItems value="#{ricercaAnagPerResidenzaView.localitaItem}"/>
-						</ice:selectOneMenu>
-							<!--<ice:inputText value="#{stradarioBean.dsLocalita}"></ice:inputText>-->
-						</ice:panelGroup>
-						<ice:panelGroup styleClass="elementContainer">
-							<ice:outputText value="#{msgs.via}" styleClass="label140"></ice:outputText>
-							<ice:selectInputText rows="10" width="300"
-								style="display:inline; margin-left:1px;width:220px"
-								listValue="#{ricercaAnagPerResidenzaView.vieItems}"
-								listVar="strada" partialSubmit="true"
-								valueChangeListener="#{ricercaAnagPerResidenzaView.updateListStrade}"
-								value="#{stradarioBean.dsStrada}">
-								<f:facet name="selectInputText">
-									<ice:panelGrid columns="1">
-										<ice:outputText value="#{strada.dsStrada}" />
-
-									</ice:panelGrid>
-								</f:facet>
-
-							</ice:selectInputText>
-						</ice:panelGroup>
-						<ice:panelGroup styleClass="elementContainer">
-							<ice:outputText value="#{msgs.filtroGestore}"
-								styleClass="label140"></ice:outputText>
-							<ice:selectOneMenu
+							<ice:outputText value="Gestore" styleClass="label140"></ice:outputText>
+							<ice:selectOneMenu partialSubmit="true"
+								valueChangeListener="#{ricercaAnagPerResidenzaView.gestoreChange}"
 								value="#{ricercaAnagPerResidenzaView.filtroGestore}">
 								<f:selectItems
-									value="#{ricercaAnagPerResidenzaView.filroGestoriItems}" />
+									value="#{ricercaAnagPerResidenzaView.gestoriItems}" />
 							</ice:selectOneMenu>
 						</ice:panelGroup>
+
+
+						<!-- ANAGRAFICA -->
 						<ice:panelGroup styleClass="elementContainer">
-							<ice:outputText value="#{msgs.filtroIncasso}"
-								styleClass="label140"></ice:outputText>
-							<ice:selectOneMenu
-								value="#{ricercaAnagPerResidenzaView.filtroIncasso}">
-								<f:selectItems
-									value="#{ricercaAnagPerResidenzaView.filtroIncassoItems}" />
-							</ice:selectOneMenu>
+							<ice:outputText value="#{msgs.anagrafica}" styleClass="label140"></ice:outputText>
+							<ice:inputText style="width: 79px" converter="IntegerConverter"
+								value="#{ricercaAnagPerResidenzaView.idAnagrafica}"></ice:inputText>
+
+
+							<ice:outputText value="#{msgs.cercaAnagrafica}"
+								style="margin-left:5px"></ice:outputText>
+							<ice:selectInputText rows="10" style="display:inline" size="40"
+								listValue="#{ricercaAnagPerResidenzaView.anagraficheItems}"
+								listVar="anagrafica" partialSubmit="true"
+								valueChangeListener="#{ricercaAnagPerResidenzaView.updateListAnagrafiche}"
+								value="#{ricercaAnagPerResidenzaView.dsAnagrafica}">
+								<f:facet name="selectInputText">
+									<ice:panelGrid columns="3">
+										<ice:outputText value="#{anagrafica.idAnagrafica}" />
+										<ice:outputText value="#{anagrafica.intestatario}" />
+										<ice:outputText value="#{anagrafica.dtNascita}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</ice:outputText>
+									</ice:panelGrid>
+								</f:facet>
+
+							</ice:selectInputText>
+							<ice:commandButton value="#{msgs.aggiungi}" partialSubmit="true"
+								style="margin-left:10px"
+								actionListener="#{ricercaAnagPerResidenzaView.addAnagraficaOnClick}"
+								id="btnAggAnag" />
 						</ice:panelGroup>
 
-					</ice:panelGroup>
-					<ice:panelGroup style="padding-top:3px;width:100%;margin-top:7px;">
-						<ice:commandButton value="#{msgs.cerca}"
-							actionListener="#{ricercaAnagPerResidenzaView.cercaOnClick}"></ice:commandButton>
-						<ice:commandButton value="#{msgs.conferma}"
-							style="margin-left:10px"
-							rendered="#{ricercaAnagPerResidenzaView.renderConferma}"
-							actionListener="#{ricercaAnagPerResidenzaView.confermaOnClick}"></ice:commandButton>
-					</ice:panelGroup>
-					<ice:panelGroup styleClass="noteContainer"
-						rendered="#{ricercaAnagPerResidenzaView.renderedNote}">
-						<ice:outputText value="#{ricercaAnagPerResidenzaView.note}"
-							styleClass="inputNote" />
+						<!-- tabella anagrafiche -->
+						<ice:panelGroup
+							rendered="#{ricercaAnagPerResidenzaView.visibleAnagrafiche}">
+							<ice:dataTable border="0" rows="#{styleBean.maxRowsTables}"
+								id="anagrafiche"
+								value="#{ricercaAnagPerResidenzaView.anagsConGestore}"
+								var="anagrafica">
 
+								<ice:column id="column0">
+									<f:facet name="header">
+									</f:facet>
+									<ice:commandButton image="#{styleBean.elimina}" title="elimina"
+										partialSubmit="true"
+										actionListener="#{ricercaAnagPerResidenzaView.eliminaAnagraficaOnClick}">
+										<f:attribute name="anagrafica" value="#{anagrafica}" />
+									</ice:commandButton>
+
+								</ice:column>
+
+								<ice:column id="column1">
+									<f:facet name="header">
+										<ice:outputText value="Nr. Anagrafica"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{anagrafica.idAnagrafica}" />
+								</ice:column>
+								<ice:column id="column2">
+									<f:facet name="header">
+										<ice:outputText value="Cognome"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{anagrafica.cognome}" />
+								</ice:column>
+								<ice:column id="column3">
+									<f:facet name="header">
+										<ice:outputText value="Nome"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{anagrafica.nome}" />
+								</ice:column>
+								<ice:column id="column5">
+									<f:facet name="header">
+										<ice:outputText value="Mail"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{anagrafica.txMail}" />
+								</ice:column>
+								<ice:column id="column6">
+									<f:facet name="header">
+										<ice:outputText value="Tel"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{anagrafica.txCell}" />
+								</ice:column>
+							</ice:dataTable>
+							<ice:dataPaginator for="anagrafiche" paginator="true"
+								fastStep="#{styleBean.fastStep}"
+								paginatorMaxPages="#{StyleBean.paginatorMaxPages}">
+								<f:facet name="first">
+									<ice:graphicImage url="#{styleBean.first}" style="border:none;"
+										title="First Page" />
+								</f:facet>
+
+								<f:facet name="last">
+									<ice:graphicImage url="#{styleBean.last}" style="border:none;"
+										title="Last Page" />
+								</f:facet>
+								<f:facet name="previous">
+									<ice:graphicImage url="#{styleBean.previous}"
+										style="border:none;" title="Previous Page" />
+								</f:facet>
+								<f:facet name="fastforward">
+									<ice:graphicImage url="#{styleBean.fastforward}"
+										style="border:none;" title="Fast Forward" />
+								</f:facet>
+								<f:facet name="fastrewind">
+									<ice:graphicImage url="#{styleBean.fastrewind}"
+										style="border:none;" title="Fast Backwards" />
+								</f:facet>
+								<f:facet name="next">
+									<ice:graphicImage url="#{styleBean.next}" style="border:none;"
+										title="Next Page" />
+								</f:facet>
+
+
+							</ice:dataPaginator>
+
+						</ice:panelGroup>
 					</ice:panelGroup>
 
-					<ice:panelGroup style="margin-top:5px;"
-						rendered="#{ricercaAnagPerResidenzaView.renderedAnags}">
-						<!-- exceld -->
-
-						<!--  tabella -->
+					<!-- impostazione per residenza -->
+					<ice:panelGroup
+						rendered="#{ricercaAnagPerResidenzaView.idAssegnazione==1}">
+						<ice:panelGroup styleClass="elementContainer">
+							<ice:outputText value="#{msgs.provincia}" styleClass="label140"></ice:outputText>
+							<ice:selectOneMenu
+								value="#{ricercaAnagPerResidenzaView.cdProvincia}"
+								partialSubmit="true">
+								<f:selectItems
+									value="#{ricercaAnagPerResidenzaView.provincieItems}" />
+							</ice:selectOneMenu>
+						</ice:panelGroup>
+						<!-- INSERIMENTO STRADA -->
 						<ice:panelGroup>
-							<ice:panelGroup
-								style="padding-top:5px;padding-bottom:5px;float:left">
-								<ice:outputText value="#{msgs.NumeroAnagrafiche}:"></ice:outputText>
-								<ice:outputText value="#{ricercaAnagPerResidenzaView.nrAnags}"></ice:outputText>
+							<ice:panelGroup styleClass="elementContainer">
+								<ice:outputText value="#{msgs.cap}" styleClass="label140"></ice:outputText>
+								<ice:selectInputText rows="10" width="300" id="capAuto"
+									style="display:inline; margin-left:1px;width:220px"
+									listValue="#{ricercaAnagPerResidenzaView.capItems}"
+									listVar="cap" partialSubmit="true"
+									valueChangeListener="#{ricercaAnagPerResidenzaView.updateListCap}"
+									value="#{stradarioBean.dsCap}" required="true">
+									<f:facet name="selectInputText">
+										<ice:panelGrid columns="1">
+											<ice:outputText value="#{cap.dsCap}" />
+
+										</ice:panelGrid>
+									</f:facet>
+
+								</ice:selectInputText>
+								<ice:message for="capAuto" />
+							</ice:panelGroup>
+							<ice:panelGroup styleClass="elementContainer">
+
+								<ice:outputText value="#{msgs.localita}" styleClass="label140"></ice:outputText>
+								<ice:selectOneMenu
+									value="#{ricercaAnagPerResidenzaView.idLocalita}"
+									partialSubmit="true"
+									valueChangeListener="#{ricercaAnagPerResidenzaView.localitaValueChange}">
+									<f:selectItems
+										value="#{ricercaAnagPerResidenzaView.localitaItem}" />
+								</ice:selectOneMenu>
+								<!--<ice:inputText value="#{stradarioBean.dsLocalita}"></ice:inputText>-->
+							</ice:panelGroup>
+							<ice:panelGroup styleClass="elementContainer">
+								<ice:outputText value="#{msgs.via}" styleClass="label140"></ice:outputText>
+								<ice:selectInputText rows="10" width="300"
+									style="display:inline; margin-left:1px;width:220px"
+									listValue="#{ricercaAnagPerResidenzaView.vieItems}"
+									listVar="strada" partialSubmit="true"
+									valueChangeListener="#{ricercaAnagPerResidenzaView.updateListStrade}"
+									value="#{stradarioBean.dsStrada}">
+									<f:facet name="selectInputText">
+										<ice:panelGrid columns="1">
+											<ice:outputText value="#{strada.dsStrada}" />
+
+										</ice:panelGrid>
+									</f:facet>
+
+								</ice:selectInputText>
+							</ice:panelGroup>
+							<ice:panelGroup styleClass="elementContainer">
+								<ice:outputText value="#{msgs.filtroGestore}"
+									styleClass="label140"></ice:outputText>
+								<ice:selectOneMenu
+									value="#{ricercaAnagPerResidenzaView.filtroGestore}">
+									<f:selectItems
+										value="#{ricercaAnagPerResidenzaView.filroGestoriItems}" />
+								</ice:selectOneMenu>
+							</ice:panelGroup>
+							<ice:panelGroup styleClass="elementContainer">
+								<ice:outputText value="#{msgs.filtroIncasso}"
+									styleClass="label140"></ice:outputText>
+								<ice:selectOneMenu
+									value="#{ricercaAnagPerResidenzaView.filtroIncasso}">
+									<f:selectItems
+										value="#{ricercaAnagPerResidenzaView.filtroIncassoItems}" />
+								</ice:selectOneMenu>
 							</ice:panelGroup>
 
-							<!--<ice:graphicImage url="#{styleBean.imgExcel}" />-->
-
-							<ice:dataExporter for="tabAnag" label="#{styleBean.labelExcel}"
-								style="border:none;margin-left:10px" type="excel"
-								ignorePagination="true" image="#{styleBean.imgExcel}" />
-
+						</ice:panelGroup>
+						<ice:panelGroup style="padding-top:3px;width:100%;margin-top:7px;">
+							<ice:commandButton value="#{msgs.cerca}"
+								actionListener="#{ricercaAnagPerResidenzaView.cercaOnClick}"></ice:commandButton>
+							<ice:commandButton value="#{msgs.conferma}"
+								style="margin-left:10px"
+								rendered="#{ricercaAnagPerResidenzaView.renderConferma}"
+								actionListener="#{ricercaAnagPerResidenzaView.confermaOnClick}"></ice:commandButton>
+						</ice:panelGroup>
+						<ice:panelGroup styleClass="noteContainer"
+							rendered="#{ricercaAnagPerResidenzaView.renderedNote}">
+							<ice:outputText value="#{ricercaAnagPerResidenzaView.note}"
+								styleClass="inputNote" />
 
 						</ice:panelGroup>
 
+						<ice:panelGroup style="margin-top:5px;"
+							rendered="#{ricercaAnagPerResidenzaView.renderedAnags}">
+							<!-- exceld -->
 
-						<!-- scrollable="true"
+							<!--  tabella -->
+							<ice:panelGroup>
+								<ice:panelGroup
+									style="padding-top:5px;padding-bottom:5px;float:left">
+									<ice:outputText value="#{msgs.NumeroAnagrafiche}:"></ice:outputText>
+									<ice:outputText value="#{ricercaAnagPerResidenzaView.nrAnags}"></ice:outputText>
+								</ice:panelGroup>
+
+								<!--<ice:graphicImage url="#{styleBean.imgExcel}" />-->
+
+								<ice:dataExporter for="tabAnag" label="#{styleBean.labelExcel}"
+									style="border:none;margin-left:10px" type="excel"
+									ignorePagination="true" image="#{styleBean.imgExcel}" />
+
+
+							</ice:panelGroup>
+
+
+							<!-- scrollable="true"
 							columnWidths="20px,40px,200px,200px,150px,150px,100px,100px,100px,100px,100px,100px,100px"
 							scrollHeight="200px" -->
 
-						<ice:dataTable border="1" cellpadding="2" cellspacing="0" rows="#{styleBean.maxRowsTables}"
-							id="tabAnag" value="#{ricercaAnagPerResidenzaView.anags}"
-							var="anagrafica">
-							<ice:column id="modicaGestore">
-								<f:facet name="header">
-								</f:facet>
-								<ice:commandButton title="modifica gestore" value="modifica"
-									partialSubmit="true" image="#{styleBean.modifica}"
-									actionListener="#{ricercaAnagPerResidenzaView.assegnaGestoreOnClick}">
-									<f:attribute name="anagrafica" value="#{anagrafica}" />
-								</ice:commandButton>
-							</ice:column>
-
-							<ice:column id="column0">
-								<f:facet name="header">
-									<ice:outputText value="Fam." />
-								</f:facet>
-								<ice:outputText value="#{anagrafica.idFamiglia}" />
-							</ice:column>
-							<ice:column id="column1">
-								<f:facet name="header">
-									<ice:outputText value="Anagrafica" />
-								</f:facet>
-								<ice:outputText value="#{anagrafica.intestatario}" />
-							</ice:column>
-
-							<ice:column id="column3">
-								<f:facet name="header">
-									<ice:outputText value="Indirizzo" />
-								</f:facet>
-								<ice:outputText value="#{anagrafica.indirizzo}" />
-							</ice:column>
-
-							<ice:column id="column2">
-								<f:facet name="header">
-									<ice:outputText value="Cap" />
-								</f:facet>
-								<ice:outputText value="#{anagrafica.capProvincia}">
-
-								</ice:outputText>
-							</ice:column>
-							<ice:column id="nascita">
-								<f:facet name="header">
-									<ice:outputText value="Data Nascita" />
-								</f:facet>
-								<ice:outputText value="#{anagrafica.dtNascita}">
-									<f:convertDateTime pattern="dd/MM/yyyy" />
-								</ice:outputText>
-							</ice:column>
-
-							<ice:column id="Gestore">
-								<f:facet name="header">
-									<ice:outputText value="Gestore" />
-								</f:facet>
-								<ice:outputText value="#{anagrafica.dsGestore}"
-									rendered="#{anagrafica.modicaGestore==false}" />
-								<ice:panelGroup rendered="#{anagrafica.modicaGestore}">
-									<ice:selectOneMenu value="#{anagrafica.idGestore}">
-										<f:selectItems
-											value="#{ricercaAnagPerResidenzaView.gestoriItems}" />
-									</ice:selectOneMenu>
-									<ice:commandButton value="#{msgs.Conferma}"
-										actionListener="#{ricercaAnagPerResidenzaView.conferma}"
-										partialSubmit="true">
-										<f:attribute value="#{anagrafica}" name="anagrafica" />
+							<ice:dataTable border="1" cellpadding="2" cellspacing="0"
+								rows="#{styleBean.maxRowsTables}" id="tabAnag"
+								value="#{ricercaAnagPerResidenzaView.anags}" var="anagrafica">
+								<ice:column id="modicaGestore">
+									<f:facet name="header">
+									</f:facet>
+									<ice:commandButton title="modifica gestore" value="modifica"
+										partialSubmit="true" image="#{styleBean.modifica}"
+										actionListener="#{ricercaAnagPerResidenzaView.assegnaGestoreOnClick}">
+										<f:attribute name="anagrafica" value="#{anagrafica}" />
 									</ice:commandButton>
-									<ice:commandButton value="#{msgs.Annulla}" partialSubmit="true"
-										actionListener="#{ricercaAnagPerResidenzaView.annulla}">
-										<f:attribute value="#{anagrafica}" name="anagrafica" />
-									</ice:commandButton>
-								</ice:panelGroup>
-							</ice:column>
-							<!-- 
+								</ice:column>
+
+								<ice:column id="column0">
+									<f:facet name="header">
+										<ice:outputText value="Fam." />
+									</f:facet>
+									<ice:outputText value="#{anagrafica.idFamiglia}" />
+								</ice:column>
+								<ice:column id="column1">
+									<f:facet name="header">
+										<ice:outputText value="Anagrafica" />
+									</f:facet>
+									<ice:outputText value="#{anagrafica.intestatario}" />
+								</ice:column>
+
+								<ice:column id="column3">
+									<f:facet name="header">
+										<ice:outputText value="Indirizzo" />
+									</f:facet>
+									<ice:outputText value="#{anagrafica.indirizzo}" />
+								</ice:column>
+
+								<ice:column id="column2">
+									<f:facet name="header">
+										<ice:outputText value="Cap" />
+									</f:facet>
+									<ice:outputText value="#{anagrafica.capProvincia}">
+
+									</ice:outputText>
+								</ice:column>
+								<ice:column id="nascita">
+									<f:facet name="header">
+										<ice:outputText value="Data Nascita" />
+									</f:facet>
+									<ice:outputText value="#{anagrafica.dtNascita}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</ice:outputText>
+								</ice:column>
+
+								<ice:column id="Gestore">
+									<f:facet name="header">
+										<ice:outputText value="Gestore" />
+									</f:facet>
+									<ice:outputText value="#{anagrafica.dsGestore}"
+										rendered="#{anagrafica.modicaGestore==false}" />
+									<ice:panelGroup rendered="#{anagrafica.modicaGestore}">
+										<ice:selectOneMenu value="#{anagrafica.idGestore}">
+											<f:selectItems
+												value="#{ricercaAnagPerResidenzaView.gestoriItems}" />
+										</ice:selectOneMenu>
+										<ice:commandButton value="#{msgs.Conferma}" title="conferma" image="#{styleBean.imgConferma}"
+											actionListener="#{ricercaAnagPerResidenzaView.conferma}"
+											partialSubmit="true">
+											<f:attribute value="#{anagrafica}" name="anagrafica" />
+										</ice:commandButton>
+										<ice:commandButton value="#{msgs.Annulla}" title="anulla"
+											partialSubmit="true" image="#{styleBean.imgAnnulla}"
+											actionListener="#{ricercaAnagPerResidenzaView.annulla}">
+											<f:attribute value="#{anagrafica}" name="anagrafica" />
+										</ice:commandButton>
+									</ice:panelGroup>
+								</ice:column>
+								<!-- 
 							<ice:column id="Tessera">
 								<f:facet name="header">
 									<ice:outputText value="Tessera" />
@@ -212,74 +365,83 @@
 								<ice:outputText value="#{anagrafica.tessera}" />
 							</ice:column>
 							 -->
-							<ice:column id="Carica">
-								<f:facet name="header">
-									<ice:outputText value="Carica" />
-								</f:facet>
-								<ice:outputText value="#{anagrafica.carica}" />
-							</ice:column>
-							<ice:column id="Quota">
-								<f:facet name="header">
-									<ice:outputText value="Quota" />
-								</f:facet>
-								<ice:outputText value="#{anagrafica.quota}" />
-							</ice:column>
-							<ice:column id="Incasso">
-								<f:facet name="header">
-									<ice:outputText value="Incasso" />
-								</f:facet>
-								<ice:outputText value="#{anagrafica.incasso}" />
-							</ice:column>
-							<ice:column id="Esattore">
-								<f:facet name="header">
-									<ice:outputText value="Esattore" />
-								</f:facet>
-								<ice:outputText value="#{anagrafica.esattore}" />
-							</ice:column>
-							<ice:column id="Telefono">
-								<f:facet name="header">
-									<ice:outputText value="Telefono" />
-								</f:facet>
-								<ice:outputText value="#{anagrafica.txCell} #{anagrafica.txFisso}" />
-							</ice:column>
-							<ice:column id="Mail">
-								<f:facet name="header">
-									<ice:outputText value="Mail" />
-								</f:facet>
-								<ice:outputText value="#{anagrafica.txMail}" />
-							</ice:column>
+								<ice:column id="Carica">
+									<f:facet name="header">
+										<ice:outputText value="Carica" />
+									</f:facet>
+									<ice:outputText value="#{anagrafica.carica}" />
+								</ice:column>
+								<ice:column id="Quota">
+									<f:facet name="header">
+										<ice:outputText value="Quota" />
+									</f:facet>
+									<ice:outputText value="#{anagrafica.quota}" />
+								</ice:column>
+								<ice:column id="Incasso">
+									<f:facet name="header">
+										<ice:outputText value="Incasso" />
+									</f:facet>
+									<ice:outputText value="#{anagrafica.incasso}" />
+								</ice:column>
+								<ice:column id="Esattore">
+									<f:facet name="header">
+										<ice:outputText value="Esattore" />
+									</f:facet>
+									<ice:outputText value="#{anagrafica.esattore}" />
+								</ice:column>
+								<ice:column id="Telefono">
+									<f:facet name="header">
+										<ice:outputText value="Telefono" />
+									</f:facet>
+									<ice:outputText
+										value="#{anagrafica.txCell} #{anagrafica.txFisso}" />
+								</ice:column>
+								<ice:column id="Mail">
+									<f:facet name="header">
+										<ice:outputText value="Mail" />
+									</f:facet>
+									<ice:outputText value="#{anagrafica.txMail}" />
+								</ice:column>
 
 
 
-						</ice:dataTable>
-						<ice:dataPaginator  for="tabAnag" paginator="true" fastStep="#{styleBean.fastStep}" paginatorMaxPages="#{StyleBean.paginatorMaxPages}">
-							<f:facet name="first">
-								<ice:graphicImage url="#{styleBean.first}" style="border:none;" title="First Page"/>
-							</f:facet>
+							</ice:dataTable>
+							<ice:dataPaginator for="tabAnag" paginator="true"
+								fastStep="#{styleBean.fastStep}"
+								paginatorMaxPages="#{StyleBean.paginatorMaxPages}">
+								<f:facet name="first">
+									<ice:graphicImage url="#{styleBean.first}" style="border:none;"
+										title="First Page" />
+								</f:facet>
 
-							<f:facet name="last">
-								<ice:graphicImage url="#{styleBean.last}" style="border:none;" title="Last Page"/>
-							</f:facet>
-							<f:facet name="previous">
-								<ice:graphicImage url="#{styleBean.previous}" style="border:none;" title="Previous Page"/>
-							</f:facet>
-							<f:facet name="fastforward">
-								<ice:graphicImage url="#{styleBean.fastforward}" style="border:none;" title="Fast Forward"/>
-							</f:facet>
-							<f:facet name="fastrewind">
-								<ice:graphicImage url="#{styleBean.fastrewind}" style="border:none;" title="Fast Backwards"/>
-							</f:facet>
-							<f:facet name="next">
-								<ice:graphicImage url="#{styleBean.next}" style="border:none;" title="Next Page"/>
-							</f:facet>
+								<f:facet name="last">
+									<ice:graphicImage url="#{styleBean.last}" style="border:none;"
+										title="Last Page" />
+								</f:facet>
+								<f:facet name="previous">
+									<ice:graphicImage url="#{styleBean.previous}"
+										style="border:none;" title="Previous Page" />
+								</f:facet>
+								<f:facet name="fastforward">
+									<ice:graphicImage url="#{styleBean.fastforward}"
+										style="border:none;" title="Fast Forward" />
+								</f:facet>
+								<f:facet name="fastrewind">
+									<ice:graphicImage url="#{styleBean.fastrewind}"
+										style="border:none;" title="Fast Backwards" />
+								</f:facet>
+								<f:facet name="next">
+									<ice:graphicImage url="#{styleBean.next}" style="border:none;"
+										title="Next Page" />
+								</f:facet>
 
 
-						</ice:dataPaginator>
-						
+							</ice:dataPaginator>
+
+						</ice:panelGroup>
 					</ice:panelGroup>
 				</ice:panelGroup>
 				<!-- BOTTONIERA -->
-
 			</ice:form>
 
 

@@ -90,6 +90,16 @@ public class AnagrafeDAO extends SqlSessionDaoSupport implements IAnagrafeDAO {
 				"it.contrada.anagrafica.queries.getAnagrafica", map);
 
 	}
+	
+	@Override
+	public List<AnagraficaDTO> getAnagraficaByGestore(int idGestore)
+			throws Exception {
+		// TODO Auto-generated method stub
+		HashMap<String,Integer> map = new HashMap<String,Integer>();
+		map.put("idGestore", idGestore);
+		return getSqlSessionTemplate().selectList(
+				"it.contrada.anagrafica.queries.getAnagrafica", map);
+	}
 
 	@Override
 	public List<AnagraficaDTO> getAnagraficaByCognome(String cognome)
@@ -332,6 +342,8 @@ public class AnagrafeDAO extends SqlSessionDaoSupport implements IAnagrafeDAO {
 		return getSqlSessionTemplate().selectList(
 				"it.contrada.anagrafica.queries.getAnagraficheConPrincipale", parms);
 	}
+
+	
 
 	
 }

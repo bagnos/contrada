@@ -53,15 +53,16 @@
 						<ice:inputText style="width: 279px" maxlength="100"
 							value="#{inserisciGestoreView.note}"></ice:inputText>
 						<ice:commandButton value="#{msgs.aggiungi}" partialSubmit="true"
-							style="display:inline-block"
+							style="display:inline-block" title="Aggiungi un nuovo gestore"
 							actionListener="#{inserisciGestoreView.addAnagraficaOnClick}"
 							id="btnAggAnag" />
 					</ice:panelGroup>
 
 					<!-- tabella anagrafiche -->
-					<ice:panelGroup
+					<ice:panelGroup style="margin-top:20px"
 						rendered="#{inserisciGestoreView.visibleAnagrafiche}">
-						<ice:dataTable border="0" rows="#{styleBean.maxRowsTables}"
+						<ice:outputText value="Elenco Gestori, Nr. #{inserisciGestoreView.nrGestori}"></ice:outputText>
+						<ice:dataTable  border="0" rows="#{styleBean.maxRowsTables}"
 							id="anagrafiche" value="#{inserisciGestoreView.anagraficheTable}"
 							var="anagrafica">
 

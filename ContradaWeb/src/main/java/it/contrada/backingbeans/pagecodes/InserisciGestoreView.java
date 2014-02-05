@@ -24,17 +24,21 @@ public class InserisciGestoreView extends BaseView {
 	private Integer idAnagrafica;
 	private List<SelectItem> anagraficheItems;
 	private String dsAnagrafica;
-		private AnagraficaDTO anagrafeSel;
+	private AnagraficaDTO anagrafeSel;
 	private List<AnagraficaDTO> anagrafiche;
 	private boolean visibleAnagrafiche;
 	private List<GestoreDTO> anagraficheTable = new ArrayList<GestoreDTO>();
 	private String note;
-	
+	private int nrGestori;
+
+	public int getNrGestori() {
+		return anagraficheTable != null ? anagraficheTable.size() : 0;
+
+	}
+
 	public void setDsAnagrafica(String dsAnagrafica) {
 		this.dsAnagrafica = dsAnagrafica;
 	}
-
-
 
 	public String getNote() {
 		return note;
@@ -79,14 +83,10 @@ public class InserisciGestoreView extends BaseView {
 			// autocompletamento
 			anagManuale = RicercaAnagraficaBD.ricercaAnagrafica(idAnagrafica);
 
-		}
-		else if (anagrafeSel!=null)
-		{
-			anagManuale=anagrafeSel;
-		}
-		else
-		{
-			anagManuale=null;
+		} else if (anagrafeSel != null) {
+			anagManuale = anagrafeSel;
+		} else {
+			anagManuale = null;
 		}
 
 		// verifica se già presente
@@ -96,7 +96,7 @@ public class InserisciGestoreView extends BaseView {
 					return;
 				}
 			}
-			
+
 			gestoreManuale = new GestoreDTO();
 			gestoreManuale.setNote(note);
 			gestoreManuale.setCognome(anagManuale.getCognome());
@@ -104,7 +104,6 @@ public class InserisciGestoreView extends BaseView {
 			gestoreManuale.setIdGestore(anagManuale.getIdAnagrafica());
 			gestoreManuale.setMail(anagManuale.getMail());
 			gestoreManuale.setCell(anagManuale.getTxCell());
-
 
 			// aggiungo anagrafica alle tessere da stampare
 			GestioneGestoreBD.insertGestore(gestoreManuale);
@@ -116,15 +115,15 @@ public class InserisciGestoreView extends BaseView {
 		}
 
 	}
-	
-	public void eliminaAnagraficaOnClick(ActionEvent e) throws ContradaExceptionNonBloccante, ContradaExceptionBloccante {
+
+	public void eliminaAnagraficaOnClick(ActionEvent e)
+			throws ContradaExceptionNonBloccante, ContradaExceptionBloccante {
 		GestoreDTO anag = (GestoreDTO) e.getComponent().getAttributes()
 				.get("anagrafica");
 		GestioneGestoreBD.deleteGestore(anag.getIdGestore());
 		anagraficheTable.remove(anag);
-		
-	}
 
+	}
 
 	public InserisciGestoreView() throws ContradaExceptionNonBloccante,
 			ContradaExceptionBloccante {

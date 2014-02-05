@@ -118,6 +118,21 @@ public class RicercaAnagrafica implements IRicercaAnagrafica {
 			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
 		}
 	}
+	
+	public List<AnagraficaDTO> ricercaAnagrafichePerGestore(int idGestore)
+			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
+		// TODO Auto-generated method stub
+		try {
+			List<AnagraficaDTO> anags = anagDao.getAnagraficaByGestore(idGestore);
+
+			normalizzaAnagrafica(anags);
+
+			return anags;
+		} catch (Exception ex) {
+			log.error(ex);
+			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
+		}
+	}
 
 	public List<AnagraficaDTO> ricercaPerNomeCognome(String nome, String cognome)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
@@ -378,5 +393,7 @@ public class RicercaAnagrafica implements IRicercaAnagrafica {
 		}
 
 	}
+
+	
 
 }

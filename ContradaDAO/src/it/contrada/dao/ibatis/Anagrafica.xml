@@ -309,6 +309,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 						#{item}
 				</foreach>
 				</when>
+				<when test="idGestore!=null">
+					AND A.ID_GESTORE=#{idGestore}
+				</when>
+				
 				<otherwise>
 					and a.id_anagrafica=0;
 		</otherwise>
@@ -340,8 +344,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		concat(A.TX_COGNOME,'
 		',A.TX_NOME) as intestatario,
 		A.DT_NASCITA as dtNascita,
-		A.TX_MAIL as mail,
-		A.TX_CELL as txCell
+		A.TX_MAIL as mail,		
+		A.TX_CELL as txCell,
+		A.TX_MAIL AS txMail	
 		FROM
 		${database.schema}ANAGRAFICA A
 		WHERE A.TX_COGNOME LIKE
@@ -475,7 +480,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		parameterType="java.util.HashMap">
 		select concat(a.tx_cognome,' ',a.tx_nome) as
 		intestatario,concat(s.ds_strada,',',cast(a.nr_civico as char)) as indirizzo,a.dt_nascita as dtNascita,
-		concat(s.cd_cap_post," ",coalesce(ds_localita,c.ds_comune)," ",p.cd_sigla_prov) as capProvincia
+		concat(s.cd_cap_post," ",coalesce(ds_localita,c.ds_comune)," ",p.cd_sigla_prov) as capProvincia,
+		A.TX_MAIL AS txMail,A.TX_CELL AS txCell,A.TX_FISSO as txFisso
+		
 		from ${database.schema}anagrafica a
 		join
 		${database.schema}strada s on s.id_Strada=a.id_Strada
@@ -537,7 +544,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT A4.ID_ANAGRAFICA AS idAnagrafica,CONCAT(A4.TX_COGNOME,' ',A4.TX_NOME) AS intestatario,
 		CONCAT(S.DS_STRADA,' ',CAST(A4.NR_CIVICO AS CHAR)) AS indirizzo,
 		CONCAT(S.CD_CAP_POST,' ',COALESCE(S.DS_LOCALITA,C.DS_COMUNE),' ',P.CD_SIGLA_PROV) AS capProvincia, A4.ID_FAMIGLIA AS idFamiglia,
-		CONCAT(G.TX_COGNOME,' ',G.TX_NOME) AS dsGestore,TT.DS_TIPO_TESSERA AS dsTipoTessera,TI.DS_TIPO_INCASSO AS dsIncasso,
+		CONCAT(A1.TX_COGNOME,' ',A1.TX_NOME) AS dsGestore,TT.DS_TIPO_TESSERA AS dsTipoTessera,TI.DS_TIPO_INCASSO AS dsIncasso,
 		TCAR.DS_TIPO_CARICA,A4.DT_NASCITA as dtNascita,T.IM_TESSERA as quota,A4.TX_MAIL AS txMail,
 		A4.TX_CELL AS txCell,A4.TX_FISSO as txFisso, E.DS_ESATTORE AS dsEsattore
 		FROM
@@ -547,9 +554,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		(C.CD_COMUNE=S.CD_COMUNE AND S.CD_PROVINCIA=C.CD_PROVINCIA) LEFT JOIN
 		${database.schema}GESTORE G
 		ON G.ID_GESTORE=A4.ID_GESTORE
-		<!--
-			LEFT JOIN ANAGRAFICA A1 ON G.ID_GESTORE=A1.ID_GESTORE
-		-->
+		LEFT JOIN ANAGRAFICA A1 ON G.ID_GESTORE=A1.ID_ANAGRAFICA		
 		JOIN TESSERA T ON T.ID_ANAGRAFICA=A4.ID_ANAGRAFICA
 		JOIN TIPO_TESSERA TT
 		ON TT.ID_TIPO_TESSERA=T.ID_TIPO_TESSERA
