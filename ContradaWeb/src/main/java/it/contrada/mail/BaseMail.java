@@ -34,8 +34,8 @@ public class BaseMail {
 			final String password = Configuration.getProperty("pswMail");
 
 			Properties props = new Properties();
-			//props.put("mail.smtp.auth", "true");
-			props.put("mail.smtp.starttls.enable", "true");
+			props.put("mail.smtp.auth", "true");
+			//props.put("mail.smtp.starttls.enable", "true");
 			props.put("mail.smtp.host", Configuration.getProperty("serverSMTP"));
 			props.put("mail.smtp.port", Configuration.getProperty("port"));
 
