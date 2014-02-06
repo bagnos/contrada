@@ -138,7 +138,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				</foreach>
 			</if>
 		</where>
-		ORDER BY intestatarioPrinc 
+		ORDER BY intestatarioPrinc		 
 	</select>
 
 
@@ -510,6 +510,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			and a.id_stato_anagrafica in (1)
 		</where>
 		order by a.dt_nascita
+		
 	</select>
 
 	<select id="getIndirizzoFamiglie" resultType="it.contrada.dto.AnagraficaDTO">

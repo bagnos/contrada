@@ -349,7 +349,7 @@
 										<f:selectItems
 											value="#{insAnagrafica01.elencoModalitaPagamento}" />
 									</ice:selectOneMenu>
-									<ice:commandButton id="btnAggTessera" value="Aggiungi Tessera"
+									<ice:commandButton id="btnAggTessera" value="Aggiungi" title="Aggiungi Tessera"
 										tabindex="18"
 										actionListener="#{insAnagrafica01.addTesseraOnClick}"
 										partialSubmit="true" />

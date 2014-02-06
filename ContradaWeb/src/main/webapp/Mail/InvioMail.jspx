@@ -21,8 +21,26 @@
 
 					<!-- TO -->
 					<ice:panelGroup styleClass="elementContainer">
+						<h:outputText for="Gruppi"  styleClass="label140"
+							value="Gruppi" />
+						<ice:panelGroup style="float:left;width:300px">
+							<ice:setEventPhase events="FacesEvent" phase="INVOKE_APPLICATION">
+							<ice:selectOneRadio partialSubmit="true" immediate="true"
+								id="Gruppi" valueChangeListener="#{invioMailView.gruppoChange}"
+								value="#{invioMailView.gruppo}"
+								required="true" layout="lineDirection">
+								<f:selectItem itemValue="0" itemLabel="Nessuno" />
+								<f:selectItem itemValue="1" itemLabel="Rete" />
+							</ice:selectOneRadio>
+							</ice:setEventPhase>
+						</ice:panelGroup>
+					</ice:panelGroup>
+					
+					
+					<ice:panelGroup styleClass="elementContainer">
+						
 						<ice:outputText value="To" styleClass="label140"></ice:outputText>
-						<ice:inputTextarea required="true" value="#{invioMailView.to}"
+						<ice:inputTextarea  value="#{invioMailView.to}"
 							rows="2" id="to" style="width:60%"></ice:inputTextarea>
 						<ice:message for="to"></ice:message>
 					</ice:panelGroup>

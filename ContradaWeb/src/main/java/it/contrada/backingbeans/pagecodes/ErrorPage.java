@@ -66,17 +66,7 @@ public class ErrorPage {
 	private void apppendJavaScript() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("top.document.getElementById('loadingSpan').style.visibility = 'hidden';");
-		sb.append("top.document.getElementById('backgroundTransparency').style.display = 'none';");
-		
-		sb.append("function toggle(id, id2) {");
-		sb.append("var toggle_one = document.getElementById(id);");
-		sb.append("var toggle_two = document.getElementById(id2);");
-		sb.append("	if (toggle_one.style.display == 'block') {");
-		sb.append("toggle_one.style.display = 'none';");
-		sb.append("} else {");
-		sb.append("toggle_one.style.display = 'block';");
-		sb.append("}");
-		sb.append("}");
+		sb.append("top.document.getElementById('backgroundTransparency').style.display = 'none';");		
 		JavascriptContext.addJavascriptCall(FacesContext.getCurrentInstance(), sb.toString());
 
 	}
@@ -89,6 +79,8 @@ public class ErrorPage {
 			Map requestMap = context.getExternalContext().getRequestMap();
 			String src = FacesContext.getCurrentInstance().getViewRoot()
 					.getViewId();
+			
+			apppendJavaScript();
 
 			// Fetch the exception
 

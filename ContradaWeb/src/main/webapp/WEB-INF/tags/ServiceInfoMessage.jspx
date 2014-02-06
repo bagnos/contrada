@@ -11,7 +11,7 @@
 			style="float:right;margin-top:-10px"
 			actionListener="#{bbean.chiudiInfoMessage}" title="Chiudi"></ice:commandButton>
 
-		<ice:commandButton image="#{styleBean.dettagli}"
+		<ice:commandButton image="#{styleBean.imgLente}"
 			rendered="#{bbean.renderImgLog}" immediate="true"
 			style="float:right;margin-top:-10px"
 			actionListener="#{bbean.showLog}" title="#{bbean.titleLog}"></ice:commandButton>

@@ -12,7 +12,7 @@
 				<xsl:for-each select="Elenco/Anagrafica">
 
 					<div style="font-family:calibri;font-size:16px;width:100%;">
-						<!-- HEADER LOGO COMMISSIONE-->
+						<!-- HEADER LOGO COMMISSIONE -->
 						<div width="100%" style="text-align:center">
 							<p align="center" style="margin-right:40px">
 
@@ -78,13 +78,14 @@
 								<br />
 								Paolo Paolini 3477780143
 							</p>
-							<br />							
-							Ti ringraziamo per il tempo che ci hai regalato e, certi del tuo generoso contributo, ti abbracciamo con affetto. 
+							<br />
+							Ti ringraziamo per il tempo che ci hai regalato e, certi del tuo
+							generoso contributo, ti abbracciamo con affetto.
 						</p>
 						<div style="width: 100%;margin-top:20px;margin-right:20px">
 							<div style="float:right;text-align:center;">
 								<p>
-									La Commissione Protettorato								
+									La Commissione Protettorato
 								</p>
 							</div>
 						</div>
@@ -95,7 +96,7 @@
 							- - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 							- - -
 							-
-							- - - - - - - 
+							- - - - - - -
 						</p>
 						<p>
 							Sottoscrizione a Vittoria : €________ Modalità: [] unica
@@ -126,11 +127,39 @@
 								<label>Protettori:</label>
 							</p>
 							<p>
-								<xsl:for-each select="Anagrafiche/Protettore">
-									<xsl:value-of select="Nominativo" />
+								<table>
+									<tr>
+										<th></th>
+										<th>Email</th>
+										<th>Cell.</th>
+										<th>Professione</th>
+										<th>Azienda</th>
+										<th>Titolo Studio</th>
+									</tr>
 
-									<br />
-								</xsl:for-each>
+									<xsl:for-each select="Anagrafiche/Protettore">
+										<table>
+											<tr>
+												<td>
+													<xsl:value-of select="Nominativo" />
+												</td>
+												<td>
+												</td>
+												<td>
+												</td>
+												<td>
+												</td>
+												<td>
+												</td>
+												<td>
+												</td>
+											</tr>
+										</table>
+
+
+										<br />
+									</xsl:for-each>
+								</table>
 
 							</p>
 

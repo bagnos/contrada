@@ -47,10 +47,15 @@ public class StyleBean {
 	private String imgLetter="/images/portlet/allegato.gif";
 	private String imgTessera="/images/portlet/contact_new.png";
 	private String imgClose="/images/portlet/close_white_cross.png";
-	private String imgConferma="/images/portlet/success.png";
-	private String imgAnnulla="/images/portlet/undo.png";
+	private String imgConferma="/images/portlet/Icon_messaggio_positivo.png";
+	private String imgAnnulla="/images/portlet/Icon_messaggio_KO.png";
+	private String imgLente="/images/portlet/view.png";
 	
 	
+
+	public String getImgLente() {
+		return imgLente;
+	}
 
 	public String getImgConferma() {
 		return imgConferma;
