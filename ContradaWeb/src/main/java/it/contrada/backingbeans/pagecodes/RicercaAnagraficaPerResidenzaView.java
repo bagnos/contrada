@@ -17,6 +17,7 @@ import it.contrada.dto.ProvinciaDTO;
 import it.contrada.dto.StradaDTO;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
+import it.contrada.web.enumcontrada.TipoGravitaMessage;
 import it.contrada.web.util.FacesUtils;
 import it.contrada.web.util.RicercaAnagraficaUtil;
 
@@ -67,6 +68,24 @@ public class RicercaAnagraficaPerResidenzaView extends BaseView {
 	private AnagraficaDTO anagrafeSel = null;
 	private boolean visibleAnagrafiche;
 	private int idAssegnazione;
+	private Integer idGestoreDa;
+	private Integer idGestoreA;
+
+	public Integer getIdGestoreDa() {
+		return idGestoreDa;
+	}
+
+	public void setIdGestoreDa(Integer idGestoreDa) {
+		this.idGestoreDa = idGestoreDa;
+	}
+
+	public Integer getIdGestoreA() {
+		return idGestoreA;
+	}
+
+	public void setIdGestoreA(Integer idGestoreA) {
+		this.idGestoreA = idGestoreA;
+	}
 
 	public List<AnagraficaDTO> getAnagsConGestore() {
 		return anagsConGestore;
@@ -635,7 +654,7 @@ public class RicercaAnagraficaPerResidenzaView extends BaseView {
 
 	public void gestoreChange(ValueChangeEvent e)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
-		if (e != null && e.getNewValue()!=null) {
+		if (e != null && e.getNewValue() != null) {
 			int idGestore = Integer.valueOf(e.getNewValue().toString())
 					.intValue();
 			anagsConGestore = RicercaAnagraficaBD
@@ -643,4 +662,38 @@ public class RicercaAnagraficaPerResidenzaView extends BaseView {
 		}
 	}
 
+	public void sostiuisciClick(ActionEvent e) {
+		if (idGestoreA != null && idGestoreDa != null) {
+			if (idGestoreDa.intValue()==idGestoreA.intValue())
+			{
+				writeInfoMessage(
+						TipoGravitaMessage.WARNING,
+						"Sotituzione non effettuata, Gestore non modificato.");
+				return;
+			}
+			
+			List<AnagraficaDTO> anags = new ArrayList<AnagraficaDTO>();
+			try {
+				anags = RicercaAnagraficaBD
+						.ricercaAnagrafichePerGestore(idGestoreDa);
+				if (!anags.isEmpty()) {
+					for (AnagraficaDTO a : anags) {
+						a.setIdGestore(idGestoreA);
+					}
+					GestioneAnagraficaBD.aggiornaGestore(anags);
+					writeInfoMessage(
+							TipoGravitaMessage.SUCCESS,
+							String.format("Aggiornate %d anagrafiche",
+									anags.size()));
+				} else {
+					writeInfoMessage(
+							TipoGravitaMessage.WARNING,
+							"Sotituzione non effettuata, Nessuna anagrafica presente.");
+				}
+			} catch (Exception e1) {
+				writeErrorMessage("ERRORE NELLA SOSTITUZIONE DEL GESTORE", e1);
+			}
+
+		}
+	}
 }

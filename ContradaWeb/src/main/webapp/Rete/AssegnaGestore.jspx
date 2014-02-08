@@ -18,7 +18,7 @@
 					<!-- INFO MESSAGE -->
 					<nicchio:serviceInfoMessage bbean="#{ricercaAnagPerResidenzaView}" />
 					<ice:panelGroup styleClass="elementContainer">
-						<h:outputText for="assegnazione"  styleClass="label140"
+						<h:outputText for="assegnazione" styleClass="label140"
 							value="Assegnazione" />
 						<ice:panelGroup style="float:left;width:300px">
 							<ice:selectOneRadio partialSubmit="true" immediate="true"
@@ -27,6 +27,7 @@
 								required="true" layout="lineDirection">
 								<f:selectItem itemValue="0" itemLabel="Manuale" />
 								<f:selectItem itemValue="1" itemLabel="Residenza" />
+								<f:selectItem itemValue="2" itemLabel="Sostituzione" />
 							</ice:selectOneRadio>
 						</ice:panelGroup>
 					</ice:panelGroup>
@@ -345,7 +346,8 @@
 											<f:selectItems
 												value="#{ricercaAnagPerResidenzaView.gestoriItems}" />
 										</ice:selectOneMenu>
-										<ice:commandButton value="#{msgs.Conferma}" title="conferma" image="#{styleBean.imgConferma}"
+										<ice:commandButton value="#{msgs.Conferma}" title="conferma"
+											image="#{styleBean.imgConferma}"
 											actionListener="#{ricercaAnagPerResidenzaView.conferma}"
 											partialSubmit="true">
 											<f:attribute value="#{anagrafica}" name="anagrafica" />
@@ -439,6 +441,37 @@
 							</ice:dataPaginator>
 
 						</ice:panelGroup>
+					</ice:panelGroup>
+
+					<!-- ASSEGNAZIONE MANUALE -->
+					<ice:panelGroup
+						rendered="#{ricercaAnagPerResidenzaView.idAssegnazione==2}">
+						<!-- GESTORE -->
+						<ice:panelGroup styleClass="elementContainer">
+							<ice:outputText value="Da Gestore" styleClass="label140"></ice:outputText>
+							<ice:selectOneMenu
+								valueChangeListener="#{ricercaAnagPerResidenzaView.gestoreChange}"
+								value="#{ricercaAnagPerResidenzaView.idGestoreDa}">
+								<f:selectItems
+									value="#{ricercaAnagPerResidenzaView.gestoriItems}" />
+							</ice:selectOneMenu>
+						</ice:panelGroup>
+						<!-- GESTORE -->
+						<ice:panelGroup styleClass="elementContainer">
+							<ice:outputText value="A Gestore" styleClass="label140"></ice:outputText>
+							<ice:selectOneMenu
+								valueChangeListener="#{ricercaAnagPerResidenzaView.gestoreChange}"
+								value="#{ricercaAnagPerResidenzaView.idGestoreA}">
+								<f:selectItems
+									value="#{ricercaAnagPerResidenzaView.gestoriItems}" />
+							</ice:selectOneMenu>
+						</ice:panelGroup>
+						<ice:panelGroup styleClass="bottoniera">
+							<ice:commandButton value="Sostitusci"
+								title="Le anagrafica del gestore 'da' saranno passate al nuovo gestore 'a'"
+								actionListener="#{ricercaAnagPerResidenzaView.sostiuisciClick}"></ice:commandButton>
+						</ice:panelGroup>
+
 					</ice:panelGroup>
 				</ice:panelGroup>
 				<!-- BOTTONIERA -->
