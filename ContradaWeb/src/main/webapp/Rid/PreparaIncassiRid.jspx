@@ -2,8 +2,7 @@
 <jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ice="http://www.icesoft.com/icefaces/component"
-	xmlns:nicchio="http://taglib.contradanicchio.it">
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
 
 	<f:view>
 		<ice:portlet>
@@ -15,9 +14,6 @@
 				</ice:panelGroup>
 				<ice:panelGrid>
 
-					<!-- INFO MESSAGE -->
-					<nicchio:serviceInfoMessage
-						bbean="#{preparaIncassiRid}"/>
 					<ice:panelGrid columns="2">
 						<ice:outputText value="Tipo Incasso Rid"></ice:outputText>
 						<ice:selectOneMenu value="#{preparaIncassiRid.incassoRid}"
@@ -134,22 +130,28 @@
 
 
 					</ice:dataPaginator>
-
-
+					<ice:outputText value="#{preparaIncassiRid.note}" />
 
 				</ice:panelGrid>
-
-				<ice:panelGroup styleClass="bottoniera">
-
-					<ice:commandButton value="#{preparaIncassiRid.labelGeneraFlusso}"
-						actionListener="#{preparaIncassiRid.preparaOnClick}" />
-					<ice:commandButton value="Elimina" style="margin-left:10px"
-						actionListener="#{preparaIncassiRid.eliminaOnClick}"
-						rendered="#{preparaIncassiRid.disabledElimina==false}" />
-
-
+				<ice:panelGroup>
+					<ice:panelGroup style="float:left;">
+						<ice:commandButton value="#{preparaIncassiRid.labelGeneraFlusso}"
+							actionListener="#{preparaIncassiRid.preparaOnClick}" />
+						<ice:commandButton value="Elimina" style="margin-left:10px"
+							actionListener="#{preparaIncassiRid.eliminaOnClick}"
+							rendered="#{preparaIncassiRid.disabledElimina==false}" />
+					</ice:panelGroup>
+					<!-- 
+				<ice:panelGroup rendered="#{preparaIncassiRid.disabledElimina==false}" style="float:left;">
+				<input type="button" value="Esporta" class="iceCmdBtn" 
+				onclick="window.open('export.txt?nomeFile=#{preparaIncassiRid.keyDownloadFile}')"/>
 				</ice:panelGroup>
-
+				 -->
+				</ice:panelGroup>
+				<!-- 
+				<a href="export.txt?nomeFile=#{preparaIncassiRid.keyDownloadFile}" target="_blank"> <h:graphicImage
+					style="border:none" alt="#{msgs.esportaFlusso}"
+					url="#{styleBean.imgPrint}"></h:graphicImage> </a>-->
 			</ice:form>
 
 		</ice:portlet>

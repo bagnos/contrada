@@ -15,8 +15,7 @@
 						styleClass="labelPortletContainer"></ice:outputText>
 				</ice:panelGroup>
 				<!-- INFO MESSAGE -->
-					<nicchio:serviceInfoMessage
-						bbean="#{riceviIncassoRid}" />
+				<nicchio:serviceInfoMessage bbean="#{riceviIncassoRid}" />
 				<ice:panelGrid>
 
 					<ice:panelGrid rendered="#{riceviIncassoRid.visibleEsiti}">
@@ -24,6 +23,8 @@
 							<ice:outputText value="#{riceviIncassoRid.intEsitiPrec}" />
 						</f:facet>
 						<ice:dataTable value="#{riceviIncassoRid.esiti}" var="esito">
+
+
 
 							<ice:column id="tsEsito">
 								<f:facet name="header">
@@ -99,6 +100,18 @@
 						rows="#{styleBean.maxRowsTables}"
 						value="#{riceviIncassoRid.ridsFiltrati}" var="rid" id="incassi">
 
+						<ice:column id="Sel">
+							<f:facet name="header">
+								<ice:setEventPhase events="ValueChangeEvent"
+									phase="INVOKE_APPLICATION">
+									<ice:selectBooleanCheckbox title="Seleziona tutti"
+										value="#{riceviIncassoRid.selectAll}" partialSubmit="true"
+										valueChangeListener="#{riceviIncassoRid.selectAllClick}" />
+								</ice:setEventPhase>
+							</f:facet>
+							<ice:selectBooleanCheckbox value="#{rid.selezionato}" />
+
+						</ice:column>
 
 
 						<ice:column id="id causale">
@@ -158,7 +171,7 @@
 							</f:facet>
 							<ice:outputText value="#{rid.tipoStatoRid}" />
 						</ice:column>
-						<ice:column id="Mail"> 
+						<ice:column id="Mail">
 							<f:facet name="header">
 								<ice:outputText value="Mail"></ice:outputText>
 							</f:facet>
@@ -198,7 +211,13 @@
 
 					</ice:dataPaginator>
 
-					
+					<ice:commandButton value="Invia Mail" style="margin-left:10px"
+						title="Mail di recupero coordinate, da inviare solo ai sospesi"
+						rendered="#{riceviIncassoRid.visibleListRid==true}"
+						actionListener="#{riceviIncassoRid.inviaMailClick}" />
+
+
+
 				</ice:panelGrid>
 
 			</ice:form>

@@ -28,10 +28,16 @@ public class DisposizioneIncassoRidRicezioneDTO implements Serializable{
 	private String abi;
 	private String cab;
 	private String conto;
+	private boolean selezionato;
 	
 	
 	
-	
+	public boolean isSelezionato() {
+		return selezionato;
+	}
+	public void setSelezionato(boolean selezionato) {
+		this.selezionato = selezionato;
+	}
 	public int getIdStatoRid() {
 		return idStatoRid;
 	}

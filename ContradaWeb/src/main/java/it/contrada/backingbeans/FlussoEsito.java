@@ -7,6 +7,17 @@ public class FlussoEsito {
 	private String nomeFile;
 	private int nrDisp;
 	private Long imFlusso;
+	private boolean selezionato;
+	
+	
+
+	public boolean isSelezionato() {
+		return selezionato;
+	}
+
+	public void setSelezionato(boolean selezionato) {
+		this.selezionato = selezionato;
+	}
 
 	public Long getImFlusso() {
 		return imFlusso;

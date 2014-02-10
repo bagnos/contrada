@@ -55,6 +55,17 @@ public class RiceviIncassoRid extends BaseView {
 	private int causale;
 	private FileInfo currentFile;
 	private int fileProgress;
+	private boolean selectAll;
+	
+	
+
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
+	}
 
 	public FileInfo getCurrentFile() {
 		return currentFile;
@@ -240,6 +251,42 @@ public class RiceviIncassoRid extends BaseView {
 		loadEsiti();
 	}
 
+	public void selectAllClick(ValueChangeEvent e) {
+		if (e != null) {
+			boolean sel = (Boolean) e.getNewValue();
+			for (DisposizioneIncassoRidRicezioneDTO disp :ridsFiltrati) {
+				disp.setSelezionato(sel);
+			}
+		}
+	}
+
+	public void inviaMailClick(ActionEvent e) {
+
+		try {
+			List<DisposizioneIncassoRidRicezioneDTO> mails = new ArrayList<DisposizioneIncassoRidRicezioneDTO>();
+			for (DisposizioneIncassoRidRicezioneDTO rid : ridsFiltrati) {
+
+				if (rid.isSelezionato()) {
+
+					mails.add(rid);
+
+				}
+			}
+			if (!mails.isEmpty()) {
+				RidMail.InviaMailSospesiRataRid(mails);
+				writeInfoMessage(TipoGravitaMessage.SUCCESS, "Mail inviate correttamente");
+			}
+			else
+			{
+				writeInfoMessage(TipoGravitaMessage.ERROR, "Nessun elemento selezionato.");
+			}
+		} catch (Exception ex) {
+			writeErrorMessage("Errore nell'invio della mail", ex);
+
+		}
+
+	}
+
 	public void eleboraOnClick(ActionEvent ev)
 			throws ContradaExceptionNonBloccante, ContradaExceptionBloccante,
 			ParseException, IOException {
@@ -254,15 +301,11 @@ public class RiceviIncassoRid extends BaseView {
 						.riceviFlussoIncassiRid(file);
 
 				List<DisposizioneIncassoRidRicezioneDTO> dispIncassi = new ArrayList<DisposizioneIncassoRidRicezioneDTO>();
-				
-				
-				for (RicezioneFlussoIncassoRidDTO flusso : flussi) {
 
-					RidMail.InviaMailSospesiRataRid(flusso.getDisposizioni());
+				for (RicezioneFlussoIncassoRidDTO flusso : flussi) {
 
 					dispIncassi.addAll(flusso.getDisposizioni());
 				}
-				
 
 				setRids(dispIncassi);
 				ridsFiltrati = dispIncassi;

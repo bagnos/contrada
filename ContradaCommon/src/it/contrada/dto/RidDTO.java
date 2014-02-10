@@ -42,12 +42,16 @@ public class RidDTO implements Serializable {
 	private String user;
 	private java.util.Date dtCensimento;
 	private String esitoMail;
+	private boolean selezionato;
 	
-	
-	
-	
-	
-	
+
+	public boolean isSelezionato() {
+		return selezionato;
+	}
+
+	public void setSelezionato(boolean selezionato) {
+		this.selezionato = selezionato;
+	}
 
 	public String getEsitoMail() {
 		return esitoMail;
