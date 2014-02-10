@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.event.ActionEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 public class ListaRidView extends BaseView {
@@ -32,6 +33,15 @@ public class ListaRidView extends BaseView {
 	private Integer tipoTessera;
 	private boolean renderInvia;
 	private String dsTessera;
+	private boolean selectAll;
+
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
+	}
 
 	public boolean isRenderInvia() {
 		return renderInvia;
@@ -129,11 +139,26 @@ public class ListaRidView extends BaseView {
 		this.stati = stati;
 	}
 
-	public void inviaMailClick(ActionEvent e1) throws ContradaExceptionBloccante, IOException {
+	public void inviaMailClick(ActionEvent e1)
+			throws ContradaExceptionBloccante, IOException {
 		try {
-			RidMail.InviaMailSospesiRid(rid,dsTessera);
-			writeInfoMessage(TipoGravitaMessage.SUCCESS, "Mail inviata con successo");
-		} catch (Exception e) {		
+			List<RidDTO> ridMail = new ArrayList<RidDTO>();
+			for (RidDTO ridDTO : rid) {
+				if (ridDTO.isSelezionato()) {
+					ridMail.add(ridDTO);
+				}
+			}
+
+			if (!ridMail.isEmpty()) {
+				RidMail.InviaMailSospesiRid(rid, dsTessera);
+				writeInfoMessage(TipoGravitaMessage.SUCCESS,
+						"Mail inviata con successo");
+			} else {
+				writeInfoMessage(TipoGravitaMessage.ERROR,
+						"Nessun Rid Selezionato");
+			}
+
+		} catch (Exception e) {
 			writeErrorMessage("Errore nell'invio della mail", e);
 		}
 	}
@@ -143,21 +168,17 @@ public class ListaRidView extends BaseView {
 
 		if (tipoTessera == -1) {
 			tipoTessera = null;
-			dsTessera="Protettorato";			
-		}
-		else
-		{
-			for (SelectItem item:tipoTessere)
-			{
-				if (Integer.valueOf(item.getValue().toString()).intValue()==tipoTessera.intValue())
-				{
-					dsTessera=item.getLabel();
+			dsTessera = "Protettorato";
+		} else {
+			for (SelectItem item : tipoTessere) {
+				if (Integer.valueOf(item.getValue().toString()).intValue() == tipoTessera
+						.intValue()) {
+					dsTessera = item.getLabel();
 				}
 			}
 		}
-		List<Integer> idIntStati=new ArrayList<Integer>();
-		for (String idStato:idStati)
-		{
+		List<Integer> idIntStati = new ArrayList<Integer>();
+		for (String idStato : idStati) {
 			idIntStati.add(Integer.parseInt(idStato));
 		}
 		rid = RicercaRidBD.ricercaPerStato(idIntStati, tipoTessera);
@@ -171,12 +192,20 @@ public class ListaRidView extends BaseView {
 				}
 			}
 		}
-		
-		for (Integer idintStato:idIntStati)
-		{
-			renderInvia=(idintStato.intValue()==TipoStatoRid.Sospesa.getStatoRid())?true:false;
-					
 
+		for (Integer idintStato : idIntStati) {
+			renderInvia = (idintStato.intValue() == TipoStatoRid.Sospesa
+					.getStatoRid()) ? true : false;
+
+		}
+	}
+
+	public void selectAllClick(ValueChangeEvent e) {
+		if (e != null) {
+			boolean sel = (Boolean) e.getNewValue();
+			for (RidDTO disp : rid) {
+				disp.setSelezionato(sel);
+			}
 		}
 	}
 

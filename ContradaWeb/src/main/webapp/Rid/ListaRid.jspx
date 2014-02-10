@@ -34,9 +34,10 @@
 
 					</ice:panelGroup>
 					<ice:panelGroup styleClass="bottoniera">
-						<ice:commandButton  value="Cerca"
+						<ice:commandButton value="Cerca"
 							actionListener="#{listaRidView.cercaClick}"></ice:commandButton>
-						<ice:commandButton  value="Invia Mail" rendered="#{listaRidView.renderInvia}"
+						<ice:commandButton value="Invia Mail" title="Invia mail per recupero coordinate bancarie"
+							rendered="#{listaRidView.renderInvia}"
 							actionListener="#{listaRidView.inviaMailClick}"></ice:commandButton>
 					</ice:panelGroup>
 
@@ -59,6 +60,22 @@
 
 						<ice:dataTable id="rids" rows="#{styleBean.maxRowsTables}"
 							value="#{listaRidView.rid}" var="rid">
+
+							<ice:column id="Sel" rendered="#{listaRidView.renderInvia}">
+								<f:facet name="header">
+
+
+									<ice:setEventPhase events="ValueChangeEvent"
+										phase="INVOKE_APPLICATION">
+										<ice:selectBooleanCheckbox title="Seleziona tutti"
+											value="#{listaRidView.selectAll}" partialSubmit="true"
+											valueChangeListener="#{listaRidView.selectAllClick}"></ice:selectBooleanCheckbox>
+									</ice:setEventPhase>
+								</f:facet>
+								<ice:selectBooleanCheckbox value="#{rid.selezionato}"></ice:selectBooleanCheckbox>
+							</ice:column>
+
+
 							<ice:column id="idRid">
 								<f:facet name="header">
 									<ice:outputText value="Rid" />
@@ -146,11 +163,10 @@
 								<f:facet name="header">
 									<ice:outputText value="Mail" />
 								</f:facet>
-								<ice:outputText value="#{rid.esitoMail}"			>
-								
+								<ice:outputText value="#{rid.esitoMail}">
+
 								</ice:outputText>
 							</ice:column>
-
 						</ice:dataTable>
 						<ice:dataPaginator id="tabAnag" for="rids" paginator="true"
 							fastStep="#{styleBean.fastStep}"

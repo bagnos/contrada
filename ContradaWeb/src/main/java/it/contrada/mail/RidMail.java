@@ -19,7 +19,7 @@ public class RidMail extends BaseMail {
 	private final static String FILE_MAIL_RID_SOSPESO_RATA = "MailRidSospesiRata.txt";
 	private final static String FILE_MAIL_RID_SOSPESO = "MailRidSospesi.txt";
 	private final static String MAIL_RID_INVIATA = "INVIATA";
-	private final static String MAIL_RID_NON_PRESENTE = "NON PRESENTE";
+	private final static String MAIL_RID_NON_PRESENTE = "MAIL NON PRESENTE";
 
 	private static String getContentRidSospesiRata(String cognome, String nome,
 			String abi, String cab, String conto, String intestatario,
@@ -71,7 +71,7 @@ public class RidMail extends BaseMail {
 		int emailRidInviati = 0;
 
 		for (RidDTO rid : rids) {
-			rid.setEsitoMail(null);
+			rid.setEsitoMail(MAIL_RID_NON_PRESENTE);
 			for (MembroRidDTO ridM : rid.getMembri()) {
 				if (ridM.getMail() != null && !ridM.getMail().trim().isEmpty()) {
 
@@ -87,7 +87,7 @@ public class RidMail extends BaseMail {
 
 				}
 			}
-			if (rid.getEsitoMail()!=null)
+			if (rid.getEsitoMail()!=null && !rid.getEsitoMail().equalsIgnoreCase(MAIL_RID_NON_PRESENTE))
 			{
 				emailRidInviati++;
 			}
@@ -100,7 +100,7 @@ public class RidMail extends BaseMail {
 			throws IOException, ContradaExceptionBloccante, AddressException,
 			MessagingException {
 		String[] address = new String[1];
-		String conto = null;
+	
 		String contentFILE = getContenFile(FILE_MAIL_RID_SOSPESO_RATA, true);
 		String content = null;
 		int emailRidInviati = 0;
@@ -110,7 +110,7 @@ public class RidMail extends BaseMail {
 			if (incasso.getTipoStatoRid() != null
 					&& incasso.getTipoStatoRid().getStatoRid() == TipoStatoRid.Sospesa
 							.getStatoRid())
-				incasso.setEsitoMail(null);
+				incasso.setEsitoMail(MAIL_RID_NON_PRESENTE);
 				for (MembroRidDTO ridM : incasso.getMembri()) {
 					if (ridM.getMail() != null
 							&& !ridM.getMail().trim().isEmpty()) {
@@ -127,7 +127,7 @@ public class RidMail extends BaseMail {
 						incasso.setEsitoMail(MAIL_RID_INVIATA);
 					}					
 				}
-				if (incasso.getEsitoMail()!=null)
+				if (incasso.getEsitoMail()!=null && !incasso.getEsitoMail().equalsIgnoreCase(MAIL_RID_NON_PRESENTE))
 				{
 					emailRidInviati++;
 				}
