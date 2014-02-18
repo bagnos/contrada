@@ -160,7 +160,7 @@ public class StradarioView {
 			int iCap = 0;
 
 			if (stradarioBean.getTipoInserimento() == 1) {
-				// censimento strada
+				// censimento strada 
 				StradaDTO strada = new StradaDTO();
 				strada.setCdCap(getStradarioBean().getCap().getCdCap());
 				strada.setCdComune(getStradarioBean().getCap().getCdComune());
