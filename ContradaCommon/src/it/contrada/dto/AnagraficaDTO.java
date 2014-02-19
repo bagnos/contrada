@@ -69,7 +69,16 @@ public class AnagraficaDTO implements Serializable {
 	private int idAnaPrinc;
 	private String intestatarioPrinc;
 	private List<AnagraficaDTO> anagrafiche;
+	private String siglaProv;
 	
+	public String getSiglaProv() {
+		return siglaProv;
+	}
+
+	public void setSiglaProv(String siglaProv) {
+		this.siglaProv = siglaProv;
+	}
+
 	public List<AnagraficaDTO> getAnagrafiche() {
 		return anagrafiche;
 	}

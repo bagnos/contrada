@@ -9,7 +9,7 @@
 		<html>
 <head>
 <title>Protettorato - Nobile Contrada del Nicchio</title>
-<script type="text/javascript" >
+<script type="text/javascript">
 	function hideLoading() {
 
 		/*
@@ -19,14 +19,17 @@
 
 		hideTrasparency();
 
-		document.getElementById('pagina').style.display = "block";	
-		
-		document.getElementById('pagina').contentWindow.Ice
-				.onServerError('document:body',function(myStatusCode, myResponseTxt, myResponseDOM) {					
-					top.document.getElementById('loadingSpan').style.visibility = "hidden";
-					top.document.getElementById('backgroundTransparency').style.display = "none";			
+		document.getElementById('pagina').style.display = "block";
 
-				});
+		document.getElementById('pagina').contentWindow.Ice
+				.onServerError(
+						'document:body',
+						function(myStatusCode, myResponseTxt, myResponseDOM) {
+							top.document.getElementById('loadingSpan').style.visibility = "hidden";
+							top.document
+									.getElementById('backgroundTransparency').style.display = "none";
+
+						});
 
 		document.getElementById('pagina').contentWindow.Ice
 				.onSendReceive(
@@ -82,10 +85,10 @@
 
 
 </head>
-<body onload="loadIFrame('./HomeContent.iface'); " >
+<body onload="loadIFrame('./HomeContent.iface'); " style="overflow: hidden;">
 
 
-	<ice:form>
+	<ice:form style="margin:0px;">
 
 		<ice:outputStyle href="#{styleBean.activeCss}" />
 
@@ -205,7 +208,7 @@ margin-top: 10px;">
 				<!-- poste -->
 				<ice:menuItem value="Poste" id="poste">
 					<ice:menuItem id="ProduciFlussoIncassiPoste"
-						value="Produci Flusso Incasso Poste"
+						value="Produci Flusso Poste"
 						onclick="loadIFrame('./Poste/ProduciFlussoIncassiPoste.iface'); ">
 					</ice:menuItem>
 					<ice:menuItem id="RiceviIncassoPoste"
@@ -320,7 +323,7 @@ margin-top: 10px;">
 				  -->
 
 		<div id="backgroundTransparency"
-			style="left: 0px; top: 0px; width: 100%; height: 100%; display: none; filter: alpha(opacity =                   30); position: absolute; z-index: 250021; cursor: wait;" />
+			style="left: 0px; top: 0px; width: 100%; height: 100%; display: none; filter: alpha(opacity =                         30); position: absolute; z-index: 250021; cursor: wait;" />
 		<div id="divbackgroundTransparency"
 			style="text-align: center; top: 50%; left: 47%; display: none; position: absolute; z-index: 250022; cursor: wait;">
 			<img alt="" src="./images/portlet/loading_animation.gif" />
@@ -329,13 +332,12 @@ margin-top: 10px;">
 
 
 		</div>
-		<!-- iframe -->
-		<iframe src="" width="100%" height="100%" frameborder="0"
-			style="display: none" onload="javascript:hideLoading();" id="pagina"></iframe>
-
-
-
 	</ice:form>
+	<!-- iframe -->
+
+	<iframe src=""  frameborder="0"
+		style="display: none; width: 100%; height: 86%"
+		onload="javascript:hideLoading();" id="pagina"></iframe>
 </body>
 		</html>
 

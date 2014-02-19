@@ -4,10 +4,11 @@ import it.contrada.businessdelegate.GestionePosteBD;
 import it.contrada.businessdelegate.RicercaAnagraficaBD;
 import it.contrada.businessdelegate.RicercaIncassoBD;
 import it.contrada.dominio.dto.TipoIncassoDTO;
-import it.contrada.dominio.dto.TipoTesseraDTO;
 import it.contrada.dto.AnagraficaDTO;
+import it.contrada.dto.PosteSottoscrizioneDTO;
 import it.contrada.dto.TesseraDTO;
 import it.contrada.enumcontrada.TipoIncasso;
+import it.contrada.enumcontrada.TipoStatoAnagrafica;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
 import it.contrada.poste.FlussoIncassoPostaDTO;
@@ -23,9 +24,10 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.faces.event.ActionEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
-public class ProduciFlussoIncassiPoste {
+public class ProduciFlussoIncassiPoste extends BaseView {
 
 	private boolean visibleListPoste;
 	private List<IncassoPostaDTO> incassiPoste;
@@ -46,6 +48,17 @@ public class ProduciFlussoIncassiPoste {
 	private List<TesseraDTO> tessere;
 	private boolean visibleTessere;
 	private Integer idAnagrafica;
+	private List<PosteSottoscrizioneDTO> flussoSottPoste=new ArrayList<PosteSottoscrizioneDTO>();
+	private boolean visibleTabSottoscrizione;
+
+	public boolean isVisibleTabSottoscrizione() {
+		visibleTabSottoscrizione=flussoSottPoste.isEmpty()?false:true;		
+		return visibleTabSottoscrizione;
+	}
+
+	public List<PosteSottoscrizioneDTO> getFlussoSottPoste() {
+		return flussoSottPoste;
+	}
 
 	public boolean isVisibleTessere() {
 		visibleTessere = (tessere != null && !tessere.isEmpty());
@@ -209,6 +222,12 @@ public class ProduciFlussoIncassiPoste {
 		List<Integer> tipoTessere = new ArrayList<Integer>();
 		tipoTessere.add(1);
 		SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy");
+		
+		if (tipoFlusso==4)
+		{
+			generaFlussoSottoscrizioni();
+			return;
+		}
 
 		if (tipoFlusso == 1) {
 			// solo pagamenti di bollettini e mav
@@ -261,6 +280,8 @@ public class ProduciFlussoIncassiPoste {
 		setDisabledConferma(true);
 
 	}
+	
+	
 
 	public void eliminaAnagraficaOnClick(ActionEvent e) {
 		TesseraDTO tes = (TesseraDTO) e.getComponent().getAttributes()
@@ -296,8 +317,16 @@ public class ProduciFlussoIncassiPoste {
 					}
 				}
 			}
-			idAnagrafica=null;
+			idAnagrafica = null;
 		}
+	}
+	
+	public void tipoFlussoChange(ValueChangeEvent e)
+	{
+		visibleExportPoste=false;
+		visibleListPoste=false;
+		visibleTabSottoscrizione=false;
+		visibleTessere=false;
 	}
 
 	public void eliminaOnClick(ActionEvent ev)
@@ -323,6 +352,50 @@ public class ProduciFlussoIncassiPoste {
 					.getDsTipoIncasso()));
 		}
 		tipoFlusso = 1;
+	}
+
+	public void generaFlussoSottoscrizioni() {
+		List<Integer> stati = new ArrayList<Integer>();
+		flussoSottPoste = new ArrayList<PosteSottoscrizioneDTO>();
+		stati.add(TipoStatoAnagrafica.Attiva.getStatoAnagrafica());
+		try {
+			List<AnagraficaDTO> anags = RicercaAnagraficaBD
+					.ricercaAnagraficheConPrincipale(stati);
+
+			PosteSottoscrizioneDTO rowFlusso = null;
+			int i = 1;
+			String campoi = null;
+			Class[] args1 = new Class[] { String.class };
+			for (AnagraficaDTO a : anags) {
+				rowFlusso = new PosteSottoscrizioneDTO();
+				rowFlusso.setRiga1(a.getIntestatarioPrinc());
+				rowFlusso.setRiga3(a.getIndirizzo());
+				rowFlusso.setCap(a.getCapPost());
+				rowFlusso.setCitta(a.getDsLocalita());
+				rowFlusso.setProv(a.getSiglaProv());
+				rowFlusso.setCampo1(a.getIntestatarioPrinc());
+				rowFlusso.setCampo2(a.getIdFamiglia().toString());
+				rowFlusso.setCampo3(a.getIntestatarioPrinc());
+				i = 4;
+				campoi = null;
+				for (AnagraficaDTO aFiglio : a.getAnagrafiche()) {
+					campoi = String.format("Campo%d", i);
+					rowFlusso
+							.getClass()
+							.getDeclaredMethod("set" + campoi, args1)
+							.invoke(rowFlusso,
+									new Object[] { aFiglio.getIntestatario() });
+
+					i++;
+
+				}
+				flussoSottPoste.add(rowFlusso);
+			}
+
+		} catch (Exception ex) {
+			writeErrorMessage("errore generazione flusso sottoscrizione", ex);
+		}
+		
 	}
 
 }

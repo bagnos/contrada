@@ -11,8 +11,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<result property="intestatarioPrinc" column="intestatarioPrinc" />
 	<result property="indirizzo" column="indirizzo" />
 	<result property="capProvincia" column="capProvincia" />
+	<result property="capPost" column="capPost" />
 	<result property="txMail" column="txMail" />
-	<result property="telefono" column="telefono" />	
+	<result property="telefono" column="telefono" />
+	<result property="dsLocalita" column="dsLocalita" />		
+	<result property="siglaProv" column="siglaProv" />
 	<result property="sesso" column="sesso" />
 	<collection property="anagrafiche" ofType="it.contrada.dto.AnagraficaDTO">
 			<id property="idAnagrafica" column="idAnagrafica" />
@@ -123,7 +126,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getAnagraficheConPrincipale" parameterType="java.util.HashMap" resultMap="anagraficaConPrincResultMap">
 		SELECT A.ID_FAMIGLIA as idFamiglia,INF.ID_ANAGRAFICA AS
 		idAnaPrinc,A.ID_ANAGRAFICA as idAnagrafica,INF.SESSO AS SESSO,
-		INF.INTESTATARIO AS intestatarioPrinc,
+		INF.INTESTATARIO AS intestatarioPrinc,INF.DS_LOCALITA as dsLocalita,
+		INF.CD_SIGLA_PROV AS siglaProv,
+		INF.CD_CAP_POST as capPost,
 		CONCAT(A.TX_COGNOME,' ',A.TX_NOME) AS INTESTATARIO,
 		INF.INDIRIZZO,INF.CAPPROVINCIA,coalesce(INF.TXMAIL,'') AS TXMAIL,
 		TRIM(CONCAT(COALESCE(INF.TXCELL,''),'  ',COALESCE(INF.TXFISSO,''))) AS TELEFONO

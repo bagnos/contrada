@@ -2139,9 +2139,9 @@ input.iceSelInpDateClosePopup {
 	border-bottom-width: 1px;
 	border-bottom-style: solid;
 	border-bottom-color: #f5f5f5;
-	width: 100%;
+	
 	clear: both;
-	overflow: auto;
+	/*overflow: auto;*/
 }
 
 .elementContainer-noborder {

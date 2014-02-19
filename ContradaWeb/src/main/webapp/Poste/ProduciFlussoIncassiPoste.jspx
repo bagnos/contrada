@@ -2,7 +2,9 @@
 <jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ice="http://www.icesoft.com/icefaces/component">
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:nicchio="http://taglib.contradanicchio.it"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
 
 	<f:view>
 		<ice:portlet>
@@ -13,22 +15,23 @@
 						<ice:outputText value="Prepara Flusso Incassi Poste"
 							styleClass="labelPortletContainer"></ice:outputText>
 					</ice:panelGroup>
-
+					<nicchio:serviceInfoMessage bbean="#{listaRidView}" />
 					<!-- radio button -->
 					<ice:panelGroup styleClass="elementContainer">
-						<ice:selectOneRadio id="tipoFlusso" layout="spread" title="tipo di flusso da generare"
-							partialSubmit="true"
+						<ice:selectOneRadio id="tipoFlusso" layout="spread" 
+							title="tipo di flusso da generare" partialSubmit="true" valueChangeListener="#{produciFlussoIncassiPoste.tipoFlussoChange}"
 							value="#{produciFlussoIncassiPoste.tipoFlusso}">
 							<f:selectItem itemValue="1" itemLabel="Bollettini ordinari" />
 							<f:selectItem itemValue="2"
 								itemLabel="Recupero insoluti fine anno" />
-							<f:selectItem itemValue="3"
-								itemLabel="Bollettini manuali" />
+							<f:selectItem itemValue="3" itemLabel="Bollettini manuali" />
+							<f:selectItem itemValue="4" itemLabel="Flusso Sottoscrizioni" />
 						</ice:selectOneRadio>
-						<ice:panelGrid columns="3">
+						<ice:panelGrid columns="4">
 							<ice:radio for="tipoFlusso" index="0" />
 							<ice:radio for="tipoFlusso" index="1" />
 							<ice:radio for="tipoFlusso" index="2" />
+							<ice:radio for="tipoFlusso" index="3" />
 						</ice:panelGrid>
 					</ice:panelGroup>
 
@@ -43,14 +46,16 @@
 					</ice:panelGroup>
 
 					<!-- inserimenterimento manuale -->
-					<ice:panelGroup styleClass="elementContainer">
+					<ice:panelGroup styleClass="elementContainer"
+						rendered="#{produciFlussoIncassiPoste.tipoFlusso==3}">
 						<ice:outputText value="Anagrafica" styleClass="label140"></ice:outputText>
 
 						<ice:inputText id="txtNrAnag" style="width: 79px"
 							converter="IntegerConverter"
 							value="#{produciFlussoIncassiPoste.idAnagrafica}"></ice:inputText>
 
-						<ice:commandButton value="Aggiungi" partialSubmit="true" title="aggiungi anagrafica al flusso"
+						<ice:commandButton value="Aggiungi" partialSubmit="true"
+							title="aggiungi anagrafica al flusso"
 							actionListener="#{produciFlussoIncassiPoste.aggiungiAnagraficaOnClick}"
 							id="btnAggAnag" />
 
@@ -63,8 +68,8 @@
 							<ice:column id="column0">
 								<f:facet name="header">
 								</f:facet>
-								<ice:commandButton image="#{styleBean.elimina}" title="elimina tessera"
-									partialSubmit="true"
+								<ice:commandButton image="#{styleBean.elimina}"
+									title="elimina tessera" partialSubmit="true"
 									actionListener="#{produciFlussoIncassiPoste.eliminaAnagraficaOnClick}">
 									<f:attribute name="tessera" value="#{tessera}" />
 								</ice:commandButton>
@@ -113,7 +118,8 @@
 					</ice:panelGroup>
 
 					<!-- data scadenza -->
-					<ice:panelGroup styleClass="elementContainer">
+					<ice:panelGroup styleClass="elementContainer"
+						rendered="#{produciFlussoIncassiPoste.tipoFlusso!=4}">
 						<ice:outputText value="Data Scadenza" styleClass="label140"
 							style="float:left"></ice:outputText>
 						<ice:selectInputDate id="dtScadenza" required="true"
@@ -124,17 +130,13 @@
 					</ice:panelGroup>
 
 					<!-- anni -->
-					<ice:panelGroup styleClass="elementContainer">
+					<ice:panelGroup styleClass="elementContainer"
+						rendered="#{produciFlussoIncassiPoste.tipoFlusso!=4}">
 						<ice:outputText value="Anno" styleClass="label140"></ice:outputText>
 						<ice:inputText id="anno" required="true"
 							value="#{produciFlussoIncassiPoste.anno}"></ice:inputText>
 
-						<!--  
-						<ice:outputText value="AnnoA" style="margin-left:20px;" styleClass="label140"
-							visible="#{produciFlussoIncassiPoste.tipoFlusso==2}"></ice:outputText>
-						<ice:inputText id="annoA" required="true"
-							visible="#{produciFlussoIncassiPoste.tipoFlusso==2}"
-							value="#{produciFlussoIncassiPoste.annoA}"></ice:inputText>-->
+					
 					</ice:panelGroup>
 
 					<!-- bottoniera -->
@@ -147,12 +149,13 @@
 							actionListener="#{produciFlussoIncassiPoste.confermaOnClick}"
 							disabled="#{produciFlussoIncassiPoste.disabledConferma==true}" />-->
 						<ice:commandButton value="Elimina" style="margin-left:20px"
+							rendered="#{produciFlussoIncassiPoste.tipoFlusso!=4}"
 							actionListener="#{produciFlussoIncassiPoste.eliminaOnClick}"
 							disabled="#{produciFlussoIncassiPoste.disabledElimina==true}" />
 
 
 					</ice:panelGroup>
-					
+
 
 					<ice:panelGrid columns="4" style="margin-top:15px"
 						rendered="#{produciFlussoIncassiPoste.visibleExportPoste==true}">
@@ -161,236 +164,21 @@
 						<ice:outputText
 							value="#{produciFlussoIncassiPoste.nrDisposizioni}" />
 						<ice:outputText value="#{produciFlussoIncassiPoste.note}"></ice:outputText>
-						
+
 						<ice:dataExporter for="incassiPoste" image="#{styleBean.imgExcel}"
-							label="#{styleBean.labelExcel}" type="excel" ignorePagination="true" />
-						
+							label="#{styleBean.labelExcel}" type="excel"
+							ignorePagination="true" />
+
 
 					</ice:panelGrid>
 
-					<ice:dataTable id="incassiPoste" scrollable="yes"
-						scrollHeight="100px"
-						rendered="#{produciFlussoIncassiPoste.visibleListPoste==true}"
-						value="#{produciFlussoIncassiPoste.incassiPoste}"
-						var="incassoPosta">
-						<ice:column id="RIGADESTINATARIO1">
-							<f:facet name="header">
-								<ice:outputText value="RIGADESTINATARIO1"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.RIGADESTINATARIO1}" />
-						</ice:column>
-						<ice:column id="RIGADESTINATARIO2">
-							<f:facet name="header">
-								<ice:outputText value="RIGADESTINATARIO2"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.RIGADESTINATARIO2}" />
-						</ice:column>
-						<ice:column id="RIGADESTINATARIO3">
-							<f:facet name="header">
-								<ice:outputText value="RIGADESTINATARIO3"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.RIGADESTINATARIO3}" />
-						</ice:column>
-						<ice:column id="RIGADESTINATARIO4">
-							<f:facet name="header">
-								<ice:outputText value="RIGADESTINATARIO4"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.RIGADESTINATARIO4}" />
-						</ice:column>
-						<ice:column id="NOME1">
-							<f:facet name="header">
-								<ice:outputText value="NOME1"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.NOME1}" />
-						</ice:column>
-						<ice:column id="INDIRIZZO">
-							<f:facet name="header">
-								<ice:outputText value="INDIRIZZO"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.INDIRIZZO}" />
-						</ice:column>
-						<ice:column id="CAP">
-							<f:facet name="header">
-								<ice:outputText value="CAP"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.CAP}" />
-						</ice:column>
-						<ice:column id="DEST">
-							<f:facet name="header">
-								<ice:outputText value="DEST"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.DEST}" />
-						</ice:column>
-						<ice:column id="PROV">
-							<f:facet name="header">
-								<ice:outputText value="PROV"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.PROV}" />
-						</ice:column>
-						<ice:column id="VAR01D">
-							<f:facet name="header">
-								<ice:outputText value="VAR01D"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.VAR01D}" />
-						</ice:column>
-						<ice:column id="VAR01S">
-							<f:facet name="header">
-								<ice:outputText value="VAR01S"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.VAR01S}" />
-						</ice:column>
+					<ui:include src="TabFlussoIncassi.jspx" />
 
-						<ice:column id="VAR02S">
-							<f:facet name="header">
-								<ice:outputText value="VAR02S"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.VAR02S}" />
-						</ice:column>
-						<ice:column id="VCAMPOT">
-							<f:facet name="header">
-								<ice:outputText value="VCAMPOT"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.VCAMPOT}" />
-						</ice:column>
-						<ice:column id="XRATAT">
-							<f:facet name="header">
-								<ice:outputText value="XRATAT"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.XRATAT}" />
-						</ice:column>
-						<ice:column id="SCADET">
-							<f:facet name="header">
-								<ice:outputText value="SCADET"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.SCADET}">
-								<f:convertDateTime pattern="dd/MM/yyyy" />
-							</ice:outputText>
-						</ice:column>
-						<ice:column id="IBAN">
-							<f:facet name="header">
-								<ice:outputText value="IBAN"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.IBAN}">
-
-							</ice:outputText>
-						</ice:column>
-
-						<ice:column id="VAR01A">
-							<f:facet name="header">
-								<ice:outputText value="VAR01A"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.VAR01A}" />
-						</ice:column>
-
-
-						<ice:column id="VAR02A">
-							<f:facet name="header">
-								<ice:outputText value="VAR02A"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.VAR02A}" />
-						</ice:column>
-
-						<ice:column id="VAR03A">
-							<f:facet name="header">
-								<ice:outputText value="VAR03A"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.VAR03A}" />
-						</ice:column>
-						<ice:column id="VAR04A">
-							<f:facet name="header">
-								<ice:outputText value="VAR04A"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.VAR04A}" />
-						</ice:column>
-						<ice:column id="VAR05A">
-							<f:facet name="header">
-								<ice:outputText value="VAR05A"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.VAR05A}" />
-						</ice:column>
-						<ice:column id="VAR06A">
-							<f:facet name="header">
-								<ice:outputText value="VAR06A"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.VAR06A}" />
-						</ice:column>
-						<ice:column id="VAR07A">
-							<f:facet name="header">
-								<ice:outputText value="VAR07A"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.VAR07A}" />
-						</ice:column>
-						<ice:column id="VAR08A">
-							<f:facet name="header">
-								<ice:outputText value="VAR08A"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.VAR08A}" />
-						</ice:column>
-						<ice:column id="VAR09A">
-							<f:facet name="header">
-								<ice:outputText value="VAR09A"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.VAR09A}" />
-						</ice:column>
-						<ice:column id="VAR10A">
-							<f:facet name="header">
-								<ice:outputText value="VAR10A"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.VAR10A}" />
-						</ice:column>
-						<ice:column id="VAR11A">
-							<f:facet name="header">
-								<ice:outputText value="VAR11A"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.VAR11A}" />
-						</ice:column>
-						<ice:column id="VAR12A">
-							<f:facet name="header">
-								<ice:outputText value="VAR12A"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.VAR12A}" />
-						</ice:column>
-						<ice:column id="VAR13A">
-							<f:facet name="header">
-								<ice:outputText value="VAR13A"></ice:outputText>
-							</f:facet>
-							<ice:outputText value="#{incassoPosta.VAR13A}" />
-						</ice:column>
-					</ice:dataTable>
-					<!-- 
-					<ice:dataPaginator id="tabAnag" for="esiti" paginator="true"
-						rendered="#{preparaAllArchivi.visibleListRid==true}"
-						fastStep="#{styleBean.fastStep}"
-						paginatorMaxPages="#{StyleBean.paginatorMaxPages}">
-						<f:facet name="first">
-							<ice:graphicImage url="#{styleBean.first}" style="border:none;"
-								title="First Page" />
-						</f:facet>
-
-						<f:facet name="last">
-							<ice:graphicImage url="#{styleBean.last}" style="border:none;"
-								title="Last Page" />
-						</f:facet>
-						<f:facet name="previous">
-							<ice:graphicImage url="#{styleBean.previous}"
-								style="border:none;" title="Previous Page" />
-						</f:facet>
-						<f:facet name="fastforward">
-							<ice:graphicImage url="#{styleBean.fastforward}"
-								style="border:none;" title="Fast Forward" />
-						</f:facet>
-						<f:facet name="fastrewind">
-							<ice:graphicImage url="#{styleBean.fastrewind}"
-								style="border:none;" title="Fast Backwards" />
-						</f:facet>
-						<f:facet name="next">
-							<ice:graphicImage url="#{styleBean.next}" style="border:none;"
-								title="Next Page" />
-						</f:facet>
-
-
-					</ice:dataPaginator>
-					 -->
+					
+					<ice:panelGroup
+						rendered="#{produciFlussoIncassiPoste.tipoFlusso==4}">
+						<ui:include src="TabSottoscrizione.jspx" />
+					</ice:panelGroup>
 
 
 
