@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ice:panelGroup xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
+
+	<ice:dataTable id="incassiPoste" scrollable="yes"
+						scrollHeight="100px"
+						rendered="#{produciFlussoIncassiPoste.visibleListPoste==true}"
+						value="#{produciFlussoIncassiPoste.incassiPoste}"
+						var="incassoPosta">
+						<ice:column id="RIGADESTINATARIO1">
+							<f:facet name="header">
+								<ice:outputText value="RIGADESTINATARIO1"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.RIGADESTINATARIO1}" />
+						</ice:column>
+						<ice:column id="RIGADESTINATARIO2">
+							<f:facet name="header">
+								<ice:outputText value="RIGADESTINATARIO2"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.RIGADESTINATARIO2}" />
+						</ice:column>
+						<ice:column id="RIGADESTINATARIO3">
+							<f:facet name="header">
+								<ice:outputText value="RIGADESTINATARIO3"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.RIGADESTINATARIO3}" />
+						</ice:column>
+						<ice:column id="RIGADESTINATARIO4">
+							<f:facet name="header">
+								<ice:outputText value="RIGADESTINATARIO4"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.RIGADESTINATARIO4}" />
+						</ice:column>
+						<ice:column id="NOME1">
+							<f:facet name="header">
+								<ice:outputText value="NOME1"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.NOME1}" />
+						</ice:column>
+						<ice:column id="INDIRIZZO">
+							<f:facet name="header">
+								<ice:outputText value="INDIRIZZO"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.INDIRIZZO}" />
+						</ice:column>
+						<ice:column id="CAP">
+							<f:facet name="header">
+								<ice:outputText value="CAP"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.CAP}" />
+						</ice:column>
+						<ice:column id="DEST">
+							<f:facet name="header">
+								<ice:outputText value="DEST"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.DEST}" />
+						</ice:column>
+						<ice:column id="PROV">
+							<f:facet name="header">
+								<ice:outputText value="PROV"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.PROV}" />
+						</ice:column>
+						<ice:column id="VAR01D">
+							<f:facet name="header">
+								<ice:outputText value="VAR01D"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.VAR01D}" />
+						</ice:column>
+						<ice:column id="VAR01S">
+							<f:facet name="header">
+								<ice:outputText value="VAR01S"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.VAR01S}" />
+						</ice:column>
+
+						<ice:column id="VAR02S">
+							<f:facet name="header">
+								<ice:outputText value="VAR02S"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.VAR02S}" />
+						</ice:column>
+						<ice:column id="VCAMPOT">
+							<f:facet name="header">
+								<ice:outputText value="VCAMPOT"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.VCAMPOT}" />
+						</ice:column>
+						<ice:column id="XRATAT">
+							<f:facet name="header">
+								<ice:outputText value="XRATAT"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.XRATAT}" />
+						</ice:column>
+						<ice:column id="SCADET">
+							<f:facet name="header">
+								<ice:outputText value="SCADET"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.SCADET}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</ice:outputText>
+						</ice:column>
+						<ice:column id="IBAN">
+							<f:facet name="header">
+								<ice:outputText value="IBAN"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.IBAN}">
+
+							</ice:outputText>
+						</ice:column>
+
+						<ice:column id="VAR01A">
+							<f:facet name="header">
+								<ice:outputText value="VAR01A"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.VAR01A}" />
+						</ice:column>
+
+
+						<ice:column id="VAR02A">
+							<f:facet name="header">
+								<ice:outputText value="VAR02A"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.VAR02A}" />
+						</ice:column>
+
+						<ice:column id="VAR03A">
+							<f:facet name="header">
+								<ice:outputText value="VAR03A"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.VAR03A}" />
+						</ice:column>
+						<ice:column id="VAR04A">
+							<f:facet name="header">
+								<ice:outputText value="VAR04A"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.VAR04A}" />
+						</ice:column>
+						<ice:column id="VAR05A">
+							<f:facet name="header">
+								<ice:outputText value="VAR05A"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.VAR05A}" />
+						</ice:column>
+						<ice:column id="VAR06A">
+							<f:facet name="header">
+								<ice:outputText value="VAR06A"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.VAR06A}" />
+						</ice:column>
+						<ice:column id="VAR07A">
+							<f:facet name="header">
+								<ice:outputText value="VAR07A"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.VAR07A}" />
+						</ice:column>
+						<ice:column id="VAR08A">
+							<f:facet name="header">
+								<ice:outputText value="VAR08A"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.VAR08A}" />
+						</ice:column>
+						<ice:column id="VAR09A">
+							<f:facet name="header">
+								<ice:outputText value="VAR09A"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.VAR09A}" />
+						</ice:column>
+						<ice:column id="VAR10A">
+							<f:facet name="header">
+								<ice:outputText value="VAR10A"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.VAR10A}" />
+						</ice:column>
+						<ice:column id="VAR11A">
+							<f:facet name="header">
+								<ice:outputText value="VAR11A"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.VAR11A}" />
+						</ice:column>
+						<ice:column id="VAR12A">
+							<f:facet name="header">
+								<ice:outputText value="VAR12A"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.VAR12A}" />
+						</ice:column>
+						<ice:column id="VAR13A">
+							<f:facet name="header">
+								<ice:outputText value="VAR13A"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{incassoPosta.VAR13A}" />
+						</ice:column>
+					</ice:dataTable>
+
+
+</ice:panelGroup>
+
+

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ice:panelGroup xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	rendered="#{produciFlussoIncassiPoste.visibleTabSottoscrizione}">
+
+	<ice:dataExporter for="sottPoste" style="margin-top:10px"
+		image="#{styleBean.imgExcel}" label="#{styleBean.labelExcel}" 
+		type="excel" ignorePagination="true" />
+
+	<ice:dataTable id="sottPoste" scrollable="yes" scrollHeight="100px"
+		
+		value="#{produciFlussoIncassiPoste.flussoSottPoste}"
+		var="incassoPosta">
+		<ice:column id="RIGA1">
+			<f:facet name="header">
+				<ice:outputText value="riga 1"></ice:outputText>
+			</f:facet>
+			<ice:outputText value="#{incassoPosta.riga1}" />
+		</ice:column>
+		<ice:column id="RIGA2">
+			<f:facet name="header">
+				<ice:outputText value="riga 2"></ice:outputText>
+			</f:facet>
+			<ice:outputText value="#{incassoPosta.riga2}" />
+		</ice:column>
+		<ice:column id="RIGA3">
+			<f:facet name="header">
+				<ice:outputText value="riga 3"></ice:outputText>
+			</f:facet>
+			<ice:outputText value="#{incassoPosta.riga3}" />
+		</ice:column>
+		<ice:column id="cap">
+			<f:facet name="header">
+				<ice:outputText value="cap"></ice:outputText>
+			</f:facet>
+			<ice:outputText value="#{incassoPosta.cap}" />
+		</ice:column>
+		<ice:column id="citta">
+			<f:facet name="header">
+				<ice:outputText value="città"></ice:outputText>
+			</f:facet>
+			<ice:outputText value="#{incassoPosta.citta}" />
+		</ice:column>
+		<ice:column id="prov">
+			<f:facet name="header">
+				<ice:outputText value="prov"></ice:outputText>
+			</f:facet>
+			<ice:outputText value="#{incassoPosta.prov}" />
+		</ice:column>
+		<ice:column id="campo1">
+			<f:facet name="header">
+				<ice:outputText value="campo 1"></ice:outputText>
+			</f:facet>
+			<ice:outputText value="#{incassoPosta.campo1}" />
+		</ice:column>
+		<ice:column id="campo2">
+			<f:facet name="header">
+				<ice:outputText value="campo 2"></ice:outputText>
+			</f:facet>
+			<ice:outputText value="#{incassoPosta.campo2}" />
+
+		</ice:column>
+
+		<ice:column id="campo3">
+			<f:facet name="header">
+				<ice:outputText value="campo 3"></ice:outputText>
+			</f:facet>
+			<ice:outputText value="#{incassoPosta.campo3}" />
+		</ice:column>
+
+		<ice:column id="campo4">
+			<f:facet name="header">
+				<ice:outputText value="campo 4"></ice:outputText>
+			</f:facet>
+			<ice:outputText value="#{incassoPosta.campo4}" />
+		</ice:column>
+
+		<ice:column id="campo5">
+			<f:facet name="header">
+				<ice:outputText value="campo 5"></ice:outputText>
+			</f:facet>
+			<ice:outputText value="#{incassoPosta.campo5}" />
+		</ice:column>
+
+		<ice:column id="campo6">
+			<f:facet name="header">
+				<ice:outputText value="campo 6"></ice:outputText>
+			</f:facet>
+			<ice:outputText value="#{incassoPosta.campo6}" />
+		</ice:column>
+
+		<ice:column id="campo7">
+			<f:facet name="header">
+				<ice:outputText value="campo 7"></ice:outputText>
+			</f:facet>
+			<ice:outputText value="#{incassoPosta.campo7}" />
+		</ice:column>
+
+		<ice:column id="campo8">
+			<f:facet name="header">
+				<ice:outputText value="campo 8"></ice:outputText>
+			</f:facet>
+			<ice:outputText value="#{incassoPosta.campo8}" />
+		</ice:column>
+
+		<ice:column id="campo9">
+			<f:facet name="header">
+				<ice:outputText value="campo 9"></ice:outputText>
+			</f:facet>
+			<ice:outputText value="#{incassoPosta.campo9}" />
+		</ice:column>
+
+		<ice:column id="campo10">
+			<f:facet name="header">
+				<ice:outputText value="campo 10"></ice:outputText>
+			</f:facet>
+			<ice:outputText value="#{incassoPosta.campo10}" />
+		</ice:column>
+
+		<ice:column id="campo11">
+			<f:facet name="header">
+				<ice:outputText value="campo 11"></ice:outputText>
+			</f:facet>
+			<ice:outputText value="#{incassoPosta.campo11}" />
+		</ice:column>
+	</ice:dataTable>
+
+</ice:panelGroup>
+
+
