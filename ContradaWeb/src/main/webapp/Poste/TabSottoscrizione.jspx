@@ -17,13 +17,7 @@
 				<ice:outputText value="riga 1"></ice:outputText>
 			</f:facet>
 			<ice:outputText value="#{incassoPosta.riga1}" />
-		</ice:column>
-		<ice:column id="RIGA2">
-			<f:facet name="header">
-				<ice:outputText value="riga 2"></ice:outputText>
-			</f:facet>
-			<ice:outputText value="#{incassoPosta.riga2}" />
-		</ice:column>
+		</ice:column>		
 		<ice:column id="RIGA3">
 			<f:facet name="header">
 				<ice:outputText value="riga 3"></ice:outputText>

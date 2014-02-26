@@ -81,6 +81,10 @@
 						<!-- tabella anagrafiche -->
 						<ice:panelGroup
 							rendered="#{ricercaAnagPerResidenzaView.visibleAnagrafiche}">
+
+							<ice:dataExporter for="anagrafiche" includeColumns="1,2,3,4,5" style="margin-top:10px"
+								image="#{styleBean.imgExcel}" label="#{styleBean.labelExcel}"
+								type="excel" ignorePagination="true" />
 							<ice:dataTable border="0" rows="#{styleBean.maxRowsTables}"
 								id="anagrafiche"
 								value="#{ricercaAnagPerResidenzaView.anagsConGestore}"
