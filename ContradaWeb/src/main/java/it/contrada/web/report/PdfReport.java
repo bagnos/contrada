@@ -60,9 +60,9 @@ public class PdfReport {
 
 	private List<AnagraficaDTO> items;
 	private final int NUM_COLS_PAGE = 3;
-	private final float SIZE = 9f;
+	private final float SIZE = 8f;
 	private final float HEIGHT_CELL = PageSize.A4.getHeight() / 10 - 0.1F;
-	private final float PADDING_CELL = 2F;
+	private final float PADDING_CELL = 4F;
 	private final int BORDER = 0;
 	private final String XSL_LETTERA_TESSERE = "it/contrada/web/report/templateLetteraInvioTessera.xsl";
 	private final String XSL_LETTERA_INSOLUTI = "it/contrada/web/report/templateLetteraInsoluti.xsl";
@@ -101,7 +101,7 @@ public class PdfReport {
 
 		FileOutputStream fos = new FileOutputStream(file);
 
-		Document document = new Document(PageSize.A4, 0, 0, 0, 0);
+		Document document = new Document(PageSize.A4, 10, 0, 0, 0);
 
 		try {
 			PdfWriter writer = PdfWriter.getInstance(document, fos);
