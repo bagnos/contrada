@@ -70,6 +70,11 @@ public class RicercaAnagraficaPerResidenzaView extends BaseView {
 	private int idAssegnazione;
 	private Integer idGestoreDa;
 	private Integer idGestoreA;
+	private boolean renderAlert;
+
+	public boolean isRenderAlert() {
+		return renderAlert;
+	}
 
 	public Integer getIdGestoreDa() {
 		return idGestoreDa;
@@ -593,12 +598,18 @@ public class RicercaAnagraficaPerResidenzaView extends BaseView {
 				anagrafeSel = null;
 			}
 		}
+		renderAlert=false;
+		if (anagrafeSel!=null && anagrafeSel.getIdGestore()!=null)
+		{
+			renderAlert=true;
+		}
 
 	}
 
 	public void addAnagraficaOnClick(ActionEvent ev)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 		try {
+			renderAlert=false;
 			AnagraficaDTO anagManuale = null;
 			if (anagrafeSel == null && idAnagrafica != null) {
 				// autocompletamento

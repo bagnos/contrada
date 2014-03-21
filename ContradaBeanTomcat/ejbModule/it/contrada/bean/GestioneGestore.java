@@ -1,6 +1,9 @@
 package it.contrada.bean;
 
+import it.contrada.dao.TesseraDAO;
+import it.contrada.dao.interfaces.IEsattoreDAO;
 import it.contrada.dao.interfaces.IGestoreDAO;
+import it.contrada.dto.EsattoreDTO;
 import it.contrada.dto.GestoreDTO;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
@@ -21,6 +24,11 @@ public class GestioneGestore implements IGestioneGestore {
 
 	@Autowired
 	private IGestoreDAO gestoreDAO;
+	private IEsattoreDAO esattoreDAO;
+
+	public void setEsattoreDAO(IEsattoreDAO esattoreDAO) {
+		this.esattoreDAO = esattoreDAO;
+	}
 
 	private static Log log = LogFactory.getLog(GestioneGestore.class);
 
@@ -52,6 +60,13 @@ public class GestioneGestore implements IGestioneGestore {
 			throws ContradaExceptionNonBloccante, ContradaExceptionBloccante {
 		// TODO Auto-generated method stub
 		try {
+			// lo inserisco anche come esattore
+			EsattoreDTO es = new EsattoreDTO();
+			es.setIdEsattore(gestore.getIdGestore());
+			es.setDsEsattore(String.format("%s %s",	new Object[] { gestore.getCognome(), gestore.getNome() }));
+			esattoreDAO.insertEsattore(es);
+
+			// inserisco il gestore
 			return gestoreDAO.insertGestore(gestore);
 		} catch (ContradaExceptionBloccante ex) {
 			log.error(ex);

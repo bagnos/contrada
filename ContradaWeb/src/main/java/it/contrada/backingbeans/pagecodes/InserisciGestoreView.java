@@ -1,6 +1,5 @@
 package it.contrada.backingbeans.pagecodes;
 
-import it.contrada.bean.GestioneGestore;
 import it.contrada.businessdelegate.GestioneGestoreBD;
 import it.contrada.businessdelegate.RicercaAnagraficaBD;
 import it.contrada.dto.AnagraficaDTO;

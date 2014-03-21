@@ -40,9 +40,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	<mapper resource="it/contrada/dao/ibatis/Gestore.xml" />
 	<mapper resource="it/contrada/dao/ibatis/Utente.xml" />
 	<mapper resource="it/contrada/dao/ibatis/Operazione.xml" />
-	
-	
-	
+	<mapper resource="it/contrada/dao/ibatis/Esattore.xml" />	
 </mappers>
 
 

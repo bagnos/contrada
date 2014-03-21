@@ -351,7 +351,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		A.DT_NASCITA as dtNascita,
 		A.TX_MAIL as mail,		
 		A.TX_CELL as txCell,
-		A.TX_MAIL AS txMail	
+		A.TX_MAIL AS txMail,
+		A.ID_GESTORE as idGestore	
 		FROM
 		${database.schema}ANAGRAFICA A
 		WHERE A.TX_COGNOME LIKE

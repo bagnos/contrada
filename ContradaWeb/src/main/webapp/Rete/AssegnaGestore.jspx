@@ -30,7 +30,9 @@
 								<f:selectItem itemValue="2" itemLabel="Sostituzione" />
 							</ice:selectOneRadio>
 						</ice:panelGroup>
+						<div style="clear:both"></div>
 					</ice:panelGroup>
+					
 
 					<!-- ASSEGNAZIONE MANUALE -->
 					<ice:panelGroup
@@ -66,7 +68,9 @@
 										<ice:outputText value="#{anagrafica.idAnagrafica}" />
 										<ice:outputText value="#{anagrafica.intestatario}" />
 										<ice:outputText value="#{anagrafica.dtNascita}">
-											<f:convertDateTime pattern="dd/MM/yyyy" />
+
+											<f:convertDateTime  pattern="dd/MM/yyyy"
+												timeZone="#{styleBean.generalTimeZone}" />
 										</ice:outputText>
 									</ice:panelGrid>
 								</f:facet>
@@ -76,15 +80,20 @@
 								style="margin-left:10px"
 								actionListener="#{ricercaAnagPerResidenzaView.addAnagraficaOnClick}"
 								id="btnAggAnag" />
+							<h:graphicImage
+								rendered="#{ricercaAnagPerResidenzaView.renderAlert}"
+								url="#{styleBean.imgAlert}"
+								title="Anagrafica già assegnata ad altro gestore"></h:graphicImage>
 						</ice:panelGroup>
 
 						<!-- tabella anagrafiche -->
 						<ice:panelGroup
 							rendered="#{ricercaAnagPerResidenzaView.visibleAnagrafiche}">
 
-							<ice:dataExporter for="anagrafiche" includeColumns="1,2,3,4,5" style="margin-top:10px"
-								image="#{styleBean.imgExcel}" label="#{styleBean.labelExcel}"
-								type="excel" ignorePagination="true" />
+							<ice:dataExporter for="anagrafiche" includeColumns="1,2,3,4,5"
+								style="margin-top:10px" image="#{styleBean.imgExcel}"
+								label="#{styleBean.labelExcel}" type="excel"
+								ignorePagination="true" />
 							<ice:dataTable border="0" rows="#{styleBean.maxRowsTables}"
 								id="anagrafiche"
 								value="#{ricercaAnagPerResidenzaView.anagsConGestore}"

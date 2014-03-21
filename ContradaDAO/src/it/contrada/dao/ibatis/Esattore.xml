@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.contrada.esattore.queries">
+
+	<select id="getEsattore" resultType="it.contrada.dto.EsattoreDTO">
+		SELECT id_esattore as
+		idEsattore, ds_esattore as dsEsattore
+		FROM ${database.schema}ESATTORE
+		ORDER BY dsEsattore
+	</select>
+	
+	<select id="getMaxEsattore" resultType="java.lang.Integer">
+		SELECT max(id_esattore)+1 
+		FROM ${database.schema}ESATTORE
+		
+	</select>
+	
+
+	<insert id="insertEsattore" parameterType="it.contrada.dto.EsattoreDTO">		
+		INSERT INTO ${database.schema}ESATTORE
+		(ID_ESATTORE,
+		DS_ESATTORE)
+		VALUES
+		(
+		#{idEsattore},
+		#{dsEsattore}
+		)
+	</insert>
+
+	<insert id="deleteEsattore" parameterType="java.util.HashMap">
+		DELETE FROM ${database.schema}ESATTORE WHERE ID_ESATTORE=#{idEsattore}
+	</insert>
+
+
+</mapper>
+

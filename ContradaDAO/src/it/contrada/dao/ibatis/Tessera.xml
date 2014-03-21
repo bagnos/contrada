@@ -427,6 +427,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		ID_MAV as
 		IdMav,
 		IM_TESSERA as imTessera,
+		IM_TESSERA as quota,
 		TX_NOTE_ESAZIONE as dsNote,
 		FG_ATTIVA as
 		fgAttiva

@@ -118,12 +118,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		TRT.id_tipo_tessera=#{idTessera} AND TRT.id_tipo_incasso=#{idIncasso}
 		</select>
 	-->
-	<select id="getEsattore" resultType="it.contrada.dto.EsattoreDTO">
-		SELECT id_esattore as
-		idEsattore, ds_esattore as dsEsattore
-		FROM ${database.schema}ESATTORE
-		ORDER BY dsEsattore 
-	</select>
+	
 
 
 

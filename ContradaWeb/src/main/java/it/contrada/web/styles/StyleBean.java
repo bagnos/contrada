@@ -50,8 +50,13 @@ public class StyleBean {
 	private String imgConferma="/images/portlet/Icon_messaggio_positivo.png";
 	private String imgAnnulla="/images/portlet/Icon_messaggio_KO.png";
 	private String imgLente="/images/portlet/view.png";
+	private String imgAlert="/images/portlet/warning_button.gif";
 	
 	
+
+	public String getImgAlert() {
+		return imgAlert;
+	}
 
 	public String getImgLente() {
 		return imgLente;

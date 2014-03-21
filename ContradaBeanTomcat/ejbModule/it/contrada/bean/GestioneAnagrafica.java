@@ -11,6 +11,7 @@ import it.contrada.dto.FamigliaDTO;
 import it.contrada.dto.OperazioneDTO;
 import it.contrada.dto.RidDTO;
 import it.contrada.dto.TesseraDTO;
+import it.contrada.enumcontrada.TipoIncasso;
 import it.contrada.enumcontrada.TipoStatoAnagrafica;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
@@ -541,6 +542,22 @@ public class GestioneAnagrafica implements IGestioneAnagrafica {
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 		// TODO Auto-generated method stub
 		try {
+			for (AnagraficaDTO a:anagrafiche)
+			{
+				a.setTessere(tesseraDao.getTesserePerAnagrafica(a.getIdAnagrafica()));
+				for (TesseraDTO t:a.getTessere())
+				{
+					if (t.getIdTipoIncasso()==TipoIncasso.ESATTORE.getIncasso())
+					{
+						//tessera per esattore, modifico anche l'esattore
+						t.setIdTipoEsattore(a.getIdGestore());
+						tesseraDao.aggiornaTessera(t);
+						tesseraDao.aggiornaTesseraStorico(t.getIdTessera());
+					}
+				}
+				
+			}
+			
 			return anagraficaDao.aggiornaGestore(anagrafiche);
 		} catch (ContradaExceptionBloccante ex) {
 			log.error(ex);

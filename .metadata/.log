@@ -1,0 +1,46 @@
+!SESSION 2014-03-19 12:08:06.196 -----------------------------------------------
+eclipse.buildId=4.3.0.M20130911-1000
+java.version=1.7.0_51
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=it_IT
+Framework arguments:  -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -data C:\Sviluppo\java\Progetti\Contrada -os win32 -ws win32 -arch x86 -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2014-03-19 12:09:38.328
+!MESSAGE Warning: EGit couldn't detect the installation path "gitPrefix" of native Git. Hence EGit can't respect system level
+Git settings which might be configured in ${gitPrefix}/etc/gitconfig under the native Git installation directory.
+The most important of these settings is core.autocrlf. Git for Windows by default sets this parameter to true in
+this system level configuration. The Git installation location can be configured on the
+Team > Git > Configuration preference page's 'System Settings' tab.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.core.net 4 0 2014-03-19 12:11:24.836
+!MESSAGE WinHttp.GetProxyForUrl for pac failed with error 'L'URL non utilizza un protocollo conosciuto
+' #12006.
+
+!ENTRY org.eclipse.core.net 4 0 2014-03-19 12:11:24.960
+!MESSAGE WinHttp.GetProxyForUrl for pac failed with error 'L'URL non utilizza un protocollo conosciuto
+' #12006.
+!SESSION 2014-03-19 12:11:55.735 -----------------------------------------------
+eclipse.buildId=4.3.0.M20130911-1000
+java.version=1.7.0_51
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=it_IT
+Framework arguments:  -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -data C:\Sviluppo\java\Progetti\Contrada -os win32 -ws win32 -arch x86 -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2014-03-19 12:12:41.764
+!MESSAGE Warning: EGit couldn't detect the installation path "gitPrefix" of native Git. Hence EGit can't respect system level
+Git settings which might be configured in ${gitPrefix}/etc/gitconfig under the native Git installation directory.
+The most important of these settings is core.autocrlf. Git for Windows by default sets this parameter to true in
+this system level configuration. The Git installation location can be configured on the
+Team > Git > Configuration preference page's 'System Settings' tab.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.core.net 4 0 2014-03-19 12:12:46.635
+!MESSAGE WinHttp.GetProxyForUrl for pac failed with error 'L'URL non utilizza un protocollo conosciuto
+' #12006.
+
+!ENTRY org.eclipse.core.net 4 0 2014-03-19 12:12:46.746
+!MESSAGE WinHttp.GetProxyForUrl for pac failed with error 'L'URL non utilizza un protocollo conosciuto
+' #12006.
