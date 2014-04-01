@@ -30,9 +30,9 @@
 								<f:selectItem itemValue="2" itemLabel="Sostituzione" />
 							</ice:selectOneRadio>
 						</ice:panelGroup>
-						<div style="clear:both"></div>
+						<div style="clear: both"></div>
 					</ice:panelGroup>
-					
+
 
 					<!-- ASSEGNAZIONE MANUALE -->
 					<ice:panelGroup
@@ -69,7 +69,7 @@
 										<ice:outputText value="#{anagrafica.intestatario}" />
 										<ice:outputText value="#{anagrafica.dtNascita}">
 
-											<f:convertDateTime  pattern="dd/MM/yyyy"
+											<f:convertDateTime pattern="dd/MM/yyyy"
 												timeZone="#{styleBean.generalTimeZone}" />
 										</ice:outputText>
 									</ice:panelGrid>
@@ -90,10 +90,15 @@
 						<ice:panelGroup
 							rendered="#{ricercaAnagPerResidenzaView.visibleAnagrafiche}">
 
-							<ice:dataExporter for="anagrafiche" includeColumns="1,2,3,4,5"
-								style="margin-top:10px" image="#{styleBean.imgExcel}"
-								label="#{styleBean.labelExcel}" type="excel"
-								ignorePagination="true" />
+							<div style="overflow-y:hidden;margin-top:5px;">
+								<ice:dataExporter for="anagrafiche" includeColumns="1,2,3,4,5,6,7"
+									style="float:left !important;margin-right:10px" image="#{styleBean.imgExcel}"
+									label="#{styleBean.labelExcel}" type="excel"
+									ignorePagination="true" />
+								<ice:outputText
+									value="Nr. Anagrafiche #{ricercaAnagPerResidenzaView.nrAnags}"></ice:outputText>
+							</div>
+
 							<ice:dataTable border="0" rows="#{styleBean.maxRowsTables}"
 								id="anagrafiche"
 								value="#{ricercaAnagPerResidenzaView.anagsConGestore}"
@@ -116,17 +121,12 @@
 									</f:facet>
 									<ice:outputText value="#{anagrafica.idAnagrafica}" />
 								</ice:column>
-								<ice:column id="column2">
-									<f:facet name="header">
-										<ice:outputText value="Cognome"></ice:outputText>
-									</f:facet>
-									<ice:outputText value="#{anagrafica.cognome}" />
-								</ice:column>
+
 								<ice:column id="column3">
 									<f:facet name="header">
 										<ice:outputText value="Nome"></ice:outputText>
 									</f:facet>
-									<ice:outputText value="#{anagrafica.nome}" />
+									<ice:outputText value="#{anagrafica.intestatario}" />
 								</ice:column>
 								<ice:column id="column5">
 									<f:facet name="header">
@@ -138,7 +138,30 @@
 									<f:facet name="header">
 										<ice:outputText value="Tel"></ice:outputText>
 									</f:facet>
-									<ice:outputText value="#{anagrafica.txCell}" />
+									<ice:outputText
+										value="#{anagrafica.txCell} #{anagrafica.txFisso}" />
+								</ice:column>
+								<ice:column id="column8">
+									<f:facet name="header">
+										<ice:outputText value="Quota"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{anagrafica.quota}"
+										converter="ImportoConverter" />
+								</ice:column>
+								<ice:column id="column9">
+									<f:facet name="header">
+										<ice:outputText value="#{anagrafica.quota}"
+											converter="ImportoConverter" />
+										<ice:outputText value="Tessera"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{anagrafica.tessera}" />
+								</ice:column>
+								<ice:column id="column10">
+									<f:facet name="header">
+										<ice:outputText value="Indirizzo"></ice:outputText>
+									</f:facet>
+									<ice:outputText
+										value="#{anagrafica.indirizzo}, #{anagrafica.capProvincia }" />
 								</ice:column>
 							</ice:dataTable>
 							<ice:dataPaginator for="anagrafiche" paginator="true"

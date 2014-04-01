@@ -15,6 +15,7 @@ import it.contrada.dto.LocalitaDTO;
 import it.contrada.dto.ParmResidenzaDTO;
 import it.contrada.dto.ProvinciaDTO;
 import it.contrada.dto.StradaDTO;
+import it.contrada.dto.TesseraDTO;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
 import it.contrada.web.enumcontrada.TipoGravitaMessage;
@@ -71,6 +72,11 @@ public class RicercaAnagraficaPerResidenzaView extends BaseView {
 	private Integer idGestoreDa;
 	private Integer idGestoreA;
 	private boolean renderAlert;
+
+	
+	
+	
+	
 
 	public boolean isRenderAlert() {
 		return renderAlert;
@@ -358,8 +364,8 @@ public class RicercaAnagraficaPerResidenzaView extends BaseView {
 					gestore.getCognome() + " " + gestore.getNome()));
 		}
 		if (gestori != null && !gestori.isEmpty()) {
-			anagsConGestore = RicercaAnagraficaBD
-					.ricercaAnagrafichePerGestore(gestori.get(0).getIdGestore());
+			cercaAnagrafichePerGestore(gestori.get(0).getIdGestore());
+
 		}
 
 	}
@@ -551,8 +557,7 @@ public class RicercaAnagraficaPerResidenzaView extends BaseView {
 		try {
 			Integer idGestore = (Integer) ev.getNewValue();
 			if (idGestore != null) {
-				anagsConGestore = RicercaAnagraficaBD
-						.ricercaAnagrafichePerGestore(idGestore);
+				cercaAnagrafichePerGestore(idGestore);
 			}
 		} catch (Exception e) {
 			writeErrorMessage("Errore nel recupeor delle anag per gestore", e);
@@ -598,10 +603,9 @@ public class RicercaAnagraficaPerResidenzaView extends BaseView {
 				anagrafeSel = null;
 			}
 		}
-		renderAlert=false;
-		if (anagrafeSel!=null && anagrafeSel.getIdGestore()!=null)
-		{
-			renderAlert=true;
+		renderAlert = false;
+		if (anagrafeSel != null && anagrafeSel.getIdGestore() != null) {
+			renderAlert = true;
 		}
 
 	}
@@ -609,7 +613,7 @@ public class RicercaAnagraficaPerResidenzaView extends BaseView {
 	public void addAnagraficaOnClick(ActionEvent ev)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 		try {
-			renderAlert=false;
+			renderAlert = false;
 			AnagraficaDTO anagManuale = null;
 			if (anagrafeSel == null && idAnagrafica != null) {
 				// autocompletamento
@@ -617,7 +621,9 @@ public class RicercaAnagraficaPerResidenzaView extends BaseView {
 						.ricercaAnagrafica(idAnagrafica);
 
 			} else if (anagrafeSel != null) {
+				// recuperle informazioni delle tessere
 				anagManuale = anagrafeSel;
+
 			} else {
 				anagManuale = null;
 			}
@@ -629,11 +635,13 @@ public class RicercaAnagraficaPerResidenzaView extends BaseView {
 						return;
 					}
 				}
+				// inserisco le informazioni per tessera e quota
+
 				anagManuale.setIdGestore(filtroGestore);
 				List<AnagraficaDTO> anagAggiunta = new ArrayList<AnagraficaDTO>();
 				anagAggiunta.add(anagManuale);
 				GestioneAnagraficaBD.aggiornaGestore(anagAggiunta);
-				anagsConGestore.add(0, anagManuale);
+				cercaAnagrafichePerGestore(anagManuale.getIdGestore());
 				anagrafeSel = null;
 				dsAnagrafica = null;
 				idAnagrafica = null;
@@ -643,6 +651,24 @@ public class RicercaAnagraficaPerResidenzaView extends BaseView {
 			writeErrorMessage("Errore nel recupeor delle anag per gestore", e);
 		}
 
+	}
+
+	private void cercaAnagrafichePerGestore(int idGestore)
+			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
+		anagsConGestore = RicercaAnagraficaBD
+				.ricercaAnagrafichePerGestore(idGestore);
+		nrAnags=anagsConGestore.size();
+		for (AnagraficaDTO a : anagsConGestore) {
+			for (TesseraDTO t : a.getTessere()) {
+				// tessere solo protettorato
+				if (t.getIdTipoTessera() == 1) {
+					a.setQuota(t.getQuota());
+					a.setTessera(String.format("%s %s", t.getDsTipoCarica(),
+							t.getDsIncasso()));
+					break;
+				}
+			}
+		}
 	}
 
 	public void eliminaAnagraficaOnClick(ActionEvent e)
@@ -668,21 +694,18 @@ public class RicercaAnagraficaPerResidenzaView extends BaseView {
 		if (e != null && e.getNewValue() != null) {
 			int idGestore = Integer.valueOf(e.getNewValue().toString())
 					.intValue();
-			anagsConGestore = RicercaAnagraficaBD
-					.ricercaAnagrafichePerGestore(idGestore);
+			cercaAnagrafichePerGestore(idGestore);
 		}
 	}
 
 	public void sostiuisciClick(ActionEvent e) {
 		if (idGestoreA != null && idGestoreDa != null) {
-			if (idGestoreDa.intValue()==idGestoreA.intValue())
-			{
-				writeInfoMessage(
-						TipoGravitaMessage.WARNING,
+			if (idGestoreDa.intValue() == idGestoreA.intValue()) {
+				writeInfoMessage(TipoGravitaMessage.WARNING,
 						"Sotituzione non effettuata, Gestore non modificato.");
 				return;
 			}
-			
+
 			List<AnagraficaDTO> anags = new ArrayList<AnagraficaDTO>();
 			try {
 				anags = RicercaAnagraficaBD
@@ -697,8 +720,7 @@ public class RicercaAnagraficaPerResidenzaView extends BaseView {
 							String.format("Aggiornate %d anagrafiche",
 									anags.size()));
 				} else {
-					writeInfoMessage(
-							TipoGravitaMessage.WARNING,
+					writeInfoMessage(TipoGravitaMessage.WARNING,
 							"Sotituzione non effettuata, Nessuna anagrafica presente.");
 				}
 			} catch (Exception e1) {

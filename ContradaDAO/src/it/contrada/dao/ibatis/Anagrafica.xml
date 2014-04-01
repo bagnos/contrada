@@ -154,8 +154,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		A.ID_GESTORE
 		AS idGestore,
 		A.TX_COGNOME as cognome,
-		concat(A.TX_COGNOME,'
-		',A.TX_NOME) as intestatario,
+		concat(A.TX_COGNOME,' ',A.TX_NOME) as intestatario,
 		A.TX_SESSO as sesso,
 		A.DT_NASCITA as
 		dtNascita,
@@ -186,28 +185,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		ST.DS_STRADA as
 		dsStrada,
 		ST.DS_LOCALITA as dsLocalita,
-		ST.ID_LOCALITA AS
-		idLocalita,
-		T.ID_TESSERA
-		as
-		idTessera,
-		T.ID_TIPO_INCASSO as
-		idTipoIncasso,
-		TI.DS_TIPO_INCASSO as
-		dsIncasso,
-		T.ID_ESATTORE as
-		idTipoEsattore,
+		ST.ID_LOCALITA AS idLocalita,
+		T.ID_TESSERA as	idTessera,
+		T.ID_TIPO_INCASSO as idTipoIncasso,
+		TI.DS_TIPO_INCASSO as dsIncasso,
+		T.ID_ESATTORE as idTipoEsattore,
 		E.DS_ESATTORE as dsEsattore,
-		T.ID_MAV
-		as idMav,
-		T.TX_NOTE_ESAZIONE as
-		dsNote,
-		TT.ID_TIPO_TESSERA as
-		idTipoTessera,
-		TT.DS_TIPO_TESSERA as
-		dsTipoTessera,
-		TR.ID_TIPO_RATEIZZAZIONE as
-		idTipoRateizzazione,
+		T.ID_MAV as idMav,
+		T.TX_NOTE_ESAZIONE as dsNote,
+		TT.ID_TIPO_TESSERA as idTipoTessera,
+		TT.DS_TIPO_TESSERA as dsTipoTessera,
+		TR.ID_TIPO_RATEIZZAZIONE as idTipoRateizzazione,
 		TR.ds_TIPO_RATEIZZAZIONE as dsTipoRateizzazione,
 		T.IM_TESSERA as quota,
 		T.ID_RID AS idRid,
@@ -215,11 +203,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		T.ID_TIPO_CARICA,
 		TCAR.DS_TIPO_CARICA,
 		RID.TX_INTESTATARIO,
-		RID.CD_FISC AS
-		cdFiscRid,
+		RID.CD_FISC AS cdFiscRid,
 		RID.ID_STATO_RID,
-		RID.CD_NAZIONE as
-		cdNazioneRid,
+		RID.CD_NAZIONE as cdNazioneRid,
 		RID.NR_CIN_EUROPEO,
 		RID.CD_ABI,
 		RID.CD_CAB,
@@ -228,13 +214,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		RID.TX_NOTE AS noteRid,
 		TSR.DS_STATO_RID,
 		PROV.CD_ISO_STATO,
-		PROV_RES.CD_ISO_STATO
-		AS
-		CD_ISO_STATO_RES,
+		PROV_RES.CD_ISO_STATO AS CD_ISO_STATO_RES,
+		INF.INDIRIZZO,INF.CAPPROVINCIA,
 		if(A.ID_ANAGRAFICA=FAMIGLIA.ID_CAPO_FAMIGLIA,'true','false') as
 		capoFamiglia
 		FROM
 		${database.schema}ANAGRAFICA A
+		JOIN
+		INDIRIZZO_FAMIGLIA INF
+		ON INF.IDFAMIGLIA=A.ID_FAMIGLIA
 		JOIN
 		${database.schema}TIPO_STATO_ANAGRAFICA TSA
 		ON
@@ -325,7 +313,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</choose>
 			<!-- AND (T.FG_ATTIVA='1' OR T.FG_ATTIVA IS NULL)-->
 		</where>
-
+		order by a.tx_cognome,a.tx_nome
 
 	</select>
 
