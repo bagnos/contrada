@@ -33,11 +33,33 @@ public class IncassoRidDTO implements Serializable{
 	private String txNomeFile;
 	private String dsIncassoRid;
 	private String dsMese;
+	private String cdPaese;;
+	private String cin;
+	private String checkDigit;
 	
 	
 	
 	
 	
+	public String getCheckDigit() {
+		return checkDigit;
+	}
+	public void setCheckDigit(String checkDigit) {
+		this.checkDigit = checkDigit;
+	}
+	public String getCdPaese() {
+		return cdPaese;
+	}
+	public void setCdPaese(String cdPaese) {
+		this.cdPaese = cdPaese;
+	}
+	
+	public String getCin() {
+		return cin;
+	}
+	public void setCin(String cin) {
+		this.cin = cin;
+	}
 	public String getDsMese() {
 		return dsMese;
 	}

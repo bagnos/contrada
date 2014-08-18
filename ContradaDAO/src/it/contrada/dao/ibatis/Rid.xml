@@ -63,6 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		NR_CIN,
 		NR_CONTO,
 		TX_NOTE,
+		CD_IBAN,
 		ID_OPERAZIONE)
 		VALUES
 		(#{intestatarioRid},
@@ -76,6 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		#{cinAbi},
 		#{numeroCC},
 		#{note},
+		upper(concat(#{paese},#{cin},#{cinAbi},lpad(#{abi},5,'0'),lpad(#{cab},5,'0'),lpad(replace(#{numeroCC},'.',''),12,'0'))),
 		#{operazione.idOperazione})
 	</insert>
 
@@ -97,10 +99,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		#{numeroCC},
 		TX_NOTE = #{note},
 		ID_OPERAZIONE =
-		#{operazione.idOperazione}
+		#{operazione.idOperazione},
+		cd_iban=upper(concat(#{paese},#{cin},#{cinAbi},lpad(#{abi},5,'0'),lpad(#{cab},5,'0'),lpad(replace(#{numeroCC},'.',''),12,'0')))
 		WHERE
 		ID_RID=#{nrRid}
-	</update>
+	</update> 
 
 	<select id="getMembriRid" resultType="it.contrada.dto.MembroRidDTO">
 		select A.TX_NOME as
@@ -426,7 +429,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		CD_CAB=#{cdCab},
 		NR_CONTO=#{nrConto},
 		NR_CIN=#{nrCin},
-		TX_NOTE=#{txNote}
+		TX_NOTE=#{txNote},
+		cd_iban=upper(concat(#{paese},#{cin},#{cinAbi},lpad(#{abi},5,'0'),lpad(#{cab},5,'0'),lpad(replace(#{numeroCC},'.',''),12,'0')))
 		<if test="intestatario!=null">
 			,TX_INTESTATARIO=#{intestatario}
 		</if>

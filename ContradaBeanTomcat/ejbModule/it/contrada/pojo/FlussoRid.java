@@ -6,6 +6,7 @@ import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.incassorid.dto.FlussoIncassoRidDTO;
 import it.contrada.incassorid.dto.IncassoRidDTO;
 import it.contrada.incassorid.dto.Record10DTO;
+import it.contrada.incassorid.dto.Record17DTO;
 import it.contrada.incassorid.dto.Record20DTO;
 import it.contrada.incassorid.dto.Record30DTO;
 import it.contrada.incassorid.dto.Record40DTO;
@@ -27,8 +28,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Properties;
 
-
-
 public class FlussoRid {
 
 	private static Properties prop;
@@ -39,7 +38,7 @@ public class FlussoRid {
 	private String MITTENTE = null;
 	private String NOME_SUPPPORTO = null;
 	private File file = null;
-	private String nomeFileSemplice=null;
+	private String nomeFileSemplice = null;
 
 	private static Properties getPropFile() throws IOException {
 		if (prop == null) {
@@ -68,6 +67,7 @@ public class FlussoRid {
 			scriviRecordTesta(parms);
 			for (IncassoRidDTO rid : rids) {
 				scriviRecord_10(rid, parms, i);
+				scriviRecord_17(rid, parms, i);
 				scriviRecord_20(parms, i);
 				scriviRecord_30(rid, i);
 				scriviRecord_40(rid, i);
@@ -78,7 +78,7 @@ public class FlussoRid {
 			}
 			scriviRecordCoda(parms, rids.size(), totIncasso);
 		} catch (Exception e) {
-			eliminaFile(); 
+			eliminaFile();
 			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), e);
 		}
 
@@ -96,30 +96,24 @@ public class FlussoRid {
 
 	private void apriFile(int anno, int mese) throws IOException,
 			ContradaExceptionBloccante {
-		
-		/*
-		String rootDirectoy = getPropFile().getProperty("directoryIncassiRid");
-		File directory = new File(rootDirectoy);
-		if (!directory.exists()) {
-			if (!directory.mkdir()) {
-				throw new ContradaExceptionBloccante(String.format(
-						"impossibile creare la directory %s", rootDirectoy));
-			}
-		}*/
 
-		//String nomeFile = getNomeFileRidIncasso(anno, mese);
+		/*
+		 * String rootDirectoy =
+		 * getPropFile().getProperty("directoryIncassiRid"); File directory =
+		 * new File(rootDirectoy); if (!directory.exists()) { if
+		 * (!directory.mkdir()) { throw new
+		 * ContradaExceptionBloccante(String.format(
+		 * "impossibile creare la directory %s", rootDirectoy)); } }
+		 */
+
+		// String nomeFile = getNomeFileRidIncasso(anno, mese);
 		String nomeFile = getNomeFileRidIncassoNoSuffix(anno, mese);
-		
-		//si salva il nome semplice
-		nomeFileSemplice=nomeFile;
-		
-		//file = new File(directory, nomeFile);
-		file=File.createTempFile(nomeFile, Constanti.EXT_FILE_RID);
-		
-		
-		
-		
-		
+
+		// si salva il nome semplice
+		nomeFileSemplice = nomeFile;
+
+		// file = new File(directory, nomeFile);
+		file = File.createTempFile(nomeFile, Constanti.EXT_FILE_RID);
 
 		fos = new FileOutputStream(file);
 		scriviRid = new PrintStream(fos);
@@ -131,10 +125,10 @@ public class FlussoRid {
 
 		return nomeFile;
 	}
-	
+
 	public static String getNomeFileRidIncassoNoSuffix(int anno, int mese) {
-		String nomeFile = String.format("Rid%d%2d", anno, mese).replace(
-				' ', '0');
+		String nomeFile = String.format("Rid%d%2d", anno, mese).replace(' ',
+				'0');
 
 		return nomeFile;
 	}
@@ -268,6 +262,30 @@ public class FlussoRid {
 
 	}
 
+	public void scriviRecord_17(IncassoRidDTO rid, ParametriContradaDTO parms,
+			int i) throws IOException {
+		
+		Record17DTO rec17DTO = new Record17DTO();
+
+		rec17DTO.setNumeroProgressivo(String.format("%s", i));
+		rec17DTO.setCdIban(rid.getCdIban());
+		rec17DTO.setDtSottoscrizione("311213");		
+		rec17DTO.setTipoSequenza("RCUR");
+
+		scriviRid.println(rec17DTO.toString());
+		;
+		/*
+		 * RecFlusso = " 50" ' record 50 RecFlusso = RecFlusso & Format(NumDisp,
+		 * "0000000") ' progressivo rid all'interno del flusso Wrk_Desc =
+		 * Left((Trim(Param.Intestazione) & String(28, " ")), 28) & "- Anno " &
+		 * txtAnno.Text & " " & Format(Wrk_Mese, "00") ' cmbMese.ListIndex + 1,
+		 * "00") Wrk_Desc = Wrk_Desc & " quota protettorato    " & cmbMese.Text
+		 * RecFlusso = RecFlusso & Left(Trim(Wrk_Desc) & String(90, " "), 90)
+		 * RecFlusso = RecFlusso & String(20, " ") Print #1, RecFlusso
+		 */
+
+	}
+
 	private void scriviRecord_20(ParametriContradaDTO parms, int i) {
 
 		Record20DTO rec20DTO = new Record20DTO();
@@ -378,10 +396,11 @@ public class FlussoRid {
 		DS_MESE = TipoMeseIncasso.lookUpMeseByOrdinal(rid.getNrMese())
 				.toString();
 
-		rec50DTO.setSegmento1(String.format("%s - %s", parms
-				.getTxIntestazione(), rid.getDsCausaleRid().replaceAll(
-				"<mese>", DS_MESE).replaceAll("<anno>",
-				rid.getNrAnno().toString())));
+		rec50DTO.setSegmento1(String.format(
+				"%s - %s",
+				parms.getTxIntestazione(),
+				rid.getDsCausaleRid().replaceAll("<mese>", DS_MESE)
+						.replaceAll("<anno>", rid.getNrAnno().toString())));
 
 		scriviRid.println(rec50DTO.toString());
 

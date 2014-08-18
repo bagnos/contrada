@@ -12,11 +12,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		CD_FISC,TX_INDIRIZZO,CD_CAP,TX_COMUNE,CD_PROV,ID_TIPO_INCASSO_RID,ID_RID_ESITO,DT_VALUTA)-->
 		${database.schema}incasso_rid
 		(NR_ANNO,NR_MESE,ID_RID,TX_INTESTATARIO,IM_RICHIESTO,CD_ABI,CD_CAB,NR_CONTO,
-		CD_FISC,ID_TIPO_INCASSO_RID,ID_RID_ESITO,DT_VALUTA)
+		CD_FISC,ID_TIPO_INCASSO_RID,ID_RID_ESITO,DT_VALUTA,CD_IBAN)
 
 		SELECT
 		#{anno},#{mese},RID.ID_RID,RID.TX_INTESTATARIO,SUM(IM_RATA)	AS IMPORTO,RID.CD_ABI,RID.CD_CAB,RID.NR_CONTO,
-		RID.CD_FISC,#{idTipoIncassoRid},50010,#{dtValuta}
+		RID.CD_FISC,#{idTipoIncassoRid},50010,#{dtValuta},
+		upper(concat(CD_NAZIONE,lpad(NR_CIN_EUROPEO,2,'0'),NR_CIN,lpad(CD_ABI,5,'0'),lpad(CD_CAB,5,'0'),lpad(replace(NR_CONTO,'.',''),12,'0'))) 
+		
 		<!-- CONCAT(S.DS_STRADA,",",RID.NR_CIVICO),S.CD_CAP_POST,C.DS_COMUNE,PROV.CD_SIGLA_PROV,-->
 	
 		FROM
@@ -80,8 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		DT_ESITO as dtEsito,
 		IM_RICHIESTO
 		as imRichiesto,
-		CD_IBAN as
-		cdIban,
+		IR.CD_IBAN as cdIban,
 		CD_ABI as cdAbi,
 		CD_CAB as cdCab,
 		NR_CONTO as nrConto,

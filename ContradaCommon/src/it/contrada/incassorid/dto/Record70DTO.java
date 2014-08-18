@@ -18,7 +18,7 @@ public class Record70DTO implements Serializable{
 	private String chiaviControllo1;
 	private String chiaviControllo2;
 	public String getTipoRecord() {
-		return tipoRecord;
+		return tipoRecord; 
 	}
 	public void setTipoRecord(String tipoRecord) {
 		this.tipoRecord = tipoRecord;

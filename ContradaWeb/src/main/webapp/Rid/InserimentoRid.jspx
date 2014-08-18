@@ -52,7 +52,7 @@
 						</ice:panelGroup>
 						<ice:outputText value="Codice Fiscale"></ice:outputText>
 						<ice:inputText id="txtFiscale" value="#{insRid.rid.cdFiscale}"
-							required="true" partialSubmit="true"
+							 partialSubmit="true"
 							validator="#{insRid.verificaCodiceFiscale}"></ice:inputText>
 						<ice:message for="txtFiscale"></ice:message>
 					</ice:panelGrid>

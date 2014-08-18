@@ -220,7 +220,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		capoFamiglia
 		FROM
 		${database.schema}ANAGRAFICA A
-		JOIN
+		left JOIN
 		INDIRIZZO_FAMIGLIA INF
 		ON INF.IDFAMIGLIA=A.ID_FAMIGLIA
 		JOIN
@@ -349,7 +349,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			and A.TX_NOME LIKE
 			#{nome}
 		</if>
-		AND A.ID_STATO_ANAGRAFICA=1
+		<!-- AND A.ID_STATO_ANAGRAFICA=1-->
 	</select>
 
 	<update id="updateGestore" parameterType="it.contrada.dto.AnagraficaDTO">
