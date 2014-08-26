@@ -10,8 +10,18 @@ public class Record30DTO implements Serializable {
 	private String tipoRecord = "30";
 	private int numeroProgressivo;
 	private String segmento1;
+	
+
 	private String segmento2;
 	private String segmento3;
+	
+	public void setSegmento1(String segmento1) {
+		this.segmento1 = segmento1;
+	}
+
+
+
+
 
 	public String getTipoRecord() {
 		return tipoRecord;
@@ -33,25 +43,9 @@ public class Record30DTO implements Serializable {
 		return segmento1;
 	}
 
-	public void setSegmento1(String segmento1) {
-		this.segmento1 = segmento1;
-	}
+	
 
-	public String getSegmento2() {
-		return segmento2;
-	}
-
-	public void setSegmento2(String segmento2) {
-		this.segmento2 = segmento2;
-	}
-
-	public String getSegmento3() {
-		return segmento3;
-	}
-
-	public void setSegmento3(String segmento3) {
-		this.segmento3 = segmento3;
-	}
+	
 
 	@Override
 	public String toString() {
@@ -63,14 +57,16 @@ public class Record30DTO implements Serializable {
 		if (segmento1 == null) {
 			segmento1 = "";
 		}
-		rec30.append(String.format("%-30s", segmento1.toUpperCase()));
-		if (segmento2 == null) {
+		rec30.append(String.format("%-90s", segmento1.toUpperCase()));
+		
+		/*if (segmento2 == null) {
 			segmento2 = "";
 		}
 		rec30.append(String.format("%-30s", segmento2.toUpperCase()));
 		rec30.append(String.format("%30s", " "));
 		rec30.append(String.format("%16s", " "));
 		rec30.append(String.format("%4s", " "));
+		*/
 		return rec30.toString();
 
 	}

@@ -89,9 +89,15 @@ public class RicezioneFlussoPreautorizzazioneRid {
 						nrRecord));
 				flussi.add(flussoPreat);
 				
-			} else {
+			}
+			else if (tipoRecord.equals("XX"))
+			{
+				//non si fa niente
+			}
+			
+			else {
 				throw new ContradaExceptionBloccante(DecodificaErrore
-						.getError("20"));
+						.getError("20")+ " " + tipoRecord);
 			}
 		}
 

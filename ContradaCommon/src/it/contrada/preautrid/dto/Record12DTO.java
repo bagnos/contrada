@@ -24,6 +24,31 @@ public class Record12DTO implements Serializable{
 	private String codiceIndividuale;
 	private String tipoRecord = "12";
 	private String iban = null;
+	
+	private String tipoMandato;
+	private String tipoIncasso;
+	
+	
+	
+	
+	public String getTipoIncasso() {
+		return tipoIncasso;
+	}
+
+	public void setTipoIncasso(String tipoIncasso) {
+		this.tipoIncasso = tipoIncasso;
+	}
+
+	public String getTipoMandato() {
+		return tipoMandato;
+	}
+
+	public void setTipoMandato(String tipoMandato) {
+		this.tipoMandato = tipoMandato;
+	}
+
+	
+
 	StringBuilder buildIban = new StringBuilder();
 	public String getIban() {
 
@@ -158,7 +183,8 @@ public class Record12DTO implements Serializable{
 		rec12.append(String.format("%7s", numeroProgressivo).replaceAll(" ",
 				"0"));
 		rec12.append(dataCreazioneDisposizione);
-		rec12.append(String.format("%12s", ""));
+		rec12.append(tipoMandato);
+		rec12.append(String.format("%4s", ""));
 		rec12.append(causale);
 		rec12.append(String.format("%10s", ""));
 		rec12.append(String.format("%2s", codicePaese));
@@ -174,7 +200,36 @@ public class Record12DTO implements Serializable{
 		rec12.append(tipoCodiceIndividuale);
 		rec12.append(String.format("%16s", codiceIndividuale).replaceAll(" ",
 				"0"));
-		rec12.append(String.format("%7s", ""));
+		rec12.append(tipoIncasso);
+		rec12.append(String.format("%2s", ""));
+		return rec12.toString();
+	}
+	
+	
+	public String toStringSeda() {
+		StringBuilder rec12 = new StringBuilder();
+		rec12.append(" ");
+		rec12.append(tipoRecord);
+		rec12.append(String.format("%7s", numeroProgressivo).replaceAll(" ",
+				"0"));
+		rec12.append(dataCreazioneDisposizione);		
+		rec12.append(String.format("%12s", ""));
+		rec12.append(causale);
+		rec12.append(String.format("%10s", ""));
+		rec12.append(String.format("%2s", ""));
+		rec12.append(String.format("%2s", ""));
+		rec12.append(String.format("%5s", AbibancaAllineamento).replaceAll(" ",
+				"0"));
+		rec12.append(String.format("%16s", ""));
+		rec12.append(" ");		
+		rec12.append(String.format("%5s", abi).replaceAll(" ", "0"));
+		rec12.append(String.format("%5s", ""));
+		rec12.append(String.format("%12s", ""));
+		rec12.append(codiceAzienda);
+		rec12.append(tipoCodiceIndividuale);
+		rec12.append(String.format("%16s", codiceIndividuale).replaceAll(" ",
+				"0"));		
+		rec12.append(String.format("%6s", ""));
 		return rec12.toString();
 	}
 

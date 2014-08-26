@@ -123,5 +123,18 @@ public class Record70DTO implements Serializable{
 
 		return rec70.toString();
 	}
+	
+	public String toStringRichiestaSeda() {
+		StringBuilder rec70 = new StringBuilder();
+		rec70.append(" ");
+		rec70.append(tipoRecord);
+		rec70.append(String.format("%7s", numeroProgressivo).replaceAll(" ",
+				"0"));
+		rec70.append(String.format("%15s", codiceRiferimento).replaceAll(" ",
+				"0"));		
+		//rec70.append(String.format("%-96s", ""));
+
+		return rec70.toString();
+	}
 
 }

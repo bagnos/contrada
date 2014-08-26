@@ -35,6 +35,10 @@ public interface IGestioneFlusso {
 	public FlussoPreautInviatoDTO preparaFlussoPreautorizzazioniRid(
 			List<RidDTO> rids) throws ContradaExceptionBloccante,
 			ContradaExceptionNonBloccante;
+	
+	public FlussoPreautInviatoDTO preparaFlussoPreautorizzazioniRidSeda(
+			) throws ContradaExceptionBloccante,
+			ContradaExceptionNonBloccante;
 
 	public FlussoIncassoRidDTO generaFlussoIncassiRid(int anno, int mese,
 			int tipoIncasso) throws ContradaExceptionNonBloccante,

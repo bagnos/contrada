@@ -57,14 +57,14 @@ public class Record40DTO implements Serializable{
 	public String toString() {
 		StringBuilder rec40 = new StringBuilder();
 		rec40.append(" ");
-		rec40.append(tipoRecord);
+		rec40.append(tipoRecord);		
 		rec40.append(String.format("%7s", numeroProgressivo).replaceAll(" ",
 				"0"));
 		rec40.append(String.format("%-30s", indirizzo.toUpperCase()));
 		rec40.append(String.format("%5s", cap.toUpperCase()));
 		rec40.append(String.format("%-25s", comuneProv.toUpperCase()));
-		rec40.append(String.format("%16s", " "));
-		rec40.append(String.format("%50s", " "));
+		//rec40.append(String.format("%66s", ""));
+		
 
 		return rec40.toString();
 	}

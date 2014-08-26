@@ -21,6 +21,15 @@ public class ParametriContradaDTO implements Serializable{
 	private int nrConto;
 	private int nrCin;
 	private int nrCCP;
+	private String idSeda;
+	
+	
+	public String getIdSeda() {
+		return idSeda;
+	}
+	public void setIdSeda(String idSeda) {
+		this.idSeda = idSeda;
+	}
 	public String getTxIntestazione() {
 		return txIntestazione;
 	}

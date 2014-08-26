@@ -6,6 +6,7 @@ import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.incassorid.dto.FlussoIncassoRidDTO;
 import it.contrada.incassorid.dto.IncassoRidDTO;
 import it.contrada.incassorid.dto.Record10DTO;
+import it.contrada.incassorid.dto.Record16DTO;
 import it.contrada.incassorid.dto.Record17DTO;
 import it.contrada.incassorid.dto.Record20DTO;
 import it.contrada.incassorid.dto.Record30DTO;
@@ -67,10 +68,11 @@ public class FlussoRid {
 			scriviRecordTesta(parms);
 			for (IncassoRidDTO rid : rids) {
 				scriviRecord_10(rid, parms, i);
+				scriviRecord_16(parms,i);
 				scriviRecord_17(rid, parms, i);
 				scriviRecord_20(parms, i);
 				scriviRecord_30(rid, i);
-				scriviRecord_40(rid, i);
+				//scriviRecord_40(rid, i);
 				scriviRecord_50(rid, i, parms);
 				scriviRecord_70(parms, i);
 				i++;
@@ -78,6 +80,7 @@ public class FlussoRid {
 			}
 			scriviRecordCoda(parms, rids.size(), totIncasso);
 		} catch (Exception e) {
+			e.printStackTrace();
 			eliminaFile();
 			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), e);
 		}
@@ -268,11 +271,35 @@ public class FlussoRid {
 		Record17DTO rec17DTO = new Record17DTO();
 
 		rec17DTO.setNumeroProgressivo(String.format("%s", i));
-		rec17DTO.setCdIban(rid.getCdIban());
+		rec17DTO.setCdIban(rid.getCdIban().trim().toUpperCase());
 		rec17DTO.setDtSottoscrizione("311213");		
 		rec17DTO.setTipoSequenza("RCUR");
 
 		scriviRid.println(rec17DTO.toString());
+		;
+		/*
+		 * RecFlusso = " 50" ' record 50 RecFlusso = RecFlusso & Format(NumDisp,
+		 * "0000000") ' progressivo rid all'interno del flusso Wrk_Desc =
+		 * Left((Trim(Param.Intestazione) & String(28, " ")), 28) & "- Anno " &
+		 * txtAnno.Text & " " & Format(Wrk_Mese, "00") ' cmbMese.ListIndex + 1,
+		 * "00") Wrk_Desc = Wrk_Desc & " quota protettorato    " & cmbMese.Text
+		 * RecFlusso = RecFlusso & Left(Trim(Wrk_Desc) & String(90, " "), 90)
+		 * RecFlusso = RecFlusso & String(20, " ") Print #1, RecFlusso
+		 */
+
+	}
+	
+	public void scriviRecord_16(ParametriContradaDTO parms,
+			int i) throws IOException {
+		
+		Record16DTO rec16DTO = new Record16DTO();
+
+		rec16DTO.setNumeroProgressivo(String.format("%s", i));
+		rec16DTO.setCdIbanOrdinante("IT29A0103014200000001301927");
+		rec16DTO.setIdCreditore(parms.getCdSia());		
+		
+
+		scriviRid.println(rec16DTO.toString());
 		;
 		/*
 		 * RecFlusso = " 50" ' record 50 RecFlusso = RecFlusso & Format(NumDisp,
@@ -327,9 +354,9 @@ public class FlussoRid {
 
 		rec30DTO.setNumeroProgressivo(i);
 
-		rec30DTO.setSegmento1(rid.getTxIntestatario());
+		rec30DTO.setSegmento1(String.format("%s %s", rid.getTxIntestatario(),rid.getCdFisc()));
 
-		rec30DTO.setSegmento2(rid.getCdFisc());
+		//rec30DTO.setSegmento2(rid.getCdFisc());
 
 		scriviRid.println(rec30DTO.toString());
 	}

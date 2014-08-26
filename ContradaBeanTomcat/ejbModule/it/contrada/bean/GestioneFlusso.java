@@ -58,92 +58,73 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class GestioneFlusso implements IGestioneFlusso {
 
-	
 	@Autowired
 	IRateizzazioneDAO rateizzazioneDAO;
 
-	
 	@Autowired
 	IFlussoRidIncassoDAO flussoRidAddebitoDAO;
 
-	
 	@Autowired
 	IParametriContradaDAO parametriContradaDAO;
 
-	
 	@Autowired
 	IRidDAO ridDAO;
 
-	
 	@Autowired
 	IFlussoPreautorizzazioniRidDAO flussoPreautorizzazioniRidDAO;
 
-	
 	@Autowired
 	IFlussoEsitiDAO flussoEsitoDAO;
 
-	
 	@Autowired
 	RicezioneFlussoPreautorizzazioneRid ricezionePreaut;
 
-	
 	@Autowired
 	RicezioneFlussoIncassiRid ricezioneIncassiRid;
 
-	
 	@Autowired
 	private Operazione operazioneBO;
 
 	private static Log log = LogFactory.getLog(GestioneFlusso.class);
 
-	
 	public void setOperazioneBO(Operazione operazioneBO) {
 		this.operazioneBO = operazioneBO;
 	}
 
-	
 	public IRateizzazioneDAO getRateizzazioneDAO() {
 		return rateizzazioneDAO;
 	}
 
-	
 	public void setRateizzazioneDAO(IRateizzazioneDAO rateizzazioneDAO) {
 		this.rateizzazioneDAO = rateizzazioneDAO;
 	}
 
-	
 	public IFlussoRidIncassoDAO getFlussoRidAddebitoDAO() {
 		return flussoRidAddebitoDAO;
 	}
 
-	
 	public void setFlussoRidAddebitoDAO(
 			IFlussoRidIncassoDAO flussoRidAddebitoDAO) {
 		this.flussoRidAddebitoDAO = flussoRidAddebitoDAO;
 	}
 
-	
 	public IParametriContradaDAO getParametriContradaDAO() {
 		return parametriContradaDAO;
 	}
 
-	
 	public void setParametriContradaDAO(
 			IParametriContradaDAO parametriContradaDAO) {
 		this.parametriContradaDAO = parametriContradaDAO;
 	}
 
-	
 	public IRidDAO getRidDAO() {
 		return ridDAO;
 	}
 
-	
 	public void setRidDAO(IRidDAO ridDAO) {
 		this.ridDAO = ridDAO;
 	}
 
-	
 	public IFlussoPreautorizzazioniRidDAO getFlussoPreautorizzazioniRidDAO() {
 		return flussoPreautorizzazioniRidDAO;
 	}
@@ -153,44 +134,36 @@ public class GestioneFlusso implements IGestioneFlusso {
 		this.flussoPreautorizzazioniRidDAO = flussoPreautorizzazioniRidDAO;
 	}
 
-	
 	public IFlussoEsitiDAO getFlussoEsitoDAO() {
 		return flussoEsitoDAO;
 	}
 
-	
 	public void setFlussoEsitoDAO(IFlussoEsitiDAO flussoEsitoDAO) {
 		this.flussoEsitoDAO = flussoEsitoDAO;
 	}
 
-	
 	public RicezioneFlussoPreautorizzazioneRid getRicezionePreaut() {
 		return ricezionePreaut;
 	}
 
-	
 	public void setRicezionePreaut(
 			RicezioneFlussoPreautorizzazioneRid ricezionePreaut) {
 		this.ricezionePreaut = ricezionePreaut;
 	}
 
-	
 	public RicezioneFlussoIncassiRid getRicezioneIncassiRid() {
 		return ricezioneIncassiRid;
 	}
 
-	
 	public void setRicezioneIncassiRid(
 			RicezioneFlussoIncassiRid ricezioneIncassiRid) {
 		this.ricezioneIncassiRid = ricezioneIncassiRid;
 	}
 
-	
 	public GestioneFlusso() {
 		// TODO Auto-generated constructor stub
 	}
 
-	
 	public FlussoIncassoRidDTO preparaFlussoIncassiRid(int anno, int mese,
 			int tipoIncassoRid, java.sql.Date dtValuta)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
@@ -201,8 +174,8 @@ public class GestioneFlusso implements IGestioneFlusso {
 			int rows = flussoRidAddebitoDAO.existFlusso(anno, mese,
 					tipoIncassoRid);
 			if (rows > 0) {
-				throw new ContradaExceptionNonBloccante(DecodificaErrore
-						.getError("11"));
+				throw new ContradaExceptionNonBloccante(
+						DecodificaErrore.getError("11"));
 			}
 
 			// inserisce tutte le tessere in tabella rateizzazione per anno,
@@ -226,20 +199,20 @@ public class GestioneFlusso implements IGestioneFlusso {
 									+ "/" + mese));
 
 			int nrRowsFlusso = flussoRidAddebitoDAO.insertFlussoRid(anno, mese,
-					dtValuta, tipoIncassoRid, FlussoRid
-							.getNomeFileConDirectoryRidIncasso(anno, mese),
+					dtValuta, tipoIncassoRid,
+					FlussoRid.getNomeFileConDirectoryRidIncasso(anno, mese),
 					operazioneDTO.getIdOperazione());
 
 			if (nrRowsFlusso == 0) {
-				throw new ContradaExceptionNonBloccante(DecodificaErrore
-						.getError("9"));
+				throw new ContradaExceptionNonBloccante(
+						DecodificaErrore.getError("9"));
 			}
 
 			nrRowsFlusso = flussoRidAddebitoDAO.insertIncassoRid(anno, mese,
 					tipoIncassoRid, dtValuta);
 			if (nrRowsFlusso == 0) {
-				throw new ContradaExceptionNonBloccante(DecodificaErrore
-						.getError("9"));
+				throw new ContradaExceptionNonBloccante(
+						DecodificaErrore.getError("9"));
 			}
 
 			// si aggiorna l'identificativo dell'incasso presente nel flusso su
@@ -247,8 +220,8 @@ public class GestioneFlusso implements IGestioneFlusso {
 			int nrRowsRid = rateizzazioneDAO.aggiornaRidFlussoAddebito(anno,
 					mese);
 			if (nrRowsRid != nrRowsRate) {
-				throw new ContradaExceptionNonBloccante(DecodificaErrore
-						.getError("10"));
+				throw new ContradaExceptionNonBloccante(
+						DecodificaErrore.getError("10"));
 			}
 
 			// genera il flusso;
@@ -294,8 +267,8 @@ public class GestioneFlusso implements IGestioneFlusso {
 			String nomeFile = flussoRidAddebitoDAO.getNomeFileFlusso(anno,
 					mese, incasso);
 			if (nomeFile == null || nomeFile.trim() == "")
-				throw new ContradaExceptionBloccante(DecodificaErrore
-						.getError("13"));
+				throw new ContradaExceptionBloccante(
+						DecodificaErrore.getError("13"));
 
 			File file = new File(nomeFile);
 			file.deleteOnExit();
@@ -309,21 +282,21 @@ public class GestioneFlusso implements IGestioneFlusso {
 					incasso);
 
 			if (nrRows == 0) {
-				throw new ContradaExceptionBloccante(DecodificaErrore
-						.getError("15"));
+				throw new ContradaExceptionBloccante(
+						DecodificaErrore.getError("15"));
 			}
 
 			nrRows = flussoRidAddebitoDAO
 					.eliminaIncassoRid(anno, mese, incasso);
 			if (nrRows == 0) {
-				throw new ContradaExceptionBloccante(DecodificaErrore
-						.getError("16"));
+				throw new ContradaExceptionBloccante(
+						DecodificaErrore.getError("16"));
 			}
 
 			nrRows = flussoRidAddebitoDAO.eliminaFlussoRid(anno, mese, incasso);
 			if (nrRows == 0) {
-				throw new ContradaExceptionBloccante(DecodificaErrore
-						.getError("15"));
+				throw new ContradaExceptionBloccante(
+						DecodificaErrore.getError("15"));
 			}
 
 		} catch (ContradaExceptionBloccante ex) {
@@ -366,14 +339,13 @@ public class GestioneFlusso implements IGestioneFlusso {
 			File file = new File(nomeFile);
 
 			if (!file.exists()) {
-				throw new ContradaExceptionBloccante(DecodificaErrore
-						.getError("18"));
+				throw new ContradaExceptionBloccante(
+						DecodificaErrore.getError("18"));
 
 			}
-			
-			if (isFileEmpty(file))
-			{
-				//lista vuota
+
+			if (isFileEmpty(file)) {
+				// lista vuota
 				return new ArrayList<DisposizionePreautRicezioneDTO>();
 			}
 
@@ -384,14 +356,14 @@ public class GestioneFlusso implements IGestioneFlusso {
 			ParametriContradaDTO params = parametriContradaDAO.getParametri();
 			if (params == null || params.getCdSia() == null
 					|| params.getCdSia().trim().equals("")) {
-				throw new ContradaExceptionBloccante(DecodificaErrore
-						.getError("12"));
+				throw new ContradaExceptionBloccante(
+						DecodificaErrore.getError("12"));
 			}
 
 			causali = flussoPreautorizzazioniRidDAO.elencoCausaliPreaut();
 			if (causali.isEmpty()) {
-				throw new ContradaExceptionBloccante(DecodificaErrore
-						.getError("22"));
+				throw new ContradaExceptionBloccante(
+						DecodificaErrore.getError("22"));
 			}
 
 			List<RicezioneFlussoPreautorizzazioneDTO> flussi = ricezionePreaut
@@ -440,10 +412,8 @@ public class GestioneFlusso implements IGestioneFlusso {
 					// si aggiorna il record nel flusso di ricezione
 					dtEsito = flusso.getRecordAL().getDtCreazioneDisposizione()
 							.trim().isEmpty() ? null : new Date(formatddMMyy
-							.parse(
-									flusso.getRecordAL()
-											.getDtCreazioneDisposizione())
-							.getTime());
+							.parse(flusso.getRecordAL()
+									.getDtCreazioneDisposizione()).getTime());
 
 					dtInvio = disp.getRecords12().getDataCreazioneFlusso()
 							.trim().isEmpty() ? null : new Date(
@@ -453,8 +423,7 @@ public class GestioneFlusso implements IGestioneFlusso {
 									.getTime());
 
 					note = String
-							.format(
-									"flusso ricevuto il %s, inviato il %s, causale %s, %s",
+							.format("flusso ricevuto il %s, inviato il %s, causale %s, %s",
 									dtEsito != null ? formatddMMyyyy
 											.format(dtEsito) : "",
 									dtInvio != null ? formatddMMyyyy
@@ -463,8 +432,8 @@ public class GestioneFlusso implements IGestioneFlusso {
 
 					// aggiorno l'esito dellla disposizione ricevuta
 					flussoPreautorizzazioniRidDAO.aggiornaRicezioneFlusso(
-							idRid, dtInvio, dtEsito, causale, flussoEsito
-									.getIdFlussoEsito());
+							idRid, dtInvio, dtEsito, causale,
+							flussoEsito.getIdFlussoEsito());
 
 					// verifica aggiornamento stato rid
 					if (causaleDisp.getIdStatoRidSucc() != null) {
@@ -497,8 +466,8 @@ public class GestioneFlusso implements IGestioneFlusso {
 					}
 
 					if (rowsAgg == 0) {
-						throw new ContradaExceptionBloccante(DecodificaErrore
-								.getError("21"));
+						throw new ContradaExceptionBloccante(
+								DecodificaErrore.getError("21"));
 					}
 
 					// recupero alcune informazioni legate al rid
@@ -513,8 +482,8 @@ public class GestioneFlusso implements IGestioneFlusso {
 
 			flussoEsito.setNrDisp(disps.size());
 			if (flussoEsitoDAO.aggiornaFlussoEsito(flussoEsito) == 0) {
-				throw new ContradaExceptionBloccante(DecodificaErrore
-						.getError("26"));
+				throw new ContradaExceptionBloccante(
+						DecodificaErrore.getError("26"));
 			}
 			return disps;
 
@@ -530,25 +499,20 @@ public class GestioneFlusso implements IGestioneFlusso {
 
 		FileReader reader = null;
 		BufferedReader bReader = null;
-		try
-		{
-		reader = new FileReader(file);
+		try {
+			reader = new FileReader(file);
 
-		 bReader = new BufferedReader(reader);
+			bReader = new BufferedReader(reader);
 
-		if (bReader.readLine().contains("Nessun oggetto trovato")) {
-			return true;
-		}
-		return false;
-		}
-		finally
-		{
-			if (bReader!=null)
-			{
+			if (bReader.readLine().contains("Nessun oggetto trovato")) {
+				return true;
+			}
+			return false;
+		} finally {
+			if (bReader != null) {
 				bReader.close();
 			}
-			if (reader!=null)
-			{
+			if (reader != null) {
 				reader.close();
 			}
 		}
@@ -575,14 +539,13 @@ public class GestioneFlusso implements IGestioneFlusso {
 			java.sql.Date dtValuta;
 
 			if (!file.exists()) {
-				throw new ContradaExceptionBloccante(DecodificaErrore
-						.getError("18"));
+				throw new ContradaExceptionBloccante(
+						DecodificaErrore.getError("18"));
 
 			}
-			
-			if (isFileEmpty(file))
-			{
-				//lista vuota
+
+			if (isFileEmpty(file)) {
+				// lista vuota
 				return new ArrayList<RicezioneFlussoIncassoRidDTO>();
 			}
 
@@ -593,14 +556,14 @@ public class GestioneFlusso implements IGestioneFlusso {
 			ParametriContradaDTO params = parametriContradaDAO.getParametri();
 			if (params == null || params.getCdSia() == null
 					|| params.getCdSia().trim().equals("")) {
-				throw new ContradaExceptionBloccante(DecodificaErrore
-						.getError("12"));
+				throw new ContradaExceptionBloccante(
+						DecodificaErrore.getError("12"));
 			}
 
 			causali = flussoRidAddebitoDAO.elencoCausaliIncassoRid();
 			if (causali.isEmpty()) {
-				throw new ContradaExceptionBloccante(DecodificaErrore
-						.getError("22"));
+				throw new ContradaExceptionBloccante(
+						DecodificaErrore.getError("22"));
 			}
 
 			List<RicezioneFlussoIncassoRidDTO> flussi = ricezioneIncassiRid
@@ -611,7 +574,6 @@ public class GestioneFlusso implements IGestioneFlusso {
 				for (DisposizioneIncassoRidRicezioneDTO disp : flusso
 						.getDisposizioni()) {
 
-				
 					causale = Integer.parseInt(disp.getRec10().getCausale());
 
 					dsCausale = "";
@@ -633,10 +595,10 @@ public class GestioneFlusso implements IGestioneFlusso {
 							.getCodiceClienteDebitore());
 
 					disp.setIdRid(idRid.intValue());
-					
-					//INSERISCO LE ANGRAFICA ATTACCATE ALLA DISPOSIZIONE
-					
-					RidDTO ridDTO=ridDAO.getRid(idRid.intValue());
+
+					// INSERISCO LE ANGRAFICA ATTACCATE ALLA DISPOSIZIONE
+
+					RidDTO ridDTO = ridDAO.getRid(idRid.intValue());
 					disp.setIdStatoRid(ridDTO.getTipoStatoRid());
 					disp.setMembri(ridDTO.getMembri());
 					disp.setAbi(ridDTO.getAbi().toString());
@@ -664,8 +626,8 @@ public class GestioneFlusso implements IGestioneFlusso {
 					// si aggiorna lo stato dell'incasso accedendo per idRid e
 					// data valuta
 					rowRids = flussoRidAddebitoDAO.aggiornaEsitoRid(idRid,
-							dtValuta, dtEsito, causale, flussoEsito
-									.getIdFlussoEsito());
+							dtValuta, dtEsito, causale,
+							flussoEsito.getIdFlussoEsito());
 
 					if (rowRids == 0) {
 						// numero flusso addebito non presente
@@ -706,8 +668,9 @@ public class GestioneFlusso implements IGestioneFlusso {
 					disp.setTipoStatoRid(tipoStatoRid);
 					// aggiorno lo stato della rate in base all'esito
 					if (causaleDisp != null) {
-						rateizzazioneDAO.aggiornaStatoRata(causaleDisp
-								.getIdStatoRataSucc(), idFlussoAddebito);
+						rateizzazioneDAO.aggiornaStatoRata(
+								causaleDisp.getIdStatoRataSucc(),
+								idFlussoAddebito);
 					} else {
 						rateizzazioneDAO.aggiornaStatoRata(
 								TipoStatoRata.Insoluta.getStatoRata(),
@@ -743,6 +706,25 @@ public class GestioneFlusso implements IGestioneFlusso {
 			log.error(ex);
 			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
 		}
+	}
+
+	public FlussoPreautInviatoDTO preparaFlussoPreautorizzazioniRidSeda()
+			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
+		// TODO Auto-generated method stub
+		List<RidDTO> rids = null;
+		List<Integer> stati=new ArrayList<Integer>();
+		stati.add(TipoStatoRid.Attiva.getStatoRid());
+		stati.add(TipoStatoRid.Censita.getStatoRid());
+		
+		try {
+			rids=ridDAO.getRidPerStato(stati, 1);
+			return generaFlussoPreautRid(rids, true);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			throw new ContradaExceptionNonBloccante(
+					"errore perparazione flusso", e);
+		}
+
 	}
 
 	public FlussoPreautInviatoDTO preparaFlussoPreautorizzazioniRid(
@@ -788,12 +770,12 @@ public class GestioneFlusso implements IGestioneFlusso {
 						TipoStatoRid.Spedita_in_Banca, TipoStatoRid.Censita);
 
 				if (nrRowsAgg != nrRowsIns) {
-					throw new ContradaExceptionBloccante(DecodificaErrore
-							.getError("17"));
+					throw new ContradaExceptionBloccante(
+							DecodificaErrore.getError("17"));
 				}
 
 				// si crea il flusso .crm
-				return generaFlussoPreautRid(rids);
+				return generaFlussoPreautRid(rids, false);
 
 			} else {
 				return null;
@@ -815,8 +797,8 @@ public class GestioneFlusso implements IGestioneFlusso {
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 		// TODO Auto-generated method stub
 		try {
-			FlussoEsitoDTO flussoEsito = FlussoUtil.getFromNomeFile(file
-					.getName(), tipoFlusso);
+			FlussoEsitoDTO flussoEsito = FlussoUtil.getFromNomeFile(
+					file.getName(), tipoFlusso);
 
 			// verifica se alcuni esiti sono già stati scaricati
 			/*
@@ -849,8 +831,8 @@ public class GestioneFlusso implements IGestioneFlusso {
 			ParametriContradaDTO params = parametriContradaDAO.getParametri();
 			if (params == null || params.getCdSia() == null
 					|| params.getCdSia().trim().equals("")) {
-				throw new ContradaExceptionBloccante(DecodificaErrore
-						.getError("12"));
+				throw new ContradaExceptionBloccante(
+						DecodificaErrore.getError("12"));
 			}
 
 			// si recupera quelli i rid da invuare
@@ -885,7 +867,7 @@ public class GestioneFlusso implements IGestioneFlusso {
 					.gerRidPreautorizzatiInviati(dtInvio);
 
 			// si genera il flusso
-			flusso = generaFlussoPreautRid(rids);
+			flusso = generaFlussoPreautRid(rids, false);
 
 			return flusso;
 
@@ -895,8 +877,8 @@ public class GestioneFlusso implements IGestioneFlusso {
 		}
 	}
 
-	private FlussoPreautInviatoDTO generaFlussoPreautRid(List<RidDTO> rids)
-			throws Exception {
+	private FlussoPreautInviatoDTO generaFlussoPreautRid(List<RidDTO> rids,
+			boolean richiestaSeda) throws Exception {
 
 		FlussoPreautInviatoDTO flusso = new FlussoPreautInviatoDTO();
 
@@ -904,12 +886,16 @@ public class GestioneFlusso implements IGestioneFlusso {
 			flusso.setRids(rids);
 			ParametriContradaDTO params = parametriContradaDAO.getParametri();
 			if (params == null) {
-				throw new ContradaExceptionBloccante(DecodificaErrore
-						.getError("12"));
+				throw new ContradaExceptionBloccante(
+						DecodificaErrore.getError("12"));
 			}
 
 			FlussoPreautorizzazioneRid preRid = new FlussoPreautorizzazioneRid();
-			flusso = preRid.creaFlussoRid(rids, params);
+			if (richiestaSeda) {
+				flusso = preRid.creaFlussoRidRichiestaDelegheSepa(rids, params);
+			} else {
+				flusso = preRid.creaFlussoRid(rids, params);
+			}
 		}
 		return flusso;
 
@@ -930,7 +916,7 @@ public class GestioneFlusso implements IGestioneFlusso {
 			throws ContradaExceptionNonBloccante, ContradaExceptionBloccante {
 		// TODO Auto-generated method stub
 		try {
-			return generaFlussoPreautRid(rids);
+			return generaFlussoPreautRid(rids, false);
 		} catch (Throwable ex) {
 			log.error(ex);
 			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);

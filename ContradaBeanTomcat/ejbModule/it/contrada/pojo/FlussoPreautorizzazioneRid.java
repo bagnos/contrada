@@ -10,6 +10,7 @@ import it.contrada.preautrid.dto.Record40DTO;
 import it.contrada.preautrid.dto.Record70DTO;
 import it.contrada.preautrid.dto.RecordALDTO;
 import it.contrada.preautrid.dto.RecordEFDTO;
+import it.contrada.preautrid.dto.RecordXXDTO;
 import it.contrada.util.Constanti;
 import it.contrada.util.DecodificaErrore;
 
@@ -55,6 +56,39 @@ public class FlussoPreautorizzazioneRid {
 				.getInstance().getTime());
 	}
 
+	public FlussoPreautInviatoDTO creaFlussoRidRichiestaDelegheSepa(
+			List<RidDTO> rids, ParametriContradaDTO parms) throws IOException,
+			ContradaExceptionBloccante {
+
+		apriFile();
+
+		int i = 0;
+
+		try {
+			scriviRecordTesta(parms);
+			for (RidDTO rid : rids) {
+				scriviRecord_12(rid, parms, i + 1, true);
+				scriviRecord_70(rid, i + 1, true);
+				i++;
+			}
+			scriviRecordCoda(i);
+		} catch (Exception e) {
+			eliminaFile();
+			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), e);
+		}
+
+		FlussoPreautInviatoDTO flusso = new FlussoPreautInviatoDTO();
+		flusso.setNrDisposizioni(i);
+		flusso.setNomeFile(file.getPath());
+		flusso.setNomeFileSemplice(nomeFileSemplice);
+		flusso.setRids(rids);
+		flusso.setDtInvio(GregorianCalendar.getInstance().getTime());
+
+		chiudiFile();
+		return flusso;
+
+	}
+
 	public FlussoPreautInviatoDTO creaFlussoRid(List<RidDTO> rids,
 			ParametriContradaDTO parms) throws IOException,
 			ContradaExceptionBloccante {
@@ -62,16 +96,17 @@ public class FlussoPreautorizzazioneRid {
 		apriFile();
 
 		int i = 0;
-		
+
 		try {
 			scriviRecordTesta(parms);
 			for (RidDTO rid : rids) {
-				scriviRecord_12(rid, parms, i+1);
+				scriviRecord_12(rid, parms, i + 1, false);
 
-				scriviRecord_30(rid, i+1);
-				scriviRecord_40(rid, i+1);
+				scriviRecord_30(rid, i + 1);
+				scriviRecord_40(rid, i + 1);
 
-				scriviRecord_70(rid, i+1);
+				scriviRecord_70(rid, i + 1, false);
+				scriviRecord_XX(rid, parms, i + 1);
 				i++;
 
 			}
@@ -95,28 +130,23 @@ public class FlussoPreautorizzazioneRid {
 
 	private void apriFile() throws IOException, ContradaExceptionBloccante {
 		/*
-		String rootDirectoy = getPropFile().getProperty(
-				"directoryPreautorizzazioniRidInviati");
-		File directory = new File(rootDirectoy.replaceAll("<anno>", Integer
-				.valueOf(
-						GregorianCalendar.getInstance().get(
-								GregorianCalendar.YEAR)).toString()));
-		if (!directory.exists()) {
-			if (!directory.mkdir()) {
-				throw new ContradaExceptionBloccante(String.format(
-						"impossibile creare la directory %s", rootDirectoy));
-			}
-		}*/
+		 * String rootDirectoy = getPropFile().getProperty(
+		 * "directoryPreautorizzazioniRidInviati"); File directory = new
+		 * File(rootDirectoy.replaceAll("<anno>", Integer .valueOf(
+		 * GregorianCalendar.getInstance().get(
+		 * GregorianCalendar.YEAR)).toString())); if (!directory.exists()) { if
+		 * (!directory.mkdir()) { throw new
+		 * ContradaExceptionBloccante(String.format(
+		 * "impossibile creare la directory %s", rootDirectoy)); } }
+		 */
 
 		String nomeFile = getNomeFilePreautRidNoSuffix();
 
-		//si salva il nome semplice
-		nomeFileSemplice=nomeFile;
-		
-		//file = new File(directory, nomeFile);
-		file=File.createTempFile(nomeFile, Constanti.EXT_FILE_RID);
-		
-		
+		// si salva il nome semplice
+		nomeFileSemplice = nomeFile;
+
+		// file = new File(directory, nomeFile);
+		file = File.createTempFile(nomeFile, Constanti.EXT_FILE_RID);
 
 		fos = new FileOutputStream(file);
 		scriviRid = new PrintStream(fos);
@@ -127,15 +157,12 @@ public class FlussoPreautorizzazioneRid {
 
 		return nomeFile;
 	}
-	
-	public String getNomeFilePreautRidNoSuffix()
-	{
+
+	public String getNomeFilePreautRidNoSuffix() {
 		String nomeFile = String.format("PreRid%s", CURRENT_DATE_ddMMyy);
 
 		return nomeFile;
 	}
-
-	
 
 	private void scriviRecordTesta(ParametriContradaDTO parms) {
 		/*
@@ -169,8 +196,8 @@ public class FlussoPreautorizzazioneRid {
 
 	}
 
-	private void scriviRecord_12(RidDTO rid, ParametriContradaDTO parms, int i)
-			throws IOException {
+	private void scriviRecord_12(RidDTO rid, ParametriContradaDTO parms, int i,
+			boolean richiestaSeda) throws IOException {
 
 		/*
 		 * RecCorpo = " 12" & Format(NumDisp, "0000000") & Format(Wrk_Data,
@@ -199,12 +226,16 @@ public class FlussoPreautorizzazioneRid {
 
 		rec12DTO.setDataCreazioneDisposizione(CURRENT_DATE_ddMMyy);
 
-		rec12DTO.setCausale(getPropFile().getProperty(
-				"causaleRichiestaAddebito"));
+		if (richiestaSeda) {
+			rec12DTO.setCausale("91211");
+		} else {
+			rec12DTO.setCausale(getPropFile().getProperty(
+					"causaleRichiestaAddebito"));
+		}
 
 		if (rid.getPaese() != null) {
 
-			rec12DTO.setCodicePaese(rid.getPaese());
+			rec12DTO.setCodicePaese(rid.getPaese().trim());
 		} else {
 
 			rec12DTO.setCodicePaese("");
@@ -212,37 +243,59 @@ public class FlussoPreautorizzazioneRid {
 
 		if (rid.getCin() != null) {
 
-			rec12DTO.setCheckDigit(rid.getCin().toString());
+			rec12DTO.setCheckDigit(rid.getCin().toString().trim());
 		} else {
 
 			rec12DTO.setCheckDigit("0");
 		}
 
-		rec12DTO.setAbibancaAllineamento(String.format("%d", parms.getCdAbi()));
+		rec12DTO.setAbibancaAllineamento(String.format("%d", parms.getCdAbi()).trim());
 
 		if (rid.getCinAbi() != null) {
 
-			rec12DTO.setCin(rid.getCinAbi());
+			rec12DTO.setCin(rid.getCinAbi().trim());
 		} else {
 
 			rec12DTO.setCin("");
 		}
 
-		rec12DTO.setAbi(rid.getAbi().toString());
+		rec12DTO.setAbi(rid.getAbi().toString().trim());
 
-		rec12DTO.setCab(rid.getCab().toString());
+		rec12DTO.setCab(rid.getCab().toString().trim());
 
-		rec12DTO.setConto(rid.getNumeroCC());
+		rec12DTO.setConto(rid.getNumeroCC().trim());
 
-		rec12DTO.setCodiceAzienda(parms.getCdSia());
+		rec12DTO.setCodiceAzienda(parms.getCdSia().trim());
 
 		rec12DTO.setTipoCodiceIndividuale(getPropFile().getProperty(
-				"tipoCodiceIndividuale"));
+				"tipoCodiceIndividuale").trim());
 
-		rec12DTO.setCodiceIndividuale(rid.getNrRid().toString());
+		rec12DTO.setCodiceIndividuale(rid.getNrRid().toString().trim());
 
-		scriviRid.println(rec12DTO.toString());
+		rec12DTO.setTipoIncasso("RCUR");
+		rec12DTO.setTipoMandato("CORSEDEM");
+		
+ 
+		if (richiestaSeda)
+		{
+			scriviRid.println(rec12DTO.toStringSeda().replaceAll("\t", "")
+					.replaceAll("\n", ""));
+		}
+		else
+		{
+		scriviRid.println(rec12DTO.toString().replaceAll("\t", "")
+				.replaceAll("\n", ""));
+		}
 
+	}
+
+	private void scriviRecord_XX(RidDTO rid, ParametriContradaDTO parms, int i)
+			throws IOException {
+		RecordXXDTO recordXX = new RecordXXDTO();
+		recordXX.setNumeroProgressivo(String.format("%d", i));
+		recordXX.setIdSeda(parms.getIdSeda());
+		recordXX.setNomeCreditore(parms.getTxIntestazione());
+		scriviRid.println(recordXX.toString());
 	}
 
 	private void scriviRecord_30(RidDTO rid, int i) {
@@ -264,13 +317,14 @@ public class FlussoPreautorizzazioneRid {
 		rec30DTO.setCdFiscaleIntestatario(rid.getCdFiscale());
 		rec30DTO.setCdFiscaleSottoscrittore(rid.getCdFiscale());
 		rec30DTO.setSegmento1(rid.getIntestatarioRid());
-		
+
 		rec30DTO.setSegmento2("");
 		rec30DTO.setSegmento3("");
 		/*
-		rec30DTO.setSegmento2(rid.getVia() + " " + rid.getNumeroCivico());
-		rec30DTO.setSegmento3(rid.getCapPost() + " " + rid.getLocalita() + " "
-				+ rid.getProvincia());*/
+		 * rec30DTO.setSegmento2(rid.getVia() + " " + rid.getNumeroCivico());
+		 * rec30DTO.setSegmento3(rid.getCapPost() + " " + rid.getLocalita() +
+		 * " " + rid.getProvincia());
+		 */
 
 		scriviRid.println(rec30DTO.toString());
 	}
@@ -288,16 +342,16 @@ public class FlussoPreautorizzazioneRid {
 		Record40DTO rec40DTO = new Record40DTO();
 
 		rec40DTO.setNumeroProgressivo(String.format("%d", i));
-		
+
 		rec40DTO.setIndirizzo("");
 		rec40DTO.setCap("");
-		
-		//rec40DTO.setIndirizzo(rid.getVia() + " " + rid.getNumeroCivico());
 
-		//rec40DTO.setCap(rid.getCapPost());
+		// rec40DTO.setIndirizzo(rid.getVia() + " " + rid.getNumeroCivico());
+
+		// rec40DTO.setCap(rid.getCapPost());
 
 		rec40DTO.setLocalita("");
-		//rec40DTO.setLocalita(rid.getLocalita() + " " + rid.getProvincia());
+		// rec40DTO.setLocalita(rid.getLocalita() + " " + rid.getProvincia());
 
 		rec40DTO.setIntestetarioConto(rid.getIntestatarioRid());
 
@@ -305,7 +359,8 @@ public class FlussoPreautorizzazioneRid {
 
 	}
 
-	private void scriviRecord_70(RidDTO rid, int i) throws IOException {
+	private void scriviRecord_70(RidDTO rid, int i, boolean richiestaSeda)
+			throws IOException {
 
 		/*
 		 * 
@@ -341,7 +396,12 @@ public class FlussoPreautorizzazioneRid {
 
 		rec70DTO.setCodiceRiferimento(String.format("%d", rid.getNrRid()));
 
-		scriviRid.println(rec70DTO.toString());
+		if (richiestaSeda) {
+			scriviRid.println(rec70DTO.toStringRichiestaSeda().replaceAll("\t", "")
+					.replaceAll("\n", ""));
+		} else {
+			scriviRid.println(rec70DTO.toString());
+		}
 	}
 
 	private void scriviRecordCoda(int nrDisp) {

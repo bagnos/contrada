@@ -430,7 +430,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		NR_CONTO=#{nrConto},
 		NR_CIN=#{nrCin},
 		TX_NOTE=#{txNote},
-		cd_iban=upper(concat(#{paese},#{cin},#{cinAbi},lpad(#{abi},5,'0'),lpad(#{cab},5,'0'),lpad(replace(#{numeroCC},'.',''),12,'0')))
+		cd_iban=upper(concat(#{cdNazione},#{nrCinEuropeo},#{nrCin},lpad(#{cdAbi},5,'0'),lpad(#{cdCab},5,'0'),lpad(replace(#{nrConto},'.',''),12,'0')))
 		<if test="intestatario!=null">
 			,TX_INTESTATARIO=#{intestatario}
 		</if>
