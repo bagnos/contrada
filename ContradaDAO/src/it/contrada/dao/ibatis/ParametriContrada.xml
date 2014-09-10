@@ -20,7 +20,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		NR_CONTO as nrConto,
 		NR_CIN as nrCin,
 		NR_CCP as nrCCP,
-		ID_SEDA as idSeda
+		ID_SEDA as idSeda,
+		CD_CHECK_DIGIT as checkDigit,
+		CD_PAESE as cdPaese
 		FROM
 		${database.schema}PARAMETRI_CONTRADA
  

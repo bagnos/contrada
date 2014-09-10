@@ -18,12 +18,27 @@ public class ParametriContradaDTO implements Serializable{
 	private String cdSia;
 	private int cdAbi;
 	private int cdCab;
-	private int nrConto;
-	private int nrCin;
+	private String nrConto;
+	private String nrCin;
 	private int nrCCP;
 	private String idSeda;
+	private String checkDigit;
+	private String cdPaese;
 	
 	
+	
+	public String getCheckDigit() {
+		return checkDigit;
+	}
+	public void setCheckDigit(String checkDigit) {
+		this.checkDigit = checkDigit;
+	}
+	public String getCdPaese() {
+		return cdPaese;
+	}
+	public void setCdPaese(String cdPaese) {
+		this.cdPaese = cdPaese;
+	}
 	public String getIdSeda() {
 		return idSeda;
 	}
@@ -90,16 +105,16 @@ public class ParametriContradaDTO implements Serializable{
 	public void setCdCab(int cdCab) {
 		this.cdCab = cdCab;
 	}
-	public int getNrConto() {
+	public String getNrConto() {
 		return nrConto;
 	}
-	public void setNrConto(int nrConto) {
+	public void setNrConto(String nrConto) {
 		this.nrConto = nrConto;
 	}
-	public int getNrCin() {
+	public String getNrCin() {
 		return nrCin;
 	}
-	public void setNrCin(int nrCin) {
+	public void setNrCin(String nrCin) {
 		this.nrCin = nrCin;
 	}
 	public int getNrCCP() {

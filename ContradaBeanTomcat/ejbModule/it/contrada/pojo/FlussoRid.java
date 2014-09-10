@@ -15,6 +15,7 @@ import it.contrada.incassorid.dto.Record50DTO;
 import it.contrada.incassorid.dto.Record70DTO;
 import it.contrada.incassorid.dto.RecordEFDTO;
 import it.contrada.incassorid.dto.RecordIRDTO;
+import it.contrada.util.BaseUtil;
 import it.contrada.util.Constanti;
 import it.contrada.util.DecodificaErrore;
 
@@ -68,11 +69,11 @@ public class FlussoRid {
 			scriviRecordTesta(parms);
 			for (IncassoRidDTO rid : rids) {
 				scriviRecord_10(rid, parms, i);
-				scriviRecord_16(parms,i);
+				scriviRecord_16(parms, i);
 				scriviRecord_17(rid, parms, i);
 				scriviRecord_20(parms, i);
 				scriviRecord_30(rid, i);
-				//scriviRecord_40(rid, i);
+				// scriviRecord_40(rid, i);
 				scriviRecord_50(rid, i, parms);
 				scriviRecord_70(parms, i);
 				i++;
@@ -267,12 +268,12 @@ public class FlussoRid {
 
 	public void scriviRecord_17(IncassoRidDTO rid, ParametriContradaDTO parms,
 			int i) throws IOException {
-		
+
 		Record17DTO rec17DTO = new Record17DTO();
 
 		rec17DTO.setNumeroProgressivo(String.format("%s", i));
 		rec17DTO.setCdIban(rid.getCdIban().trim().toUpperCase());
-		rec17DTO.setDtSottoscrizione("311213");		
+		rec17DTO.setDtSottoscrizione("311213");
 		rec17DTO.setTipoSequenza("RCUR");
 
 		scriviRid.println(rec17DTO.toString());
@@ -288,17 +289,18 @@ public class FlussoRid {
 		 */
 
 	}
-	
-	public void scriviRecord_16(ParametriContradaDTO parms,
-			int i) throws IOException {
-		
+
+	public void scriviRecord_16(ParametriContradaDTO parms, int i)
+			throws IOException {
+
 		Record16DTO rec16DTO = new Record16DTO();
 
 		rec16DTO.setNumeroProgressivo(String.format("%s", i));
-		rec16DTO.setCdIbanOrdinante("IT29A0103014200000001301927");
-		rec16DTO.setIdCreditore(parms.getCdSia());		
+		rec16DTO.setCdIbanOrdinante(BaseUtil.formatIban(parms.getCdPaese(),
+				parms.getCheckDigit(), parms.getNrCin(), Integer.toString(parms.getCdAbi()),
+				Integer.toString(parms.getCdCab()), parms.getNrConto()));
+		rec16DTO.setIdCreditore(parms.getIdSeda());
 		
-
 		scriviRid.println(rec16DTO.toString());
 		;
 		/*
@@ -354,9 +356,10 @@ public class FlussoRid {
 
 		rec30DTO.setNumeroProgressivo(i);
 
-		rec30DTO.setSegmento1(String.format("%s %s", rid.getTxIntestatario(),rid.getCdFisc()));
+		rec30DTO.setSegmento1(String.format("%s %s", rid.getTxIntestatario(),
+				rid.getCdFisc()));
 
-		//rec30DTO.setSegmento2(rid.getCdFisc());
+		// rec30DTO.setSegmento2(rid.getCdFisc());
 
 		scriviRid.println(rec30DTO.toString());
 	}

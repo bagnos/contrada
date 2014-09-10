@@ -35,4 +35,13 @@ public class BaseUtil {
 		return strImporto;
 
 	}
+	
+	public static String formatIban(String cdPaese,String checkDigit,String nrCin,String abi,String cab,String conto)
+	{
+		String iban=String.format("%2s%2s%1s%5s%5s%12s", cdPaese,checkDigit,nrCin,abi,cab,conto);
+		iban=iban.replaceAll(" ", "0");
+		return iban;
+		
+		
+	}
 }
