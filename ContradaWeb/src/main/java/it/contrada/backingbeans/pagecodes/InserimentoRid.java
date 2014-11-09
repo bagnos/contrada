@@ -159,7 +159,7 @@ public class InserimentoRid extends BaseView {
 		rid.setCapPost(HelperSession.getInitParameter(
 				Costante.CAP_RESIDENZA_DEFAULT).toString());
 
-		rid.setTipoStatoRid(TipoStatoRid.Censita.getStatoRid());
+		rid.setTipoStatoRid(TipoStatoRid.Attiva.getStatoRid());
 		rid.setPaese(Costante.CONSTANT_VAL_IT);
 
 		if (isRidFromInsertAnag()) {

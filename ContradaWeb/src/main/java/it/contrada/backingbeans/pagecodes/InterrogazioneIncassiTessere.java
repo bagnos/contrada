@@ -258,11 +258,14 @@ public class InterrogazioneIncassiTessere {
 		HashMap<Integer, Object> tessere = new HashMap<Integer, Object>();
 		int idTessera = 0;
 		int anno = 0;
+		int imAnno=0;
+		List<RateizzazioneDTO> rateDistinct=new ArrayList<RateizzazioneDTO>();
 
 		if (getRateizzazioni().isEmpty()) {
 			return;
 		}
-
+		
+		
 		for (RateizzazioneDTO rata : getRateizzazioni()) {
 
 			if (rata.getTipoStatoRata() == TipoStatoRata.Pagata.getStatoRata()) {
@@ -273,6 +276,7 @@ public class InterrogazioneIncassiTessere {
 			}
 
 			if (idTessera != rata.getIdTessera() || anno != rata.getNrAnno()) {
+				
 				setIncassoPrevisto(rata.getImRata() + getIncassoPrevisto());
 			}
 			idTessera = rata.getIdTessera();

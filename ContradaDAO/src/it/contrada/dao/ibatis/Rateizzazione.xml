@@ -160,7 +160,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 
 		<if test="annoDa !=null and annoA!=null">
-			AND R.nr_ANNO BETWEEN #{annoDa} and #{annoA}
+			AND R.nr_ANNO &gt; #{annoDa} and R.NR.ANNO &lt; #{annoA}
 		</if>
 		
 
