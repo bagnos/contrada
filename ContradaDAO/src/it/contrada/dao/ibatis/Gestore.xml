@@ -10,6 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		note, a.tx_mail as mail, a.tx_cell as cell
 		FROM ${database.schema}GESTORE g, ${database.schema}ANAGRAFICA a
 		WHERE A.ID_ANAGRAFICA=G.ID_GESTORE
+		
 
 	</select>
 	

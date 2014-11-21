@@ -121,6 +121,13 @@
 									</f:facet>
 									<ice:outputText value="#{anagrafica.idAnagrafica}" />
 								</ice:column>
+								
+								<ice:column id="columnFam">
+									<f:facet name="header">
+										<ice:outputText value="Nr. Famiglia"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{anagrafica.idFamiglia}" />
+								</ice:column>
 
 								<ice:column id="column3">
 									<f:facet name="header">

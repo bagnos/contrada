@@ -313,7 +313,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</choose>
 			<!-- AND (T.FG_ATTIVA='1' OR T.FG_ATTIVA IS NULL)-->
 		</where>
+		<if test="order=='fam'">
+		order by a.id_famiglia
+		</if>
+		<if test="order==null">
 		order by a.tx_cognome,a.tx_nome
+		</if>
+		
 
 	</select>
 

@@ -95,8 +95,9 @@ public class AnagrafeDAO extends SqlSessionDaoSupport implements IAnagrafeDAO {
 	public List<AnagraficaDTO> getAnagraficaByGestore(int idGestore)
 			throws Exception {
 		// TODO Auto-generated method stub
-		HashMap<String,Integer> map = new HashMap<String,Integer>();
+		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("idGestore", idGestore);
+		map.put("order", "fam");
 		return getSqlSessionTemplate().selectList(
 				"it.contrada.anagrafica.queries.getAnagrafica", map);
 	}
