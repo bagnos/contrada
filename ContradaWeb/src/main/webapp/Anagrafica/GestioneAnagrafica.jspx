@@ -502,6 +502,20 @@
 											style="width: 86px" />
 									</ice:panelGrid>
 								</ice:column>
+								
+								
+								<ice:column id="column10">
+									<f:facet name="header">
+										<ice:outputText value="Incassato"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{tessera.quotaIncassata}"
+										converter="ImportoConverter"
+										/>
+								</ice:column>
+								
+								
+								
+								
 								<ice:column id="modifica" rendered="#{tessera.modificata==true}">
 
 									<ice:panelGrid columns="4" width="100%"

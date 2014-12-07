@@ -92,6 +92,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<id property="fgAttiva" column="FG_ATTIVA" />
 			<id property="idTipoCarica" column="ID_TIPO_CARICA" />
 			<id property="dsTipoCarica" column="DS_TIPO_CARICA" />
+			<id property="quotaIncassata" column="imIncassato" />
+			
 		</collection>
 
 
@@ -143,7 +145,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				</foreach>
 			</if>
 		</where>
-		ORDER BY intestatarioPrinc		 
+		ORDER BY intestatarioPrinc		  
 	</select>
 
 
@@ -151,8 +153,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		parameterType="java.util.HashMap">
 		SELECT A.TX_NOME as nome,
 		A.ID_ANAGRAFICA as idAnagrafica,
-		A.ID_GESTORE
-		AS idGestore,
+		A.ID_GESTORE AS idGestore,
+		G.DS_GESTORE as dsGestore,
 		A.TX_COGNOME as cognome,
 		concat(A.TX_COGNOME,' ',A.TX_NOME) as intestatario,
 		A.TX_SESSO as sesso,
@@ -201,6 +203,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		T.ID_RID AS idRid,
 		T.FG_ATTIVA,
 		T.ID_TIPO_CARICA,
+			
+			INCASSO.imIncassato as imIncassato,	
+			
 		TCAR.DS_TIPO_CARICA,
 		RID.TX_INTESTATARIO,
 		RID.CD_FISC AS cdFiscRid,
@@ -277,8 +282,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		ON
 		TCAR.ID_TIPO_CARICA=T.ID_TIPO_CARICA
 		LEFT JOIN
-		${database.schema}GESTORE G
+		(
+		SELECT G1.ID_GESTORE,CONCAT(A1.TX_COGNOME,' ',A1.TX_NOME) AS DS_GESTORE
+		FROM ${database.schema}GESTORE G1,${database.schema}ANAGRAFICA A1
+		WHERE G1.ID_GESTORE=A1.ID_ANAGRAFICA) G
 		ON G.ID_GESTORE=A.ID_GESTORE
+			
+		LEFT JOIN
+		(	
+		 SELECT T1.ID_TESSERA, coalesce(SUM(IM_RATA),0) AS imIncassato 
+		 FROM ${database.schema}RATEIZZAZIONE R1,${database.schema}TESSERA T1
+		 WHERE				
+		 T1.ID_TESSERA=R1.ID_TESSERA
+		 AND NR_ANNO=year(current_date)
+		 <if test="cdAnag != null">
+		 AND T1.ID_ANAGRAFICA=#{cdAnag}
+		 </if>
+		 group by t1.id_tessera	
+		) INCASSO
+		ON INCASSO.ID_TESSERA=T.ID_TESSERA
+		
+	
 		<where>
 			<choose>
 				<when test="cdAnag != null">

@@ -34,7 +34,6 @@ public class AnagraficaDTO implements Serializable {
 	private Integer comuneResidenza;
 	private List<TesseraDTO> tessere;
 	
-
 	private RidDTO rid;
 	private String dsStrada;
 	private String dsLocalita;
