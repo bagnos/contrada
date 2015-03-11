@@ -245,6 +245,11 @@
   <managed-bean-class>it.contrada.backingbeans.pagecodes.ListaFazzoletti</managed-bean-class>
   <managed-bean-scope>request</managed-bean-scope>
  </managed-bean>
+  <managed-bean>
+  <managed-bean-name>listaRitiroTessere</managed-bean-name>
+  <managed-bean-class>it.contrada.backingbeans.pagecodes.ListaRitiroTessere</managed-bean-class>
+  <managed-bean-scope>request</managed-bean-scope>
+ </managed-bean>
  <managed-bean>
   <managed-bean-name>inserimentoRicetta</managed-bean-name>
   <managed-bean-class>it.contrada.backingbeans.reversecooking.pagecodes.InserimentoRicetta</managed-bean-class>

@@ -70,4 +70,7 @@ public interface IRicercaAnagrafica {
 	
 	public List<AnagraficaDTO> ricercaAnagrafichePerGestore(int idGestore)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante;
+	
+	public List<AnagraficaDTO> elencoRitiroTessere()
+			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante;
 }

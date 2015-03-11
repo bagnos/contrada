@@ -274,6 +274,9 @@ margin-top: 10px;">
 						<ice:menuItem id="ListaFazzoletti" value="Lista Fazzoletti"
 							onclick="loadIFrame('./Anagrafica/ListaFazzoletti.iface'); ">
 						</ice:menuItem>
+						<ice:menuItem id="ListaRitiroTessere" value="Lista Ritiro Tessere"
+							onclick="loadIFrame('./Anagrafica/ListaRitiroTessere.iface'); ">
+						</ice:menuItem>
 					</ice:menuItem>
 
 

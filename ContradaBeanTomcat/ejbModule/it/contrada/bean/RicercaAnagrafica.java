@@ -394,6 +394,19 @@ public class RicercaAnagrafica implements IRicercaAnagrafica {
 
 	}
 
+	public List<AnagraficaDTO> elencoRitiroTessere()
+			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
+		// TODO Auto-generated method stub
+		try {
+			return anagDao.getRitiroTessere();
+		}
+
+		catch (Exception ex) {
+			log.error(ex);
+			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
+		}
+	}
+
 	
 
 }

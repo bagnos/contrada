@@ -91,7 +91,7 @@
 							rendered="#{ricercaAnagPerResidenzaView.visibleAnagrafiche}">
 
 							<div style="overflow-y:hidden;margin-top:5px;">
-								<ice:dataExporter for="anagrafiche" includeColumns="1,2,3,4,5,6,7"
+								<ice:dataExporter for="anagrafiche" includeColumns="1,2,3,4,5,6,7,8"
 									style="float:left !important;margin-right:10px" image="#{styleBean.imgExcel}"
 									label="#{styleBean.labelExcel}" type="excel"
 									ignorePagination="true" />

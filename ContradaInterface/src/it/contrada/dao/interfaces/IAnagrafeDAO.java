@@ -33,6 +33,7 @@ public interface IAnagrafeDAO {
 	public List<AnagraficaDTO> getPagantiAnnoPrecedente(int anno,int tipoTessera) throws Exception ;
 	public List<AnagraficaDTO> getVotanti(int idTipoTessera,Date dtElezione,int etaMin,int annoDa) throws Exception ;
 	public List<AnagraficaDTO> getFazzoletti(int annoPagamentoDa) throws Exception ;
+	public List<AnagraficaDTO> getRitiroTessere() throws Exception ;
 	public List<AnagraficaDTO> getAnagraficheConPrincipale(List<Integer> statiAnagrafica) throws Exception ;
 	
 }

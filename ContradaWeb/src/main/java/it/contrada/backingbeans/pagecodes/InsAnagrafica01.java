@@ -103,8 +103,9 @@ public class InsAnagrafica01 extends BaseView {
 	private List<SelectItem> elencoTipoTessera_modifica;
 	private List<SelectItem> gestoriItem;
 	private String ricFamByCognome;
-	private Date dtFazzoletto;
+	private Date dtFazzoletto;	
 	List<CaricaTesseraDTO> caricheTessereDTO;
+	private Date dtRitiroTessera;
 
 	/*
 	 * private boolean eliminaTessere;
@@ -114,6 +115,15 @@ public class InsAnagrafica01 extends BaseView {
 	 * public void setEliminaTessere(boolean eliminaTessere) {
 	 * this.eliminaTessere = eliminaTessere; }
 	 */
+
+	public Date getDtRitiroTessera() {
+		return dtRitiroTessera;
+	}
+
+	public void setDtRitiroTessera(Date dtRitiroTessera) {
+		this.dtRitiroTessera = dtRitiroTessera;
+		anagrafica.setDtRitiroTessera(ConverterTypes.valueOf(dtRitiroTessera));
+	}
 
 	public Date getDtFazzoletto() {
 		return dtFazzoletto;
@@ -480,6 +490,7 @@ public class InsAnagrafica01 extends BaseView {
 
 			dtNascita = ConverterTypes.valueOf(anagrafica.getDtNascita());
 			dtFazzoletto = ConverterTypes.valueOf(anagrafica.getDtFazzoletto());
+			dtRitiroTessera = ConverterTypes.valueOf(anagrafica.getDtRitiroTessera());
 
 			if (anagrafica.getIdLocalita() == null) {
 				anagrafica.setIdLocalita(-1);

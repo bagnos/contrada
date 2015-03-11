@@ -131,6 +131,11 @@ public class RicercaAnagraficaBD {
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 		return ricercaAnagrafica.elencoFazzoletti(annoPagamentoDa);
 	}
+	
+	public static List<AnagraficaDTO> elencoRitiroTessere()
+			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
+		return ricercaAnagrafica.elencoRitiroTessere();
+	}
 
 	public static List<AnagraficaDTO> ricercaAnagraficheConPrincipale(
 			List<Integer> stato) throws ContradaExceptionBloccante,

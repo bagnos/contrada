@@ -536,7 +536,7 @@
 						</ice:panelTab>
 
 
-						<ice:panelTab id="tab5" label="Economato">
+						<ice:panelTab id="tab5" label="Consegne">
 							<!-- INGREDIENTI -->
 							<ice:panelGroup styleClass="elementContainer">
 								<ice:outputText value="Data Fazzoletto" styleClass="label140"></ice:outputText>
@@ -552,6 +552,23 @@
 								</ice:panelGroup>
 
 							</ice:panelGroup>
+							
+							<ice:panelGroup styleClass="elementContainer">
+								<ice:outputText value="Data Ritiro Tessera" styleClass="label140"></ice:outputText>
+								<ice:panelGroup style="display:inline-block">
+									<ice:selectInputDate id="dtRitiroTessera" renderAsPopup="true"
+										partialSubmit="false" popupDateFormat="dd/MM/yyyy"
+										required="false" value="#{insAnagrafica01.dtRitiroTessera}"
+										tabindex="5" style="width: 262px">
+										<f:convertDateTime type="date"
+											timeZone="#{styleBean.generalTimeZone}" />
+
+									</ice:selectInputDate>
+								</ice:panelGroup>
+
+							</ice:panelGroup>
+							
+							
 						</ice:panelTab>
 
 

@@ -9,6 +9,7 @@ import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -342,6 +343,15 @@ public class AnagrafeDAO extends SqlSessionDaoSupport implements IAnagrafeDAO {
 
 		return getSqlSessionTemplate().selectList(
 				"it.contrada.anagrafica.queries.getAnagraficheConPrincipale", parms);
+	}
+
+	@Override
+	public List<AnagraficaDTO> getRitiroTessere() throws Exception {
+		// TODO Auto-generated method stub
+
+		return getSqlSessionTemplate().selectList(
+				"it.contrada.anagrafica.queries.getConsegne");
+
 	}
 
 	

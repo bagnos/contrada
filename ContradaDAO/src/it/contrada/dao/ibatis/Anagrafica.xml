@@ -52,6 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="statoNascita" column="CD_ISO_STATO" />
 		<result property="statoResidenza" column="CD_ISO_STATO_RES" />
 		<result property="dtFazzoletto" column="DT_FAZZOLETTO" />
+		<result property="dtRitiroTessera" column="DT_RITIRO_TESSERA" />
 		<result property="idStatoAnagrafica" column="ID_STATO_ANAGRAFICA" />
 		<result property="tipoStatoAnagrafica" column="DS_STATO_ANAGRAFICA" />
 		<result property="capoFamiglia" column="capoFamiglia" />
@@ -158,22 +159,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		A.TX_COGNOME as cognome,
 		concat(A.TX_COGNOME,' ',A.TX_NOME) as intestatario,
 		A.TX_SESSO as sesso,
-		A.DT_NASCITA as
-		dtNascita,
+		A.DT_NASCITA as	dtNascita,
 		A.DT_MORTE asdtMorte,
 		A.DT_CESSAZIONE AS dtCessazione,
 		A.DT_INSERIMENTO AS dtInserimento,
 		A.CD_FISC as cdFiscale,
 		A.ID_FAMIGLIA as idFamiglia,
 		A.DT_ULT_CENS as dtUltCens,
-		A.TX_NOTE as
-		note,
+		A.TX_NOTE as note,
 		A.CD_PROVINCIA_NASCITA as provinciaNascita,
-		A.CD_COMUNE_NASCITA as
-		comuneNascita,
+		A.CD_COMUNE_NASCITA as comuneNascita,
 		A.ID_STRADA AS idStrada,
 		A.NR_CIVICO AS nrCivico,
 		A.DT_FAZZOLETTO,
+		A.DT_RITIRO_TESSERA,
 		A.ID_STATO_ANAGRAFICA,
 		TSA.DS_STATO_ANAGRAFICA,
 		A.TX_MAIL AS txMail,
@@ -446,6 +445,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		=#{dtNascita},
 		DT_FAZZOLETTO
 		=#{dtFazzoletto},
+		DT_RITIRO_TESSERA
+		=#{dtRitiroTessera},
 		TX_NOTE = #{note},
 		NR_CIVICO=#{nrCivico},
 		ID_STRADA =
@@ -468,7 +469,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${database.schema}ANAGRAFICA
 		(TX_NOME,TX_COGNOME,TX_SESSO,
 		DT_NASCITA,DT_MORTE,CD_FISC,ID_FAMIGLIA,DT_ULT_CENS,
-		TX_NOTE,NR_CIVICO,ID_STRADA,CD_PROVINCIA_NASCITA,CD_COMUNE_NASCITA,DT_FAZZOLETTO,ID_GESTORE,TX_MAIL,TX_CELL,TX_FISSO,ID_OPERAZIONE,DT_INSERIMENTO)
+		TX_NOTE,NR_CIVICO,ID_STRADA,CD_PROVINCIA_NASCITA,CD_COMUNE_NASCITA,DT_FAZZOLETTO,ID_GESTORE,TX_MAIL,TX_CELL,TX_FISSO,ID_OPERAZIONE,DT_INSERIMENTO,DT_RITIRO_TESSERA)
 		VALUES(UPPER(#{nome}),
 		UPPER(#{cognome}),
 		#{sesso},
@@ -488,8 +489,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		#{txCell},
 		#{txFisso},
 		#{operazione.idOperazione},
-		CURRENT_DATE
-
+		CURRENT_DATE,
+		#{dtRitiroTessera}
 		)
 	</insert>
 
@@ -704,7 +705,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		upper(IP.CAPPROVINCIA) AS capProvincia,
 		COALESCE(CAST(A.DT_NASCITA AS CHAR),'N.P.') AS dtNascita,
 		IF(A.DT_FAZZOLETTO = '1111-11-11', null, A.DT_FAZZOLETTO) AS dtFazzoletto,
-
+		A.DT_RITIRO_TESSERA as dtRitiroTessera,
 		upper(trim(coalesce(a.tx_mail,''))) as txMail,
 		trim(coalesce(a.tx_cell,'')) as txCell,
 		trim(coalesce(a.tx_fisso,'')) as txfisso,
@@ -739,6 +740,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </if>
 		and ts.id_tipo_tessera=#{idTipoTessera}
 		and a.id_stato_anagrafica=1
+		order by intestatario;
+	</select>
+	
+	
+	<select id="getConsegne" resultType="it.contrada.dto.AnagraficaDTO"
+		parameterType="java.util.HashMap">
+		select
+		a.id_anagrafica as idAnagrafica,
+		a.id_famiglia as idFamiglia,
+		concat(a.tx_cognome,' ',a.tx_nome) as intestatario,
+		IF(A.DT_FAZZOLETTO = '1111-11-11', null, A.DT_FAZZOLETTO) AS dtFazzoletto,
+		A.DT_RITIRO_TESSERA as dtRitiroTessera,
+		upper(trim(coalesce(a.tx_mail,''))) as txMail,
+		trim(coalesce(a.tx_cell,'')) as txCell,
+		trim(coalesce(a.tx_fisso,'')) as txfisso
+		from ${database.schema}anagrafica a
 		order by intestatario;
 	</select>
 
