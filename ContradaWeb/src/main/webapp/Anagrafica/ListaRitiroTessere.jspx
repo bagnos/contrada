@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component">
+	<jsp:directive.page contentType="text/html;charset=utf-8" />
+	<f:view>
+		<ice:portlet>
+
+			<ice:form>
+				<ice:outputStyle href="#{styleBean.activeCss}" />
+
+				<ice:panelGroup>
+					<ice:panelGroup styleClass="portletContainer">
+						<ice:outputText value="Lista Ritiro Tessere"
+							styleClass="labelPortletContainer"></ice:outputText>
+					</ice:panelGroup>
+					<ice:panelGroup style="margin-bottom:10px;">
+						<ice:outputText value="Lista Ritiro Tessere"
+							style="font-style: italic;font-weight: bold;"></ice:outputText>
+					</ice:panelGroup>
+					<ice:panelGroup rendered="#{listaRitiroTessere.visibleAnagrafiche}">
+						<ice:panelGrid columns="3">
+
+							<ice:dataExporter for="tessere" image="#{styleBean.imgExcel}"
+								label="#{styleBean.labelExcel}" type="excel"
+								ignorePagination="true" />
+							<ice:panelGroup>
+								<ice:outputText style="margin-left:10px"
+									value="Nr. Anagrafiche:" />
+								<ice:outputText value="#{listaRitiroTessere.nrAnagrafiche}" />
+								<ice:outputText style="margin-left:10px"
+									value="Nr. Anagrafiche Ritirate:" />
+								<ice:outputText value="#{listaRitiroTessere.nrAnagraficheRitirate}" />
+								<ice:outputText style="margin-left:10px"
+									value="Nr. Anagrafiche da Ritirare:" />
+								<ice:outputText value="#{listaRitiroTessere.nrAnagrafiche-listaRitiroTessere.nrAnagraficheRitirate}" />
+							</ice:panelGroup>
+
+						</ice:panelGrid>
+
+						<ice:dataTable rows="20"
+							value="#{listaRitiroTessere.anags}" var="tessera" id="tessere">
+
+
+							<!-- 
+							<ice:column id="id causale">
+								<f:facet name="header">
+									<ice:outputText value="Id Anag."></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.idAnagrafica}" />
+							</ice:column>
+							 -->
+							<ice:column id="cognome">
+								<f:facet name="header">
+									<ice:outputText value="Intestatario"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.intestatario}" />
+							</ice:column>
+							<ice:column id="dataTessera">
+								<f:facet name="header">
+									<ice:outputText value="Data Ritiro"></ice:outputText>
+								</f:facet>
+								<ice:outputText value="#{tessera.dtRitiroTessera}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</ice:outputText>
+							</ice:column>
+
+						</ice:dataTable>
+						<ice:dataPaginator id="tabAnag" for="tessere" paginator="true"
+							fastStep="#{styleBean.fastStep}"
+							paginatorMaxPages="#{StyleBean.paginatorMaxPages}">
+							<f:facet name="first">
+								<ice:graphicImage url="#{styleBean.first}" style="border:none;"
+									title="First Page" />
+							</f:facet>
+
+							<f:facet name="last">
+								<ice:graphicImage url="#{styleBean.last}" style="border:none;"
+									title="Last Page" />
+							</f:facet>
+							<f:facet name="previous">
+								<ice:graphicImage url="#{styleBean.previous}"
+									style="border:none;" title="Previous Page" />
+							</f:facet>
+							<f:facet name="fastforward">
+								<ice:graphicImage url="#{styleBean.fastforward}"
+									style="border:none;" title="Fast Forward" />
+							</f:facet>
+							<f:facet name="fastrewind">
+								<ice:graphicImage url="#{styleBean.fastrewind}"
+									style="border:none;" title="Fast Backwards" />
+							</f:facet>
+							<f:facet name="next">
+								<ice:graphicImage url="#{styleBean.next}" style="border:none;"
+									title="Next Page" />
+							</f:facet>
+
+
+						</ice:dataPaginator>
+					</ice:panelGroup>
+
+				</ice:panelGroup>
+
+
+			</ice:form>
+		</ice:portlet>
+	</f:view>
+
+</jsp:root>
