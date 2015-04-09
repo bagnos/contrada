@@ -1,6 +1,7 @@
 package it.contrada.interfaces;
 
 import it.contrada.dominio.dto.TipoStatoAnagraficaDTO;
+import it.contrada.dto.AnagMaxMinDTO;
 import it.contrada.dto.AnagraficaDTO;
 import it.contrada.dto.ParmResidenzaDTO;
 import it.contrada.dto.RicercaFasceEtaDTO;
@@ -73,4 +74,8 @@ public interface IRicercaAnagrafica {
 	
 	public List<AnagraficaDTO> elencoRitiroTessere()
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante;
+	
+	public AnagMaxMinDTO getAnagraficheMaxMin()
+			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante;
+	
 }

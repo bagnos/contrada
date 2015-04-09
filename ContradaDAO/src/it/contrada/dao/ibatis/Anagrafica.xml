@@ -756,7 +756,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		trim(coalesce(a.tx_cell,'')) as txCell,
 		trim(coalesce(a.tx_fisso,'')) as txfisso
 		from ${database.schema}anagrafica a
+		WHERE A.id_stato_anagrafica=1
 		order by intestatario;
+	</select>
+	
+	<select id="getMaxMinAnag" resultType="it.contrada.dto.AnagMaxMinDTO"
+		parameterType="java.util.HashMap">
+		select max(A.id_Anagrafica) as max,min(A.id_Anagrafica) as min
+		from ${database.schema}anagrafica a
+		WHERE a.id_stato_anagrafica=1
 	</select>
 
 </mapper>

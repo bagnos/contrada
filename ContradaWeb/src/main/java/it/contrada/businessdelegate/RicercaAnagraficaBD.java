@@ -2,6 +2,7 @@ package it.contrada.businessdelegate;
 
 import it.contrada.bean.factory.ContradaPojoFactory;
 import it.contrada.dominio.dto.TipoStatoAnagraficaDTO;
+import it.contrada.dto.AnagMaxMinDTO;
 import it.contrada.dto.AnagraficaDTO;
 import it.contrada.dto.ParmResidenzaDTO;
 import it.contrada.dto.RicercaFasceEtaDTO;
@@ -146,6 +147,11 @@ public class RicercaAnagraficaBD {
 	public static List<AnagraficaDTO> ricercaAnagrafichePerGestore(int idGestore)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 		return ricercaAnagrafica.ricercaAnagrafichePerGestore(idGestore);
+	}
+	
+	public static AnagMaxMinDTO getAnagraficheMaxMin()
+			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
+		return ricercaAnagrafica.getAnagraficheMaxMin();
 	}
 
 }

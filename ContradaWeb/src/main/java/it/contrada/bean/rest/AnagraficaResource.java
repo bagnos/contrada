@@ -1,6 +1,7 @@
 package it.contrada.bean.rest;
 
 import it.contrada.businessdelegate.RicercaAnagraficaBD;
+import it.contrada.dto.AnagMaxMinDTO;
 import it.contrada.dto.AnagraficaDTO;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
@@ -38,6 +39,18 @@ public class AnagraficaResource {
 		
 			AnagraficaDTO anag = RicercaAnagraficaBD
 					.ricercaAnagrafica(id);
+			return anag;
+		
+	}
+	
+	@GET
+	@Path("/maxmin")
+	public AnagMaxMinDTO getAnagraficaMaxMin(
+			) throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
+
+		
+		AnagMaxMinDTO anag = RicercaAnagraficaBD.getAnagraficheMaxMin();
+					
 			return anag;
 		
 	}

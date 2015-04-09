@@ -1,6 +1,7 @@
 package it.contrada.dao.interfaces;
 
 import it.contrada.dominio.dto.TipoStatoAnagraficaDTO;
+import it.contrada.dto.AnagMaxMinDTO;
 import it.contrada.dto.AnagraficaDTO;
 import it.contrada.dto.ParmResidenzaDTO;
 import it.contrada.dto.RicercaFasceEtaDTO;
@@ -35,5 +36,6 @@ public interface IAnagrafeDAO {
 	public List<AnagraficaDTO> getFazzoletti(int annoPagamentoDa) throws Exception ;
 	public List<AnagraficaDTO> getRitiroTessere() throws Exception ;
 	public List<AnagraficaDTO> getAnagraficheConPrincipale(List<Integer> statiAnagrafica) throws Exception ;
+	public AnagMaxMinDTO getAnagraficheMaxMin() throws Exception ;
 	
 }

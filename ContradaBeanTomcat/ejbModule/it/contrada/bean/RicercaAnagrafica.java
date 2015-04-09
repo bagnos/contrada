@@ -3,6 +3,7 @@ package it.contrada.bean;
 import it.contrada.dao.AnagrafeDAO;
 import it.contrada.dao.interfaces.IAnagrafeDAO;
 import it.contrada.dominio.dto.TipoStatoAnagraficaDTO;
+import it.contrada.dto.AnagMaxMinDTO;
 import it.contrada.dto.AnagraficaDTO;
 import it.contrada.dto.ParmResidenzaDTO;
 import it.contrada.dto.RicercaFasceEtaDTO;
@@ -405,6 +406,20 @@ public class RicercaAnagrafica implements IRicercaAnagrafica {
 			log.error(ex);
 			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
 		}
+	}
+
+	public AnagMaxMinDTO getAnagraficheMaxMin()
+			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
+		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub
+				try {
+					return anagDao.getAnagraficheMaxMin();
+				}
+
+				catch (Exception ex) {
+					log.error(ex);
+					throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
+				}
 	}
 
 	

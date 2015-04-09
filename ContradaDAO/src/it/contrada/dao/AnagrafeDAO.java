@@ -2,6 +2,7 @@ package it.contrada.dao;
 
 import it.contrada.dao.interfaces.IAnagrafeDAO;
 import it.contrada.dominio.dto.TipoStatoAnagraficaDTO;
+import it.contrada.dto.AnagMaxMinDTO;
 import it.contrada.dto.AnagraficaDTO;
 import it.contrada.dto.ParmResidenzaDTO;
 import it.contrada.dto.RicercaFasceEtaDTO;
@@ -352,6 +353,15 @@ public class AnagrafeDAO extends SqlSessionDaoSupport implements IAnagrafeDAO {
 		return getSqlSessionTemplate().selectList(
 				"it.contrada.anagrafica.queries.getConsegne");
 
+	}
+
+	@Override
+	public AnagMaxMinDTO getAnagraficheMaxMin() throws Exception {
+		// TODO Auto-generated method stub
+		return (AnagMaxMinDTO) getSqlSessionTemplate().selectOne(
+				"it.contrada.anagrafica.queries.getMaxMinAnag");
+		
+	
 	}
 
 	
