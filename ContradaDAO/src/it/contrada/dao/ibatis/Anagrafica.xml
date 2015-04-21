@@ -327,6 +327,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				</when>
 				<when test="idGestore!=null">
 					AND A.ID_GESTORE=#{idGestore}
+					AND A.ID_STATO_ANAGRAFICA=1
 				</when>
 				
 				<otherwise>

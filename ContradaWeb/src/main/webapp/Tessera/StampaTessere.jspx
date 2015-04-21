@@ -17,8 +17,7 @@
 							styleClass="labelPortletContainer"></ice:outputText>
 					</ice:panelGroup>
 					<!-- INFO MESSAGE -->
-					<nicchio:serviceInfoMessage
-						bbean="#{stampaTesseraView}"/>
+					<nicchio:serviceInfoMessage bbean="#{stampaTesseraView}" />
 					<!-- ANNO -->
 					<ice:panelGroup styleClass="elementContainer">
 						<ice:outputText value="#{msgs.anno}" styleClass="label140"></ice:outputText>
@@ -206,7 +205,12 @@
 
 
 
-
+						<ice:column id="idAnag">
+							<f:facet name="header">
+								<ice:outputText value="Id"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{tessera.idAnagrafica}" />
+						</ice:column>
 						<ice:column id="idFamiglia">
 							<f:facet name="header">
 								<ice:outputText value="Famiglia"></ice:outputText>

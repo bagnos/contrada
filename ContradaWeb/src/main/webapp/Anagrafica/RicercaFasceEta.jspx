@@ -116,7 +116,8 @@
 									<ice:outputText value="Data Nascita" />
 								</f:facet>
 								<ice:outputText value="#{anagrafica.dtNascita}">
-									<f:convertDateTime pattern="dd/MM/yyyy" />
+									<f:convertDateTime pattern="dd/MM/yyyy"  timeZone="#{styleBean.generalTimeZone}" />
+									
 								</ice:outputText>
 							</ice:column>
 							

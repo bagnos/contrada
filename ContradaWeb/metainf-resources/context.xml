@@ -26,11 +26,11 @@
 <Resource name="jdbc/contrada" removeAbandoned="true"
 		logAbandoned="true" auth="Container" type="javax.sql.DataSource"
 		maxActive="10" maxIdle="5" validationQuery="SELECT 1" validationInterval="30000" maxWait="10000" username="root" password="root"
-		driverClassName="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/contrada" />
+		driverClassName="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/prote923_contrada" />
 
 	<Realm className="org.apache.catalina.realm.DataSourceRealm"
-		dataSourceName="jdbc/contrada" userTable="contrada.utente"
-		userNameCol="tx_user" userCredCol="tx_psw" userRoleTable="contrada.abilitazione"
+		dataSourceName="jdbc/contrada" userTable="prote923_contrada.utente"
+		userNameCol="tx_user" userCredCol="tx_psw" userRoleTable="prote923_contrada.abilitazione"
 		roleNameCol="tx_ruolo" localDataSource="true" />
 	
 	<!-- 
