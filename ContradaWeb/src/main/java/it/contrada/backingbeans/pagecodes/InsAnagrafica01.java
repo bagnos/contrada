@@ -106,6 +106,7 @@ public class InsAnagrafica01 extends BaseView {
 	private Date dtFazzoletto;	
 	List<CaricaTesseraDTO> caricheTessereDTO;
 	private Date dtRitiroTessera;
+	private List<GestoreDTO> gestori;
 
 	/*
 	 * private boolean eliminaTessere;
@@ -1960,6 +1961,23 @@ public class InsAnagrafica01 extends BaseView {
 			messaggio = Errori.TESSERE_MEMORIA;
 			return false;
 		}
+		
+		//verifica la corrispondenza tra esattore e gestore		
+		if (getAnagrafica().getIdGestore()!=null)
+		{
+			for (TesseraDTO tess: getAnagrafica().getTessere())
+			{
+				if (tess.getIdTipoEsattore()!=null && tess.getIdTipoEsattore().intValue()!=getAnagrafica().getIdGestore())
+				{
+					messaggio="Gestore ed Esattore devono coincidere con la stessa persona";
+					return false;
+				}
+			}
+			
+		}
+		
+		
+		
 
 		return true;
 
@@ -2440,7 +2458,7 @@ public class InsAnagrafica01 extends BaseView {
 	private void iniziallizzaGestori() throws ContradaExceptionBloccante,
 			ContradaExceptionNonBloccante {
 
-		List<GestoreDTO> gestori = GestioneGestoreBD.elencaGestori();
+		gestori = GestioneGestoreBD.elencaGestori();
 		gestoriItem = new ArrayList<SelectItem>();
 		gestoriItem.add(new SelectItem(-1, "--- selezionare un gestore ---"));
 		for (GestoreDTO gestore : gestori) {
