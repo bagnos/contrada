@@ -598,7 +598,14 @@ public class GestioneFlusso implements IGestioneFlusso {
 
 					// INSERISCO LE ANGRAFICA ATTACCATE ALLA DISPOSIZIONE
 
+					log.info("Elaboro rid "+idRid);
 					RidDTO ridDTO = ridDAO.getRid(idRid.intValue());
+					if (ridDTO==null)
+					{
+						log.warn("idrid non presente con membri:"+idRid);
+						ridDTO=ridDAO.getSchedaRid(idRid.intValue());
+					}
+					
 					disp.setIdStatoRid(ridDTO.getTipoStatoRid());
 					disp.setMembri(ridDTO.getMembri());
 					disp.setAbi(ridDTO.getAbi().toString());
@@ -611,6 +618,8 @@ public class GestioneFlusso implements IGestioneFlusso {
 
 					dtValuta = new java.sql.Date(formatddMMyy.parse(
 							disp.getRec10().getDtScadenzaEffettiva()).getTime());
+					
+					log.info("Elaborato dt valuta");
 
 					// si aggiorna il record nel flusso di ricezione
 					dtEsito = flusso.getRecIR().getDtCreazioneFlusso().trim()
@@ -618,6 +627,8 @@ public class GestioneFlusso implements IGestioneFlusso {
 							: new Date(formatddMMyy.parse(
 									flusso.getRecIR().getDtCreazioneFlusso())
 									.getTime());
+					
+					log.info("Elaboro dtEsito");
 
 					note = String.format("%s, %s - %s", disp.getRec50()
 							.getSegmento2(), causale, dsCausale);
