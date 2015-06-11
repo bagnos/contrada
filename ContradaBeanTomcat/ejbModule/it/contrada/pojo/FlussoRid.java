@@ -274,7 +274,14 @@ public class FlussoRid {
 		rec17DTO.setNumeroProgressivo(String.format("%s", i));
 		rec17DTO.setCdIban(rid.getCdIban().trim().toUpperCase());
 		rec17DTO.setDtSottoscrizione("311213");
-		rec17DTO.setTipoSequenza("RCUR");
+		
+		if (rid.getNrMovimenti() > 1) {
+			rec17DTO.setTipoSequenza("RCUR");
+		} else {
+			// solo un movimento presente in Incasso_Rid con 50010 (quello
+			// appena inserito) quindi rappresenta prima disposizione per IBAN
+			rec17DTO.setTipoSequenza("FRST");
+		}
 
 		scriviRid.println(rec17DTO.toString());
 		;
@@ -297,10 +304,11 @@ public class FlussoRid {
 
 		rec16DTO.setNumeroProgressivo(String.format("%s", i));
 		rec16DTO.setCdIbanOrdinante(BaseUtil.formatIban(parms.getCdPaese(),
-				parms.getCheckDigit(), parms.getNrCin(), Integer.toString(parms.getCdAbi()),
+				parms.getCheckDigit(), parms.getNrCin(),
+				Integer.toString(parms.getCdAbi()),
 				Integer.toString(parms.getCdCab()), parms.getNrConto()));
 		rec16DTO.setIdCreditore(parms.getIdSeda());
-		
+
 		scriviRid.println(rec16DTO.toString());
 		;
 		/*

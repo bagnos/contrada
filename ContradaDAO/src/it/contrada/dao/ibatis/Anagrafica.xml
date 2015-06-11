@@ -203,7 +203,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		T.FG_ATTIVA,
 		T.ID_TIPO_CARICA,
 			
-			INCASSO.imIncassato as imIncassato,	
+		INCASSO.imIncassato as imIncassato,	
 			
 		TCAR.DS_TIPO_CARICA,
 		RID.TX_INTESTATARIO,
@@ -225,7 +225,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM
 		${database.schema}ANAGRAFICA A
 		left JOIN
-		INDIRIZZO_FAMIGLIA INF
+		${database.schema}INDIRIZZO_FAMIGLIA INF
 		ON INF.IDFAMIGLIA=A.ID_FAMIGLIA
 		JOIN
 		${database.schema}TIPO_STATO_ANAGRAFICA TSA
@@ -293,6 +293,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		 FROM ${database.schema}RATEIZZAZIONE R1,${database.schema}TESSERA T1
 		 WHERE				
 		 T1.ID_TESSERA=R1.ID_TESSERA
+		 AND R1.ID_TIPO_STATO_RATA=1
 		 AND NR_ANNO=year(current_date)
 		 <if test="cdAnag != null">
 		 AND T1.ID_ANAGRAFICA=#{cdAnag}

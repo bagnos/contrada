@@ -349,7 +349,7 @@ public class PdfReport {
 		File filePDF = xslXmlToHtml(xslFile, xmlTemp);
 
 		PrintFile pFile = new PrintFile();
-		String nomeFile = String.format("Distinta%s",
+		String nomeFile = String.format("Distinta%s.pdf",
 				formatDDMMYYYY.format(Calendar.getInstance().getTime()));
 		pFile.setNomeFile(nomeFile);
 		pFile.setFile(filePDF);

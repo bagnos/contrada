@@ -36,11 +36,15 @@ public class IncassoRidDTO implements Serializable{
 	private String cdPaese;;
 	private String cin;
 	private String checkDigit;
+	private int nrMovimenti;
 	
 	
-	
-	
-	
+	public int getNrMovimenti() {
+		return nrMovimenti;
+	}
+	public void setNrMovimenti(int nrMovimenti) {
+		this.nrMovimenti = nrMovimenti;
+	}
 	public String getCheckDigit() {
 		return checkDigit;
 	}

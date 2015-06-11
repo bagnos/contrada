@@ -135,8 +135,7 @@
 				</ice:panelGrid>
 				<ice:panelGroup>
 					<ice:panelGroup style="float:left;">
-					<ice:commandButton  type="reset" value="Reset"
-							 />
+					<ice:commandButton  value="Reset" partialSubmit="true" actionListener="#{preparaIncassiRid.resetOnClick}"/>
 						<ice:commandButton value="#{preparaIncassiRid.labelGeneraFlusso}"
 							actionListener="#{preparaIncassiRid.preparaOnClick}" />
 						<ice:commandButton value="Elimina" style="margin-left:10px"

@@ -74,7 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		as nrAnno,
 		FR.NR_MESE as
 		nrMese,
-		ID_RID as idRid,
+		IR.ID_RID as idRid,
 		TX_INTESTATARIO as
 		txIntestatario,
 		fr.DT_VALUTA as
@@ -95,7 +95,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		CD_PROV as cdProv,
 		FR.ID_TIPO_INCASSO_RID as idTipoIncassoRid,
 		TX_RIF_DEBITO as txRifDebito,
-		DS_CAUSALE AS dsCausaleRid
+		DS_CAUSALE AS dsCausaleRid,
+		seq.movimenti as nrMovimenti
 		FROM
 		${database.schema}incasso_rid IR
 		JOIN
@@ -114,6 +115,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		AND FR.NR_MESE= #{mese}
 		AND
 		FR.NR_ANNO= #{anno}
+		join (select IR.id_rid,IR.CD_IBAN,count(*) AS movimenti
+		from ${database.schema}incasso_rid ir,${database.schema}rid r
+		where ID_RID_ESITO='50010'
+		and r.id_rid=ir.ID_RID
+		and r.ID_STATO_RID=1       
+		group by IR.CD_IBAN,IR.id_rid) seq
+        on seq.cd_iban=ir.cd_iban
+        and seq.id_rid=ir.id_rid
 	</select>
 	<update id="aggiornaStatoPagatoRidInviati">
 		UPDATE ${database.schema}inncasso_rid

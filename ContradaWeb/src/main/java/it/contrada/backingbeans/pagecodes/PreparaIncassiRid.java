@@ -148,8 +148,17 @@ public class PreparaIncassiRid extends BaseView {
 
 	public PreparaIncassiRid() throws ContradaExceptionBloccante,
 			ContradaExceptionNonBloccante {
-		// TODO Auto-generated constructor stub
+		init();
+	}
+	
+	private void init() throws ContradaExceptionBloccante, ContradaExceptionNonBloccante
+	{
+		
 		int anno = GregorianCalendar.getInstance().get(Calendar.YEAR);
+		flusso=null;
+		rids=null;
+		disabledElimina=true;
+		
 		annoItem = new ArrayList<SelectItem>();
 		annoItem.add(new SelectItem(anno));
 		annoItem.add(new SelectItem(anno - 1));
@@ -170,6 +179,9 @@ public class PreparaIncassiRid extends BaseView {
 
 		setDtValuta(new java.util.Date(dtValuta.getTimeInMillis()));
 		hideInfoMessage();
+		note=null;
+		
+		
 	}
 
 	public void incassoRidOnChange(ValueChangeEvent e)
@@ -197,6 +209,13 @@ public class PreparaIncassiRid extends BaseView {
 			item = new SelectItem(mese.getIdMese(), mese.getDsMese());
 			meseItem.add(item);
 		}
+	}
+	
+	
+	
+	public void resetOnClick(ActionEvent e) throws ContradaExceptionBloccante, ContradaExceptionNonBloccante
+	{
+		init();
 	}
 
 	public void preparaOnClick(ActionEvent e)
