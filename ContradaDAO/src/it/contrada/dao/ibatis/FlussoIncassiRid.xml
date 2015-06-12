@@ -83,9 +83,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		IM_RICHIESTO
 		as imRichiesto,
 		IR.CD_IBAN as cdIban,
-		CD_ABI as cdAbi,
-		CD_CAB as cdCab,
-		NR_CONTO as nrConto,
+		IR.CD_ABI as cdAbi,
+		IR.CD_CAB as cdCab,
+		IR.NR_CONTO as nrConto,
 		ID_RID_ESITO as idRidEsito,
 		CD_FISC as cdFisc,
 		TX_INDIRIZZO as
@@ -115,13 +115,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		AND FR.NR_MESE= #{mese}
 		AND
 		FR.NR_ANNO= #{anno}
-		join (select IR.id_rid,IR.CD_IBAN,count(*) AS movimenti
+		join (SELECT IR.id_rid,IR.CD_ABI,IR.CD_CAB,IR.NR_CONTO,count(*) AS movimenti
 		from ${database.schema}incasso_rid ir,${database.schema}rid r
 		where ID_RID_ESITO='50010'
 		and r.id_rid=ir.ID_RID
 		and r.ID_STATO_RID=1       
-		group by IR.CD_IBAN,IR.id_rid) seq
-        on seq.cd_iban=ir.cd_iban
+		group by IR.CD_ABI,IR.CD_CAB,IR.NR_CONTO,IR.id_rid) seq
+        on seq.cd_abi=ir.cd_abi
+        and seq.cd_cab=ir.cd_cab
+        and seq.nr_conto=ir.NR_CONTO
         and seq.id_rid=ir.id_rid
 	</select>
 	<update id="aggiornaStatoPagatoRidInviati">
