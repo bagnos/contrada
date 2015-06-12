@@ -116,11 +116,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		AND
 		FR.NR_ANNO= #{anno}
 		join (SELECT IR.id_rid,IR.CD_ABI,IR.CD_CAB,IR.NR_CONTO,count(*) AS movimenti
-		from ${database.schema}incasso_rid ir,${database.schema}rid r
-		where ID_RID_ESITO='50010'
-		and r.id_rid=ir.ID_RID
-		and r.ID_STATO_RID=1       
-		group by IR.CD_ABI,IR.CD_CAB,IR.NR_CONTO,IR.id_rid) seq
+				from ${database.schema}incasso_rid ir,${database.schema}rid r
+				where ID_RID_ESITO<![CDATA[ <> ]]>'50007'
+				and r.id_rid=ir.ID_RID
+				and r.ID_STATO_RID=1    
+        		group by IR.CD_ABI,IR.CD_CAB,IR.NR_CONTO,IR.id_rid) seq
         on seq.cd_abi=ir.cd_abi
         and seq.cd_cab=ir.cd_cab
         and seq.nr_conto=ir.NR_CONTO
