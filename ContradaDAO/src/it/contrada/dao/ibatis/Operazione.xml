@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		TX_OPERAZIONE as dsOperazione
 		FROM ${database.schema}operazione
 		order by tsOperazione desc
-		LIMIT 100;
+		LIMIT 56;
 </select>
 
 </mapper>

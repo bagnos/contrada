@@ -534,7 +534,7 @@ public class GestioneFlusso implements IGestioneFlusso {
 
 			String note;
 			TipoStatoRid tipoStatoRid;
-			int rowRids;
+			int rowRids = 0;
 			int rowsAgg;
 			java.sql.Date dtValuta;
 
@@ -598,14 +598,13 @@ public class GestioneFlusso implements IGestioneFlusso {
 
 					// INSERISCO LE ANGRAFICA ATTACCATE ALLA DISPOSIZIONE
 
-					log.info("Elaboro rid "+idRid);
+					log.info("Elaboro rid " + idRid);
 					RidDTO ridDTO = ridDAO.getRid(idRid.intValue());
-					if (ridDTO==null)
-					{
-						log.warn("idrid non presente con membri:"+idRid);
-						ridDTO=ridDAO.getSchedaRid(idRid.intValue());
+					if (ridDTO == null) {
+						log.warn("idrid non presente con membri:" + idRid);
+						ridDTO = ridDAO.getSchedaRid(idRid.intValue());
 					}
-					
+
 					disp.setIdStatoRid(ridDTO.getTipoStatoRid());
 					disp.setMembri(ridDTO.getMembri());
 					disp.setAbi(ridDTO.getAbi().toString());
@@ -618,7 +617,7 @@ public class GestioneFlusso implements IGestioneFlusso {
 
 					dtValuta = new java.sql.Date(formatddMMyy.parse(
 							disp.getRec10().getDtScadenzaEffettiva()).getTime());
-					
+
 					log.info("Elaborato dt valuta");
 
 					// si aggiorna il record nel flusso di ricezione
@@ -627,18 +626,34 @@ public class GestioneFlusso implements IGestioneFlusso {
 							: new Date(formatddMMyy.parse(
 									flusso.getRecIR().getDtCreazioneFlusso())
 									.getTime());
-					
+
 					log.info("Elaboro dtEsito");
 
 					note = String.format("%s, %s - %s", disp.getRec50()
 							.getSegmento2(), causale, dsCausale);
 					note = note.trim();
+					long idFlussoAddebito = 0;
+					if (!disp.getRec70().getCodiceRiferimento().trim()
+							.equalsIgnoreCase(params.getCdSia().trim())) {
+						idFlussoAddebito = Long.parseLong(disp.getRec70()
+								.getCodiceRiferimento().trim());
+					}
 
-					// si aggiorna lo stato dell'incasso accedendo per idRid e
-					// data valuta
-					rowRids = flussoRidAddebitoDAO.aggiornaEsitoRid(idRid,
-							dtValuta, dtEsito, causale,
-							flussoEsito.getIdFlussoEsito());
+					if (idFlussoAddebito==0) {
+
+						// si aggiorna lo stato dell'incasso accedendo per idRid
+						// e
+						// data valuta
+						log.info("Aggiorno esito rid per data valuta");
+						rowRids = flussoRidAddebitoDAO.aggiornaEsitoRid(idRid,
+								dtValuta, dtEsito, causale,
+								flussoEsito.getIdFlussoEsito());
+					} else {
+						log.info("Aggiorno esito rid per cd riferimento");
+						rowRids = flussoRidAddebitoDAO.aggiornaEsitoRid(idFlussoAddebito, dtEsito,
+								causale,
+								flussoEsito.getIdFlussoEsito());
+					}
 
 					if (rowRids == 0) {
 						// numero flusso addebito non presente
@@ -651,8 +666,11 @@ public class GestioneFlusso implements IGestioneFlusso {
 					// disp.setIdRid(rateizzazioneDAO
 					// .getIdRidFromIdFlusso(idFlussoAddebito));
 					// recupero l'idAddebito dall'id rid e dalla data valuta
-					long idFlussoAddebito = flussoRidAddebitoDAO
-							.getIdFlussoAddebito(idRid, dtValuta);
+					if (idFlussoAddebito == 0) {
+						log.info("recupero id flusso addebito");
+						idFlussoAddebito = flussoRidAddebitoDAO
+								.getIdFlussoAddebito(idRid, dtValuta);
+					}
 
 					// aggiornamento stato rid
 					tipoStatoRid = TipoStatoRid.Attiva;
@@ -723,12 +741,12 @@ public class GestioneFlusso implements IGestioneFlusso {
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 		// TODO Auto-generated method stub
 		List<RidDTO> rids = null;
-		List<Integer> stati=new ArrayList<Integer>();
+		List<Integer> stati = new ArrayList<Integer>();
 		stati.add(TipoStatoRid.Attiva.getStatoRid());
 		stati.add(TipoStatoRid.Censita.getStatoRid());
-		
+
 		try {
-			rids=ridDAO.getRidPerStato(stati, 1);
+			rids = ridDAO.getRidPerStato(stati, 1);
 			return generaFlussoPreautRid(rids, true);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

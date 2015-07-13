@@ -37,5 +37,6 @@ public interface IFlussoRidIncassoDAO {
 	
 	public int aggiornaEsitoRid(long idRid, java.sql.Date dtValuta,java.sql.Date dtEsito, int idRidEsito, int idFlussoEsito)  throws Exception;
 	
+	
 	public long getIdFlussoAddebito(long idRid, java.sql.Date dtValuta) throws Exception;
 }

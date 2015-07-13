@@ -138,6 +138,8 @@ public class FlussoRidIncassoDAO extends SqlSessionDaoSupport implements
 		map.put("idFlussoEsito", idFlussoEsito);
 		return getSqlSessionTemplate().update("it.contrada.flussoincassirid.queries.aggiornaRidEsitoPerRidValuta",map);
 	}
+	
+	
 
 	@Override
 	public long getIdFlussoAddebito(long idRid, Date dtValuta) throws Exception {

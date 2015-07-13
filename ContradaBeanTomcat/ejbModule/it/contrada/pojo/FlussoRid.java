@@ -75,7 +75,7 @@ public class FlussoRid {
 				scriviRecord_30(rid, i);
 				// scriviRecord_40(rid, i);
 				scriviRecord_50(rid, i, parms);
-				scriviRecord_70(parms, i);
+				scriviRecord_70(rid, i);
 				i++;
 				totIncasso += rid.getImRichiesto();
 			}
@@ -444,7 +444,7 @@ public class FlussoRid {
 
 	}
 
-	private void scriviRecord_70(ParametriContradaDTO parms, int i) {
+	private void scriviRecord_70(IncassoRidDTO ir, int i) {
 
 		/*
 		 * RecFlusso = " 70" ' record 70 RecFlusso = RecFlusso & Format(NumDisp,
@@ -457,7 +457,7 @@ public class FlussoRid {
 
 		rec70DTO.setNumeroProgressivo(i);
 
-		rec70DTO.setCodiceRiferimento(parms.getCdSia());
+		rec70DTO.setCodiceRiferimento(ir.getIdFlussoAddebito().toString());
 
 		scriviRid.println(rec70DTO.toString());
 
