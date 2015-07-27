@@ -32,6 +32,33 @@ public class AnagraficaResource {
 	}
 	
 	@GET
+	@Path("/cognome/{cognome}")
+	public List<AnagraficaDTO> getAnagrafica(
+			@PathParam("cognome") String cognome) throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
+		
+		
+			List<AnagraficaDTO> anags = RicercaAnagraficaBD
+					.ricercaAnagraficaPerCognome(cognome);
+			
+			return anags;
+		
+	}
+	
+	@GET
+	@Path("/famiglia/{id}")
+	public List<AnagraficaDTO> getAnagraficaPerFamiglia(
+			@PathParam("id") int cdFamiglia) throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
+
+		
+			List<AnagraficaDTO> anags = RicercaAnagraficaBD
+					.ricercaAnagraficaPerFamiglia(cdFamiglia);
+			
+			return anags;
+		
+	}
+
+	
+	@GET
 	@Path("/{id}")
 	public AnagraficaDTO getAnagrafica(
 			@PathParam("id") int id) throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
