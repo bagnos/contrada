@@ -122,6 +122,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<id column="capPostRid" property="capPost" />
 			<id column="provinciaRid" property="provinciaResidenza" />
 			<id column="comuneRid" property="comuneResidenza" />
+			<id column="CD_IBAN" property="nrIban" />
 		</collection>
 
 	</resultMap>
@@ -215,6 +216,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		RID.CD_CAB,
 		RID.NR_CIN,
 		RID.NR_CONTO,
+		RID.CD_IBAN,
 		RID.TX_NOTE AS noteRid,
 		TSR.DS_STATO_RID,
 		PROV.CD_ISO_STATO,

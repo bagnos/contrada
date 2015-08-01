@@ -43,7 +43,16 @@ public class RidDTO implements Serializable {
 	private java.util.Date dtCensimento;
 	private String esitoMail;
 	private boolean selezionato;
+	private String nrIban;
 	
+
+	public String getNrIban() {
+		return nrIban;
+	}
+
+	public void setNrIban(String nrIban) {
+		this.nrIban = nrIban;
+	}
 
 	public boolean isSelezionato() {
 		return selezionato;

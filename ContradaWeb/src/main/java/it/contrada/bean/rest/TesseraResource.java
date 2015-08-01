@@ -37,4 +37,17 @@ public class TesseraResource {
 		return rate;
 
 	}
+	
+	@GET	
+	@Path("/{idAnag}")
+	public List<RateizzazioneDTO> getTesserePerId(
+			@PathParam("idAnag") int idAnag
+			)
+			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
+
+		
+		List<RateizzazioneDTO> rate= RicercaTipoRateizzazioneBD.ricercaRateizzazionePerAnagrafica(idAnag);
+		return rate;
+
+	}
 }
