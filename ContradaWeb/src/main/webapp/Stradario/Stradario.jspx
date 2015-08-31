@@ -26,16 +26,62 @@
 							<f:selectItem itemLabel="#{msgs.strada}" itemValue="1" />
 							<f:selectItem itemLabel="#{msgs.localita}" itemValue="2" />
 							<f:selectItem itemLabel="#{msgs.cap}" itemValue="3" />
+							<f:selectItem itemLabel="Provincia" itemValue="4" />
 							<!--
 							<f:selectItem itemLabel="Comune" itemValue="3" /> -->
 						</ice:selectOneMenu>
 					</ice:panelGroup>
+					<!-- NUOVA PROVINVIA -->
+					<ice:panelGroup rendered="#{stradarioBean.tipoInserimento==4}">
+						<ice:panelGroup styleClass="elementContainer">
+							<ice:outputText value="Stato" styleClass="label140"></ice:outputText>
+
+							<ice:selectOneMenu value="#{stradarioBean.cdStato}"
+								partialSubmit="false">
+								<f:selectItems value="#{stradarioView.statiItems}" />
+							</ice:selectOneMenu>
+
+						</ice:panelGroup>
+						<ice:panelGroup styleClass="elementContainer">
+							<ice:outputText value="Provincia" styleClass="label140"></ice:outputText>
+
+							<ice:inputText value="#{stradarioBean.dsProvincia}" maxlength="15" required="true"
+								id="idNewProvincia" size="25">
+
+							</ice:inputText>
+							<ice:message for="idNewProvincia"></ice:message>
+
+						</ice:panelGroup>
+						<ice:panelGroup styleClass="elementContainer">
+							<ice:outputText value="Sigla (solo per IT)" styleClass="label140"></ice:outputText>
+
+							<ice:inputText value="#{stradarioBean.cdSiglaProvincia}" maxlength="5" 
+							size="7">
+
+							</ice:inputText>
+							
+
+						</ice:panelGroup>
+						<ice:panelGroup styleClass="elementContainer">
+							<ice:outputText value="CAP" styleClass="label140"></ice:outputText>
+
+							<ice:inputText id="idCapProv"  value="#{stradarioBean.cdCap}" maxlength="5" required="true"
+							size="7">
+
+							</ice:inputText>
+							
+							<ice:message for="idCapProv"></ice:message>
+						</ice:panelGroup>
+					</ice:panelGroup>
+
+
 					<!-- PROVINVIA -->
-					<ice:panelGroup styleClass="elementContainer">
+					<ice:panelGroup styleClass="elementContainer"
+						rendered="#{stradarioBean.tipoInserimento!=4}">
 						<ice:outputText value="#{msgs.provincia}" styleClass="label140"></ice:outputText>
 
 						<ice:selectOneMenu value="#{stradarioBean.cdProvincia}"
-							partialSubmit="true" 
+							partialSubmit="true"
 							valueChangeListener="#{stradarioView.provinciaChange}">
 							<f:selectItems value="#{stradarioView.provincieItem}" />
 						</ice:selectOneMenu>
@@ -47,7 +93,7 @@
 							<ice:outputText value="#{msgs.comune}" styleClass="label140"></ice:outputText>
 
 							<ice:selectOneMenu value="#{stradarioBean.cdComune}"
-								id="lstComune" required="true" 
+								id="lstComune" required="true"
 								requiredMessage="Comune non inserito">
 								<f:selectItems value="#{stradarioView.comuneItem}" />
 							</ice:selectOneMenu>
@@ -56,15 +102,16 @@
 						</ice:panelGroup>
 						<ice:panelGroup styleClass="elementContainer">
 							<ice:outputText value="#{msgs.cap}" styleClass="label140"></ice:outputText>
-							<ice:inputText value="#{stradarioBean.cdCap}" maxlength="5" 
-								id="cdCap" size="7" >
-								
+							<ice:inputText value="#{stradarioBean.cdCap}" maxlength="5"
+								id="cdCap" size="7">
+
 							</ice:inputText>
 							<ice:message for="cdCap"></ice:message>
 						</ice:panelGroup>
 					</ice:panelGroup>
 					<!-- INSERIMENTO STRADA -->
-					<ice:panelGroup rendered="#{stradarioBean.tipoInserimento!=3}">
+					<ice:panelGroup
+						rendered="#{stradarioBean.tipoInserimento!=3 and stradarioBean.tipoInserimento!=4}">
 						<ice:panelGroup styleClass="elementContainer">
 							<ice:outputText value="#{msgs.cap}" styleClass="label140"></ice:outputText>
 							<ice:selectInputText rows="10" width="200" size="60"

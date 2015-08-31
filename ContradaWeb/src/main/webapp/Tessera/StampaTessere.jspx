@@ -253,6 +253,25 @@
 
 							</ice:outputText>
 						</ice:column>
+						
+						<ice:column id="capProv">
+							<f:facet name="header">
+								<ice:outputText value="Stato"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{tessera.stato}">
+
+							</ice:outputText>
+						</ice:column>
+						
+						<ice:column id="imp">
+							<f:facet name="header">
+								<ice:outputText value="Importo"></ice:outputText>
+							</f:facet>
+							<ice:outputText converter="ImportoConverter" value="#{tessera.quota}">
+							
+
+							</ice:outputText>
+						</ice:column>
 
 						<ice:column id="recapito">
 							<f:facet name="header">

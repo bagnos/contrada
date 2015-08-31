@@ -43,6 +43,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</where>
 	</select>
 	
+	<select id="getMaxProvincia" resultType="java.lang.Integer">
+	select max(cd_provincia)+1 as cdProvNew  from provincia
+	</select>
+	
+	<select id="getMaxComune" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+	select max(cd_comune)  from comune
+	where cd_provincia=#{cdProvincia}
+	</select>
+	
+	
 	
 	<insert id="insertStrada" parameterType="it.contrada.dto.StradaDTO"
 		useGeneratedKeys="true"  keyProperty="idStrada">
@@ -93,6 +103,47 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 		 
 </insert>
+
+
+<insert id="insertProvincia" parameterType="it.contrada.dto.ProvinciaDTO"
+		useGeneratedKeys="true"  keyProperty="cdProvincia">
+		INSERT INTO
+		${database.schema}provincia
+		(		
+		`CD_PROVINCIA`,
+		`DS_PROVINCIA`,
+		`CD_SIGLA_PROV`,
+		`CD_ISO_STATO`)
+		VALUES
+		(		
+		#{cdProvincia},
+		#{dsProvincia},
+		#{cdSiglaProv},
+		#{cdIsoStato}
+		);
+
+		 
+</insert>
+
+<insert id="insertComune" parameterType="it.contrada.dto.ComuneDTO"
+		useGeneratedKeys="true"  keyProperty="cdProvincia">
+		INSERT INTO
+		${database.schema}comune
+		(		
+		`CD_PROVINCIA`,
+		`CD_COMUNE`,
+		`DS_COMUNE`
+		)
+		VALUES
+		(		
+		#{cdProvincia},
+		#{cdComune},
+		#{dsComune}
+		);
+
+		 
+</insert>
+
 
 
 

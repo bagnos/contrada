@@ -508,9 +508,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getFasceEta" resultType="it.contrada.dto.AnagraficaDTO"
 		parameterType="java.util.HashMap">
 		select concat(a.tx_cognome,' ',a.tx_nome) as
-		intestatario,concat(s.ds_strada,',',cast(a.nr_civico as char)) as indirizzo,a.dt_nascita as dtNascita,
-		concat(s.cd_cap_post," ",coalesce(ds_localita,c.ds_comune)," ",p.cd_sigla_prov) as capProvincia,
-		A.TX_MAIL AS txMail,A.TX_CELL AS txCell,A.TX_FISSO as txFisso
+		intestatario,inf.indirizzo as indirizzo,a.dt_nascita as dtNascita,
+		inf.capProvincia as capProvincia,
+		A.TX_MAIL AS txMail,A.TX_CELL AS txCell,A.TX_FISSO as txFisso,
+		inf.statoResidenza as statoResidenza
 		
 		from ${database.schema}anagrafica a
 		join
@@ -518,8 +519,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		join
 		${database.schema}comune c on (c.cd_comune=s.cd_comune and
 		c.cd_provincia=s.cd_provincia)
-		join ${database.schema}provincia p on
-		s.cd_provincia=p.cd_provincia
+		join ${database.schema}provincia p on s.cd_provincia=p.cd_provincia
+		join ${database.schema}indirizzo_famiglia inf on inf.id_Anagrafica=a.id_Anagrafica
+	
 		<where>
 			<if test="dtDa!=null and dtA!=null">
 				and a.dt_nascita BETWEEN #{dtDa}

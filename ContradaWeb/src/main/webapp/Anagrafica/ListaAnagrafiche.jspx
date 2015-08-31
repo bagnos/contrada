@@ -161,6 +161,16 @@
 
 							</ice:outputText>
 						</ice:column>
+						
+						<ice:column id="Stato">
+							<f:facet name="header">
+								<ice:outputText value="Stato"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{tessera.stato}">
+
+							</ice:outputText>
+						</ice:column>
+						
 						<ice:column id="mail">
 							<f:facet name="header">
 								<ice:outputText value="Mail"></ice:outputText>

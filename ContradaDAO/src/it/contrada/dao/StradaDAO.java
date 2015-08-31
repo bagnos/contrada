@@ -1,7 +1,9 @@
 package it.contrada.dao;
 
 import it.contrada.dao.interfaces.IStradaDAO;
+import it.contrada.dto.ComuneDTO;
 import it.contrada.dto.LocalitaDTO;
+import it.contrada.dto.ProvinciaDTO;
 import it.contrada.dto.StradaDTO;
 
 import java.util.HashMap;
@@ -82,5 +84,36 @@ public class StradaDAO extends SqlSessionDaoSupport implements IStradaDAO {
 
 		return strade;
 	}
+
+	@Override
+	public int insertProvincia(ProvinciaDTO provincia)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return getSqlSessionTemplate().insert(
+				"it.contrada.stradario.queries.insertProvincia", provincia);
+	}
+
+	@Override
+	public int getMaxProvincia() throws Exception {
+		// TODO Auto-generated method stub
+		return (Integer) getSqlSessionTemplate().selectOne("it.contrada.stradario.queries.getMaxProvincia");
+	}
+
+	@Override
+	public int insertComune(ComuneDTO comune) throws Exception {
+		// TODO Auto-generated method stub
+		return getSqlSessionTemplate().insert(
+				"it.contrada.stradario.queries.insertComune", comune);
+	}
+
+	@Override
+	public int getMaxComune(int cdProvincia) throws Exception {
+		// TODO Auto-generated method stub
+		HashMap<String, Integer> map=new HashMap<String, Integer>();
+		map.put("cdProvincia", cdProvincia);
+		
+		return (Integer) getSqlSessionTemplate().selectOne("it.contrada.stradario.queries.getMaxProvincia");
+	}
+
 
 }

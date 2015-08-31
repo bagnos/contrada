@@ -11,6 +11,24 @@ public class ProvinciaDTO implements Serializable {
 	private String dsProvincia;
 	private String cdSiglaProv;
 	private int cdRegione;
+	private String cdIsoStato;
+	private String cdCap;
+	
+	public String getCdCap() {
+		return cdCap;
+	}
+
+	public void setCdCap(String cdCap) {
+		this.cdCap = cdCap;
+	}
+
+	public String getCdIsoStato() {
+		return cdIsoStato;
+	}
+
+	public void setCdIsoStato(String cdIsoStato) {
+		this.cdIsoStato = cdIsoStato;
+	}
 
 	public int getCdProvincia() {
 		return cdProvincia;

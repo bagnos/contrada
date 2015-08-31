@@ -71,6 +71,8 @@ public class AnagraficaDTO implements Serializable {
 	private String siglaProv;
 	private Date dtRitiroTessera;
 	
+	
+	
 	public Date getDtRitiroTessera() {
 		return dtRitiroTessera;
 	}

@@ -3,7 +3,9 @@ package it.contrada.bean;
 import it.contrada.dao.interfaces.ICapDAO;
 import it.contrada.dao.interfaces.IStradaDAO;
 import it.contrada.dto.CapDTO;
+import it.contrada.dto.ComuneDTO;
 import it.contrada.dto.LocalitaDTO;
+import it.contrada.dto.ProvinciaDTO;
 import it.contrada.dto.StradaDTO;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.interfaces.IGestioneStradario;
@@ -100,5 +102,35 @@ public class GestioneStradario implements IGestioneStradario {
 			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
 		}
 	}
+
+	public ProvinciaDTO inserisciProvincia(ProvinciaDTO prov)
+			throws ContradaExceptionBloccante {
+		// TODO Auto-generated method stub
+		try {
+			prov.setCdProvincia(stradaDao.getMaxProvincia());
+			stradaDao.insertProvincia(prov);
+			
+			ComuneDTO comune=new ComuneDTO(); 
+			comune.setDsComune(prov.getDsProvincia());
+			comune.setCdProvincia(prov.getCdProvincia());
+			comune.setCdComune(stradaDao.getMaxComune(prov.getCdProvincia()));
+			stradaDao.insertComune(comune);
+			
+			CapDTO cap=new CapDTO();
+			cap.setCdCap(String.format("%5s",
+					prov.getCdCap().toString())
+					.replaceAll(" ", "0").toUpperCase());
+			cap.setCdComune(comune.getCdComune());
+			cap.setCdProv(prov.getCdProvincia());
+			inserisciCap(cap);
+			
+			 return prov;
+		} catch (Exception ex) {
+			log.error(ex);
+			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
+		}
+	}
+
+
 
 }

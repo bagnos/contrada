@@ -623,7 +623,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		e.ds_esattore as esattore,
 		t.id_tessera as idTessera,
 		ti.ds_tipo_incasso as dsPagamento,
-		ts.ds_tipo_tessera as dsTipoTessera
+		ts.ds_tipo_tessera as dsTipoTessera,
+		inf.statoResidenza as stato
 		from ${database.schema}anagrafica a
 		join
 		${database.schema}indirizzo_famiglia inf

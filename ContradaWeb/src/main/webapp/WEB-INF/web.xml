@@ -196,7 +196,7 @@
   </servlet>
   <servlet>
     <servlet-name>StampaTessera</servlet-name>
-    <servlet-class>it.contrada.servlets.StampaTessera</servlet-class>
+    <servlet-class>it.contrada.servlets.StampaTesseraPDF</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>StampaLettera</servlet-name>

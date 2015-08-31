@@ -28,8 +28,17 @@ public class TesseraStampataDTO implements Serializable {
 	private String intestatario;
 	private String dsTipoTessera;
 	private int anno;
+	private String stato;
 	
 	
+
+	public String getStato() {
+		return stato;
+	}
+
+	public void setStato(String stato) {
+		this.stato = stato;
+	}
 
 	public int getAnno() {
 		return anno;

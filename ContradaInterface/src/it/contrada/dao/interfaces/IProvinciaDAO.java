@@ -8,4 +8,5 @@ public interface IProvinciaDAO {
 	public List<ProvinciaDTO> getProvincia(int cdRegione) throws Exception;
 	public List<ProvinciaDTO> getProvinciaPerStato(String cdIsoStato) throws Exception;
 	public List<ProvinciaDTO> getAll() throws Exception;
+
 }

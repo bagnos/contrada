@@ -44,9 +44,13 @@ public class TesseraResource {
 			@PathParam("idAnag") int idAnag
 			)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
+		
+		Integer year=Calendar.getInstance().get(Calendar.YEAR);
+		Integer precYear=(year-5);
+		
 
 		
-		List<RateizzazioneDTO> rate= RicercaTipoRateizzazioneBD.ricercaRateizzazionePerAnagrafica(idAnag);
+		List<RateizzazioneDTO> rate= RicercaTipoRateizzazioneBD.ricercaRateizzazionePerAnagrafica(idAnag,null,precYear,year);
 		return rate;
 
 	}

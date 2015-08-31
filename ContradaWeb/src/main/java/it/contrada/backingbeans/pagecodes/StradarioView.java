@@ -3,11 +3,13 @@ package it.contrada.backingbeans.pagecodes;
 import it.contrada.backingbeans.model.StradarioBean;
 import it.contrada.businessdelegate.GestioneStradarioBD;
 import it.contrada.businessdelegate.RicercaComuneBD;
+import it.contrada.businessdelegate.RicercaNazioneBD;
 import it.contrada.businessdelegate.RicercaProvinciaBD;
 import it.contrada.businessdelegate.RicercaStradaBD;
 import it.contrada.dto.CapDTO;
 import it.contrada.dto.ComuneDTO;
 import it.contrada.dto.LocalitaDTO;
+import it.contrada.dto.NazioneDTO;
 import it.contrada.dto.ProvinciaDTO;
 import it.contrada.dto.StradaDTO;
 import it.contrada.exceptions.ContradaExceptionBloccante;
@@ -25,7 +27,7 @@ import javax.faces.model.SelectItem;
 
 import com.icesoft.faces.component.selectinputtext.SelectInputText;
 
-public class StradarioView {
+public class StradarioView extends BaseView {
 
 	private StradarioBean stradarioBean;
 
@@ -41,6 +43,12 @@ public class StradarioView {
 	private List<SelectItem> comuneItem;
 	private final int MAX_CAP = 99999;
 	private final int MIN_CAP = 0;
+	private List<SelectItem> statiItems;
+	
+
+	public List<SelectItem> getStatiItems() {
+		return statiItems;
+	}
 
 	public List<SelectItem> getComuneItem() {
 		return comuneItem;
@@ -103,7 +111,7 @@ public class StradarioView {
 			ContradaExceptionNonBloccante {
 		// TODO Auto-generated constructor stub
 		// via
-
+		iniziallizzaStati();
 		iniziallizzaProvincia();
 
 	}
@@ -160,7 +168,7 @@ public class StradarioView {
 			int iCap = 0;
 
 			if (stradarioBean.getTipoInserimento() == 1) {
-				// censimento strada 
+				// censimento strada
 				StradaDTO strada = new StradaDTO();
 				strada.setCdCap(getStradarioBean().getCap().getCdCap());
 				strada.setCdComune(getStradarioBean().getCap().getCdComune());
@@ -188,8 +196,9 @@ public class StradarioView {
 				if (isValidCap()) {
 
 					CapDTO cap = new CapDTO();
-					cap.setCdCap(String.format("%5s", getStradarioBean()
-							.getCdCap().toString()).replaceAll(" ", "0"));
+					cap.setCdCap(String.format("%5s",
+							getStradarioBean().getCdCap().toString())
+							.replaceAll(" ", "0"));
 					cap.setCdComune(getStradarioBean().getCdComune());
 					cap.setCdProv(getStradarioBean().getCdProvincia());
 					GestioneStradarioBD.inserisciCap(cap);
@@ -197,9 +206,30 @@ public class StradarioView {
 					return;
 				}
 			}
+			else if (stradarioBean.getTipoInserimento()==4)
+			{
+				ProvinciaDTO prov=new ProvinciaDTO();
+				prov.setCdIsoStato(stradarioBean.getCdStato());
+				prov.setDsProvincia(stradarioBean.getDsProvincia());
+				prov.setCdSiglaProv(stradarioBean.getCdSiglaProvincia());
+				prov.setCdCap(stradarioBean.getCdCap());
+				if (stradarioBean.getCdStato()!="IT")
+				{
+					prov.setCdSiglaProv("");
+				}
+				GestioneStradarioBD.inserisciProvincia(prov);
+				iniziallizzaProvincia();
+				
+ 				
+			}
 			note = "Operazione eseguita correttamente";
 		} catch (ContradaExceptionBloccante e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+			note = e.getMessage();
+		} catch (ContradaExceptionNonBloccante e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			note = e.getMessage();
 		}
 		renderedNote = true;
@@ -213,6 +243,18 @@ public class StradarioView {
 		for (ProvinciaDTO prv : provincie) {
 			provincieItem.add(new SelectItem(prv.getCdProvincia(), prv
 					.getDsProvincia()));
+		}
+
+	}
+
+	private void iniziallizzaStati() throws ContradaExceptionBloccante,
+			ContradaExceptionNonBloccante {
+
+		RicercaNazioneBD ricNazione=new RicercaNazioneBD();
+		List<NazioneDTO> nazioni = ricNazione.elencaNazione();
+		statiItems = new ArrayList<SelectItem>();
+		for (NazioneDTO naz : nazioni) {
+			statiItems.add(new SelectItem(naz.getCdNazione(), naz.getDsNazione()));
 		}
 
 	}

@@ -26,11 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		cdProvincia, p.ds_provincia as dsProvincia,
 		p.cd_sigla_prov as
 		cdSiglaProv
-		FROM ${database.schema}PROVINCIA as
-		P,${database.schema}STATO S
-		WHERE P.CD_ISO_STATO=S.CD_ISO_STATO
-		AND
-		S.CD_ISO_STATO='IT'
+		FROM ${database.schema}PROVINCIA as P
 		ORDER BY p.ds_provincia
 </select>
 

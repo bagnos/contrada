@@ -14,6 +14,35 @@ public class StradarioBean {
 	private Integer cdLocalita;
 	private Integer cdComune;
 	private String cdCap;
+	private String cdStato;
+	private String dsProvincia;
+	private String cdSiglaProvincia;
+	
+	
+
+	public String getDsProvincia() {
+		return dsProvincia;
+	}
+
+	public void setDsProvincia(String dsProvincia) {
+		this.dsProvincia = dsProvincia;
+	}
+
+	public String getCdSiglaProvincia() {
+		return cdSiglaProvincia;
+	}
+
+	public void setCdSiglaProvincia(String cdSiglaProvincia) {
+		this.cdSiglaProvincia = cdSiglaProvincia;
+	}
+
+	public String getCdStato() {
+		return cdStato;
+	}
+
+	public void setCdStato(String cdStato) {
+		this.cdStato = cdStato;
+	}
 
 	public String getCdCap() {
 		return cdCap;

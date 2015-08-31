@@ -3,10 +3,12 @@ package it.contrada.businessdelegate;
 import it.contrada.bean.factory.ContradaPojoFactory;
 import it.contrada.dto.CapDTO;
 import it.contrada.dto.LocalitaDTO;
+import it.contrada.dto.ProvinciaDTO;
 import it.contrada.dto.StradaDTO;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.interfaces.IGestioneRid;
 import it.contrada.interfaces.IGestioneStradario;
+import it.contrada.util.DecodificaErrore;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -48,5 +50,12 @@ public class GestioneStradarioBD {
 	{
 		return gestioneStradario.inserisciCap(cap);
 	}
+	
+	public static ProvinciaDTO inserisciProvincia(ProvinciaDTO prov) throws ContradaExceptionBloccante
+	{
+		return gestioneStradario.inserisciProvincia(prov);
+	}
+	
+	
 
 }

@@ -139,10 +139,19 @@ public class PdfReport {
 		cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 		Font f = new Font(Font.FontFamily.COURIER, SIZE);
 		cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+		if (a.getStatoResidenza().equalsIgnoreCase("Italia"))
+		{
 		cell.addElement(new Phrase(String.format("%s\n%s\n%s", a
 				.getIntestatario().toUpperCase(), a.getIndirizzo()
 				.toUpperCase(), a.getCapProvincia().toUpperCase()), f));
-
+		}
+		else
+		{
+			cell.addElement(new Phrase(String.format("%s\n%s\n%s\n%s", a
+					.getIntestatario().toUpperCase(), a.getIndirizzo()
+					.toUpperCase(), a.getCapProvincia().toUpperCase(),a.getStatoResidenza().toUpperCase()), f));
+		}
+		
 		// Phrase phrase = new Phrase("44630259", f);
 
 		/*

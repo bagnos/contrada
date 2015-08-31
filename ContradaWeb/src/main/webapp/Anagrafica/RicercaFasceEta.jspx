@@ -110,6 +110,15 @@
 
 								</ice:outputText>
 							</ice:column>
+							
+							<ice:column id="stato">
+								<f:facet name="header">
+									<ice:outputText value="Stato" />
+								</f:facet>
+								<ice:outputText value="#{anagrafica.statoResidenza}">
+
+								</ice:outputText>
+							</ice:column>
 
 							<ice:column id="dtNasc">
 								<f:facet name="header">
