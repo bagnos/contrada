@@ -520,7 +520,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${database.schema}comune c on (c.cd_comune=s.cd_comune and
 		c.cd_provincia=s.cd_provincia)
 		join ${database.schema}provincia p on s.cd_provincia=p.cd_provincia
-		join ${database.schema}indirizzo_famiglia inf on inf.id_Anagrafica=a.id_Anagrafica
+		join ${database.schema}indirizzo_famiglia inf on inf.idFamiglia=a.id_famiglia
 	
 		<where>
 			<if test="dtDa!=null and dtA!=null">
