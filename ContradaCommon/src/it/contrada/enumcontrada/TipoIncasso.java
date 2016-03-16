@@ -1,7 +1,7 @@
 package it.contrada.enumcontrada;
 
 public enum TipoIncasso {
-	RID(1), CASSA(2), MAV(3), BOLLETTINO(4), ESATTORE(5),BONIFICO(6);
+	RID(1), CASSA(2), MAV(3), BOLLETTINO(4), ESATTORE(5),BONIFICO(6),PAYPAL(7);
 
 	private int incasso;
 

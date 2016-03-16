@@ -4,6 +4,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="it.contrada.tessera.queries">
 
+<resultMap id="orderDTOResultMap" type="it.othala.payment.paypal.dto.OrderDTO">
+	<result property="idOrder" column="idOrder" />
+	<result property="returnUrl" column="returnUrl" />
+	<result property="user" column="user" />
+	<result property="stato" column="stato" />
+	<result property="idTransaction" column="idTransaction" />
+	<collection property="cart" ofType="it.othala.payment.paypal.dto.TesseraPaymentDTO">
+			<id property="idAnagrafica" column="idAnagrafica" />
+			<id property="idTessera" column="idTessera" />
+			<id property="nrAnno" column="nrAnno" />
+			<id property="imTessera" column="imTessera" />
+			<id property="idTipoTessera" column="idTipoTessera" />
+			<id property="txTessera" column="txTessera" />		
+		</collection>
+</resultMap>
+	
+
+
 	<select id="getTipoTessera" resultType="it.contrada.dominio.dto.TipoTesseraDTO">
 		SELECT id_tipo_tessera as
 		idTipoTessera, ds_tipo_tessera as dsTipoTessera, TT.im_tessera as
@@ -153,6 +171,59 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		and  ID_TESSERA=#{idTessera}
 		</if>
 	</delete>
+	
+	<select id="getOrderPaymentDTO" parameterType="java.util.HashMap" resultMap="orderDTOResultMap">
+		SELECT
+		t.idanagrafica, t.idtessera,t.idTipoTessera,t.imTessera,t.nrAnno,t.imTessera,o.idOrder,o.user,o.idTransaction,o.returnUrl,o.stato
+		from orderpaymentonline o, tessera_orderpaymentonline t
+		where t.idOrder=o.idOrder
+		and o.idOrder=#{idOrder}
+		
+	</select>
+		<insert id="insertMessageIpn" parameterType="it.othala.payment.paypal.dto.MessageIpnDTO">
+		INSERT INTO
+		${database.schema}ipnmessages
+		(`idOrder`,
+		`idTransaction`,
+		`txMessage`,
+		`txStato`,
+		`txNote`,
+		`fgElaborato`)
+		VALUES
+		(#{idOrder},#{idTransaction},#{txMessage},
+		#{txStato},#{txNote},#{fgElaborato})
+	</insert>
+
+		<select id="getIdTransaction" resultType="Integer" parameterType="java.util.HashMap">
+		SELECT count(*)
+		FROM ${database.schema}ipnmessages
+		Where  idTransaction = #{idTransaction}
+		<if test="txStato!=null">
+		and upper(trim(txStato))=upper(trim(#{txStato}))
+		</if>
+	</select>
+
+	
+	<insert id="insertOrderPayment" useGeneratedKeys="true"
+		keyProperty="idOrder" parameterType="it.othala.payment.paypal.dto.OrderDTO">
+		insert into ${database.schema}orderpaymentonline
+		(stato,dtIns,user,returnUrl)
+		value ("INSERITO",CURRENT_TIMESTAMP,#{user},#{returnUrl})
+	</insert>
+	
+	<insert id="insertTesseraPayment"  parameterType="it.othala.payment.paypal.dto.TesseraPaymentDTO">
+		insert into ${database.schema}tessera_orderpaymentonline
+		
+		value (#{idOrder},#{idTessera},#{nrAnno},#{idAnagrafica},#{imTessera},#{idTipoTessera},#{txTessera})
+	</insert>
+	
+	<update id="aggiornaStatoOrdine" parameterType="java.util.HashMap">
+		UPDATE
+		${database.schema}orderpaymentonline o 
+		set o.stato=#{stato}		
+		WHERE
+		idorder=#{idOrder} 
+	</update>
 
 	<insert id="insertStorico" parameterType="java.util.HashMap">
 		INSERT INTO

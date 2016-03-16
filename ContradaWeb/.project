@@ -3,12 +3,13 @@
 	<name>ContradaWeb</name>
 	<comment></comment>
 	<projects>
-		<project>ContradaDAO</project>
-		<project>ContradaInterface</project>
 		<project>ContradaBeanInterface</project>
 		<project>ContradaBeanTomcat</project>
-		<project>ContradaUtil</project>
 		<project>ContradaCommon</project>
+		<project>ContradaDAO</project>
+		<project>ContradaInterface</project>
+		<project>ContradaUtil</project>
+		<project>PaymentService</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -1,19 +1,16 @@
 package it.contrada.dao;
 
 import it.contrada.dao.interfaces.ITesseraDAO;
-import it.contrada.dominio.dto.TipoCaricaDTO;
-import it.contrada.dominio.dto.TipoStatoAnagraficaDTO;
 import it.contrada.dominio.dto.TipoTesseraDTO;
 import it.contrada.dto.TesseraDTO;
 import it.contrada.dto.TesseraStampataDTO;
 import it.contrada.exceptions.ContradaExceptionBloccante;
+import it.othala.payment.paypal.dto.MessageIpnDTO;
+import it.othala.payment.paypal.dto.OrderDTO;
+import it.othala.payment.paypal.dto.TesseraPaymentDTO;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.naming.ldap.HasControls;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -510,6 +507,59 @@ public class TesseraDAO extends SqlSessionDaoSupport implements ITesseraDAO {
 		// TODO Auto-generated method stub
 		return (Integer) getSqlSessionTemplate().selectOne(
 				"it.contrada.tessera.queries.getAnnoInCorso");
+	}
+
+	@Override
+	public int insertOrderPayment(OrderDTO order) {
+		// TODO Auto-generated method stub
+		return getSqlSessionTemplate().insert("it.contrada.tessera.queries.insertOrderPayment",order);
+	}
+
+	@Override
+	public int insertTesseraOrderPayment(TesseraPaymentDTO tes) {
+		// TODO Auto-generated method stub
+		return getSqlSessionTemplate().insert("it.contrada.tessera.queries.insertTesseraPayment",tes);
+	}
+
+	@Override
+	public OrderDTO getOrderPaymentDTO(int idOrder) {
+		// TODO Auto-generated method stub
+		HashMap<String, Integer> map=new HashMap<String, Integer>();
+		map.put("idOrder", idOrder);
+		return (OrderDTO) getSqlSessionTemplate().selectOne("it.contrada.tessera.queries.getOrderPaymentDTO", map);
+	}
+
+	@Override
+	public int insertMessageIpn(MessageIpnDTO messageIpn) {
+
+		return getSqlSessionTemplate().insert("it.contrada.tessera.queries.insertMessageIpn",
+				messageIpn);
+
+	}
+
+	@Override
+	public int getIdTrasanction(String idTransaction,String txStato) {
+		
+		HashMap<String, Object> mapProduct = new HashMap<String, Object>();
+		
+		mapProduct.put("idTransaction", idTransaction);
+		mapProduct.put("txStato", txStato);
+		
+
+		Integer qtIdTransaction = (Integer) getSqlSessionTemplate().selectOne(
+				"it.contrada.tessera.queries.getIdTransaction", mapProduct);
+
+		return qtIdTransaction;
+	}
+
+	@Override
+	public int aggiornaStatoOrdine(int idOrder, String stato) {
+		// TODO Auto-generated method stub
+		HashMap<String, Object> map=new HashMap<String, Object>();
+		map.put("idOrder", idOrder);
+		map.put("stato", stato);
+		return (Integer) getSqlSessionTemplate().update("it.contrada.tessera.queries.aggiornaStatoOrdine", map);
+		 
 	}
 
 	

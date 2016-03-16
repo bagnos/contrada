@@ -13,6 +13,9 @@
         <dependent-module archiveName="ContradaBeanInterface.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ContradaBeanInterface/ContradaBeanInterface">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="PaymentService.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/PaymentService/PaymentService">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="ContradaBean.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ContradaBeanTomcat/ContradaBeanTomcat">
             <dependency-type>uses</dependency-type>
         </dependent-module>

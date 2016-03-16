@@ -3,6 +3,9 @@ package it.contrada.dao.interfaces;
 import it.contrada.dominio.dto.TipoTesseraDTO;
 import it.contrada.dto.TesseraDTO;
 import it.contrada.dto.TesseraStampataDTO;
+import it.othala.payment.paypal.dto.MessageIpnDTO;
+import it.othala.payment.paypal.dto.OrderDTO;
+import it.othala.payment.paypal.dto.TesseraPaymentDTO;
 
 import java.util.List;
 
@@ -103,5 +106,11 @@ public interface ITesseraDAO {
 
 	public List<TesseraDTO> getTessereNonPagantiUltimiAnni(int idTipoTessera,
 			int annoDa, int tipoIncasso,int annoA,Integer tipoEsattore) throws Exception;
-
+	
+	public int insertOrderPayment(OrderDTO order);
+	public int insertTesseraOrderPayment(TesseraPaymentDTO order);
+	public OrderDTO getOrderPaymentDTO(int idOrder);
+	public int getIdTrasanction(String idTransaction,String stato);
+	public int aggiornaStatoOrdine(int idOrder,String stato);
+	public int insertMessageIpn(MessageIpnDTO messageIpn);
 }
