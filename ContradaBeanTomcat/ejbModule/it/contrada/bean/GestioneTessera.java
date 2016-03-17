@@ -306,8 +306,8 @@ public class GestioneTessera implements IGestioneTessera {
 
 			RedirectDTO redirect = new RedirectDTO();
 			redirect.setContentMail(messaggio);
-			redirect.setRedirectUrl(order.getReturnUrl() + "?okPayment"
-					+ okPayment + "&messagio=" + messaggio);
+			redirect.setRedirectUrl(order.getReturnUrl() + "?okPayment="
+					+ okPayment + "&messaggio=" + messaggio);
 			redirect.setSubjectsMail("Pagamento Tessere Online ProtettoratoNicchio");
 			redirect.setTosMail(order.getUser());
 
