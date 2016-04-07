@@ -24,9 +24,16 @@ public class ParametriContradaDTO implements Serializable{
 	private String idSeda;
 	private String checkDigit;
 	private String cdPaese;
+	private String cdIban;
 	
 	
 	
+	public String getCdIban() {
+		return cdIban;
+	}
+	public void setCdIban(String cdIban) {
+		this.cdIban = cdIban;
+	}
 	public String getCheckDigit() {
 		return checkDigit;
 	}

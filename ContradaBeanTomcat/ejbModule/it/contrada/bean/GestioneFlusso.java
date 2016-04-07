@@ -8,6 +8,7 @@ import it.contrada.dao.interfaces.IRateizzazioneDAO;
 import it.contrada.dao.interfaces.IRidDAO;
 import it.contrada.dominio.dto.TipoCasualiIncassoRidDTO;
 import it.contrada.dominio.dto.TipoCasualiPreautDTO;
+import it.contrada.dominio.dto.TipoIncassoDTO;
 import it.contrada.dto.FlussoEsitoDTO;
 import it.contrada.dto.OperazioneDTO;
 import it.contrada.dto.ParametriContradaDTO;
@@ -26,6 +27,7 @@ import it.contrada.incassorid.dto.RicezioneFlussoIncassoRidDTO;
 import it.contrada.interfaces.IGestioneFlusso;
 import it.contrada.pojo.FlussoPreautorizzazioneRid;
 import it.contrada.pojo.FlussoRid;
+import it.contrada.pojo.FlussoRidXml;
 import it.contrada.pojo.FlussoUtil;
 import it.contrada.pojo.Operazione;
 import it.contrada.pojo.RicezioneFlussoIncassiRid;
@@ -165,7 +167,7 @@ public class GestioneFlusso implements IGestioneFlusso {
 	}
 
 	public FlussoIncassoRidDTO preparaFlussoIncassiRid(int anno, int mese,
-			int tipoIncassoRid, java.sql.Date dtValuta)
+			int tipoIncassoRid, java.sql.Date dtValuta, boolean formatXML)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 		// TODO Auto-generated method stub
 		try {
@@ -226,7 +228,7 @@ public class GestioneFlusso implements IGestioneFlusso {
 
 			// genera il flusso;
 			FlussoIncassoRidDTO flussoRidDto = generaFlussoIncassiRid(anno,
-					mese, tipoIncassoRid);
+					mese, tipoIncassoRid, formatXML);
 
 			/*
 			 * // si recupera le informazioni sui parametri della contrada
@@ -639,7 +641,7 @@ public class GestioneFlusso implements IGestioneFlusso {
 								.getCodiceRiferimento().trim());
 					}
 
-					if (idFlussoAddebito==0) {
+					if (idFlussoAddebito == 0) {
 
 						// si aggiorna lo stato dell'incasso accedendo per idRid
 						// e
@@ -650,8 +652,8 @@ public class GestioneFlusso implements IGestioneFlusso {
 								flussoEsito.getIdFlussoEsito());
 					} else {
 						log.info("Aggiorno esito rid per cd riferimento");
-						rowRids = flussoRidAddebitoDAO.aggiornaEsitoRid(idFlussoAddebito, dtEsito,
-								causale,
+						rowRids = flussoRidAddebitoDAO.aggiornaEsitoRid(
+								idFlussoAddebito, dtEsito, causale,
 								flussoEsito.getIdFlussoEsito());
 					}
 
@@ -852,12 +854,30 @@ public class GestioneFlusso implements IGestioneFlusso {
 	}
 
 	public FlussoIncassoRidDTO generaFlussoIncassiRid(int anno, int mese,
-			int tipoIncassoRid) throws ContradaExceptionNonBloccante,
-			ContradaExceptionBloccante {
+			int tipoIncassoRid, boolean formatXML)
+			throws ContradaExceptionNonBloccante, ContradaExceptionBloccante {
 		// TODO Auto-generated method stub
 		// si recupera le informazioni sui parametri della contrada
 		try {
-			ParametriContradaDTO params = parametriContradaDAO.getParametri();
+			List<TipoIncassoDTO> tipoIncassi = ridDAO.elencaTipoIncassi();
+			ParametriContradaDTO params = null;
+			for (TipoIncassoDTO inc : tipoIncassi) {
+				if (inc.getIdTipoIncasso() == tipoIncassoRid) {
+					if (inc.getCdIbanAccredito() != null) {
+						// per questo flusso si utilizza un iban di accredito
+						// diverso rispetto a quello standard
+						params = new ParametriContradaDTO();
+						params.setIdSeda(inc.getIdSeda());
+						params.setIdSeda(inc.getIdSeda());
+						params.setTxIntestazione(inc.getDenominazione());
+						params.setCdIban(inc.getCdIbanAccredito());
+						
+					}
+				}
+			}
+			if (params == null) {
+				params = parametriContradaDAO.getParametri();
+			}
 			if (params == null || params.getCdSia() == null
 					|| params.getCdSia().trim().equals("")) {
 				throw new ContradaExceptionBloccante(
@@ -872,9 +892,19 @@ public class GestioneFlusso implements IGestioneFlusso {
 			}
 
 			// si crea il file
-			FlussoRid flusso = new FlussoRid();
-			FlussoIncassoRidDTO flussoRidDto = flusso.creaFlussoRid(mese, anno,
-					incassi, params);
+
+			FlussoIncassoRidDTO flussoRidDto = null;
+			if (!formatXML) {
+				FlussoRid flusso = new FlussoRid();
+				flussoRidDto = flusso
+						.creaFlussoRid(mese, anno, incassi, params);
+				flussoRidDto.setExtension(".crm");
+			} else {
+				FlussoRidXml flusso = new FlussoRidXml();
+				flussoRidDto = flusso.creaFlussoRidXML(mese, anno, incassi,
+						params);
+				flussoRidDto.setExtension(".xml");
+			}
 			return flussoRidDto;
 		} catch (Throwable ex) {
 			log.error(ex);

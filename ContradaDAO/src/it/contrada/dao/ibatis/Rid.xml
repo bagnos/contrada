@@ -470,7 +470,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="elencaTipoIncassiRid" resultType="it.contrada.dominio.dto.TipoIncassoDTO">
 		SELECT
 		ID_TIPO_INCASSO_RID AS idTipoIncasso,
-		DS_INCASSO AS dsTipoIncasso
+		DS_INCASSO AS dsTipoIncasso, CD_SIA as cdSIA, ID_SEDA as idSeda, CD_IBAN_ACCREDITO as cdIban,
+		tx_denominazione as txDenominazione 
 		FROM
 		${database.schema}TIPO_INCASSO_RID
 		WHERE FG_ATTIVA=true

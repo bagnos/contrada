@@ -56,12 +56,13 @@ public class FlussoRid {
 	public FlussoRid() {
 
 	}
-
+	
+	
 	public FlussoIncassoRidDTO creaFlussoRid(int mese, int anno,
 			List<IncassoRidDTO> rids, ParametriContradaDTO parms)
 			throws IOException, ContradaExceptionBloccante {
 
-		apriFile(anno, mese);
+		apriFile(anno, mese,Constanti.EXT_FILE_RID);
 
 		int i = 1;
 		int totIncasso = 0;
@@ -98,7 +99,7 @@ public class FlussoRid {
 
 	}
 
-	private void apriFile(int anno, int mese) throws IOException,
+	private void apriFile(int anno, int mese,String suffix) throws IOException,
 			ContradaExceptionBloccante {
 
 		/*
@@ -117,7 +118,7 @@ public class FlussoRid {
 		nomeFileSemplice = nomeFile;
 
 		// file = new File(directory, nomeFile);
-		file = File.createTempFile(nomeFile, Constanti.EXT_FILE_RID);
+		file = File.createTempFile(nomeFile, suffix);
 
 		fos = new FileOutputStream(file);
 		scriviRid = new PrintStream(fos);

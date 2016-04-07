@@ -15,7 +15,7 @@ import java.util.List;
 
 public interface IGestioneFlusso {
 	public FlussoIncassoRidDTO preparaFlussoIncassiRid(int anno, int mese,
-			int tipoIncasso, java.sql.Date dtValuta)
+			int tipoIncasso, java.sql.Date dtValuta, boolean formatXML)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante;
 
 	public void eliminaFlussoIncassiRid(int anno, int mese, int tipoIncasso)
@@ -41,7 +41,7 @@ public interface IGestioneFlusso {
 			ContradaExceptionNonBloccante;
 
 	public FlussoIncassoRidDTO generaFlussoIncassiRid(int anno, int mese,
-			int tipoIncasso) throws ContradaExceptionNonBloccante,
+			int tipoIncasso,boolean formatXML) throws ContradaExceptionNonBloccante,
 			ContradaExceptionBloccante;
 
 	public FlussoPreautInviatoDTO generaFlussoPreautInviati(

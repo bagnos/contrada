@@ -16,4 +16,5 @@ public class Constanti {
 	public static final int LAST_NR_OPERAZIONI=50;
 	public static final String EXT_FILE_RID = ".crm";
 	public static final String EXT_FILE_PDF = ".pdf";
+	public static final String EXT_FILE_XML = ".xml";
 }
