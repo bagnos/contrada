@@ -8,9 +8,6 @@
 
 		<ice:portlet>
 			<ice:form>
-
-				
-
 				<ice:outputStyle href="#{styleBean.activeCss}" />
 				<ice:panelGroup styleClass="portletContainer">
 					<ice:outputText value="Ricerca Anagrafica"
@@ -52,6 +49,7 @@
 							action="#{ricercaAnagrafica.modificaAnagraficaOnClick}">
 							<f:attribute name="idAnag" value="#{anagrafica.idAnagrafica}" />
 						</ice:commandButton>
+						
 					</ice:panelGroup>
 
 
@@ -63,7 +61,7 @@
 						<f:facet name="header">
 							<ice:outputText value="Anagrafiche" />
 						</f:facet>
-						<ice:dataTable value="#{ricercaAnagrafica.anagrafiche}"
+						<ice:dataTable value="#{ricercaAnagrafica.ricercaAnagraficheBean.anagrafiche}"
 							var="anagrafica">
 
 							<ice:column id="column0">

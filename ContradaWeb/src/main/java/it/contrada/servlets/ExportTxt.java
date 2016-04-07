@@ -47,7 +47,7 @@ public class ExportTxt extends HttpServlet {
 			File file = new File(filePrint.getNomeFileCompleto());
 			
 			response.addHeader("Content-Disposition", "attachment; filename=\""
-					+ filePrint.getNomeFile()+".crm" + "\"");
+					+ filePrint.getNomeFile()+filePrint.getExtension() + "\"");
 			byte[] buf = new byte[1024];
 
 			long length = file.length();

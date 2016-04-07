@@ -43,6 +43,15 @@
   <managed-bean-name>ricercaAnagrafica</managed-bean-name>
   <managed-bean-class>it.contrada.backingbeans.pagecodes.RicercaAnagrafica</managed-bean-class>
   <managed-bean-scope>request</managed-bean-scope>
+  <managed-property>
+   <property-name>ricercaAnagraficheBean</property-name>
+   <value>#{ricercaAnagraficaBean}</value>
+  </managed-property> 
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>ricercaAnagraficaBean</managed-bean-name>
+  <managed-bean-class>it.contrada.backingbeans.model.RicercaAnagraficheBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
  </managed-bean>
  <managed-bean>
   <managed-bean-name>preparaTessereStorico</managed-bean-name>

@@ -1,5 +1,6 @@
 package it.contrada.backingbeans.pagecodes;
 
+import it.contrada.backingbeans.model.RicercaAnagraficheBean;
 import it.contrada.businessdelegate.RicercaAnagraficaBD;
 import it.contrada.dto.AnagraficaDTO;
 import it.contrada.exceptions.ContradaExceptionBloccante;
@@ -14,11 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
-import javax.faces.application.NavigationHandler;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.servlet.http.HttpServletRequest;
 
 import com.icesoft.faces.component.ext.RowSelectorEvent;
 
@@ -28,14 +28,23 @@ public class RicercaAnagrafica {
 	private int nrFam;
 	private String nome;
 	private String cognome;
-	private List<AnagraficaDTO> anagrafiche;
+
 	private boolean visibleAnagrafiche;
 	private boolean visibleModifica;
 	private AnagraficaDTO anagrafica = null;
 	private boolean visibleMessageNoAnag;
 	private String noDataFound;
 	private AnagraficaDTO anagSel;
-	
+	private RicercaAnagraficheBean ricercaAnagraficheBean;
+
+	public RicercaAnagraficheBean getRicercaAnagraficheBean() {
+		return ricercaAnagraficheBean;
+	}
+
+	public void setRicercaAnagraficheBean(
+			RicercaAnagraficheBean ricercaAnagraficheBean) {
+		this.ricercaAnagraficheBean = ricercaAnagraficheBean;
+	}
 
 	public String getNoDataFound() {
 		return noDataFound;
@@ -75,7 +84,8 @@ public class RicercaAnagrafica {
 	}
 
 	public boolean isVisibleAnagrafiche() {
-		visibleAnagrafiche = (anagrafiche != null && !anagrafiche.isEmpty());
+		visibleAnagrafiche = (ricercaAnagraficheBean.getAnagrafiche() != null && !ricercaAnagraficheBean
+				.getAnagrafiche().isEmpty());
 		return visibleAnagrafiche;
 	}
 
@@ -112,111 +122,98 @@ public class RicercaAnagrafica {
 	}
 
 	public List<AnagraficaDTO> getAnagrafiche() {
-
-		return anagrafiche;
+		return ricercaAnagraficheBean.getAnagrafiche();
 	}
 
 	public void setAnagrafiche(List<AnagraficaDTO> anagrafcihe) {
-		this.anagrafiche = anagrafcihe;
+		ricercaAnagraficheBean.setAnagrafiche(anagrafcihe);
 	}
 
 	public String modificaAnagraficaOnClick() {
 		// invocare la pagina di modifica
-		HelperSession.putInRequest(Costante.SESSION_ANAG_DTO, anagSel);		
-		HelperSession.putInRequest(Costante.PARM_MOD_ANAG,"true");
+		HelperSession.putInRequest(Costante.SESSION_ANAG_DTO, anagSel);
+		HelperSession.putInRequest(Costante.PARM_MOD_ANAG, "true");
 		return "MODIFICA_ANAGRAFICA";
 	}
-	
-	
 
 	public void ricecaAnagraficaOnClick(ActionEvent e)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
-		AnagraficaDTO anagrafica=null;
-		List<AnagraficaDTO> anagrafiche=null;
+		AnagraficaDTO anagrafica = null;
+		List<AnagraficaDTO> anagrafiche = null;
 		setAnagrafiche(null);
 		setVisibleMessageNoAnag(true);
-		
+
 		if (getNrAnag() != 0) {
-			
-			anagrafica=RicercaAnagraficaBD.ricercaAnagrafica(getNrAnag());
-			if (anagrafica!=null)
-			{
-				anagrafiche=new ArrayList<AnagraficaDTO>();
+
+			anagrafica = RicercaAnagraficaBD.ricercaAnagrafica(getNrAnag());
+			if (anagrafica != null) {
+				anagrafiche = new ArrayList<AnagraficaDTO>();
 				anagrafiche.add(anagrafica);
-			}			
-			
+			}
+
 		} else if (getNrFam() != 0) {
-			anagrafiche=RicercaAnagraficaBD
+			anagrafiche = RicercaAnagraficaBD
 					.ricercaAnagraficaPerFamiglia(getNrFam());
 		} else if ((getCognome() != null && getCognome().trim() != "")
 				&& (getNome() != null && getNome().trim() != "")) {
-			anagrafiche=RicercaAnagraficaBD.ricercaAnagraficaPerCognomeNome(
+			anagrafiche = RicercaAnagraficaBD.ricercaAnagraficaPerCognomeNome(
 					cognome.trim(), nome.trim());
 
-		} else if (cognome!=null && !cognome.isEmpty()) {
-			
-			anagrafiche=RicercaAnagraficaBD
+		} else if (cognome != null && !cognome.isEmpty()) {
+
+			anagrafiche = RicercaAnagraficaBD
 					.ricercaAnagraficaPerCognome(cognome.trim());
-		}
-		else
-		{
-			//nessuna ricerca selezionata
-			String errore="Riempire almeno un campo di ricerca";
+		} else {
+			// nessuna ricerca selezionata
+			String errore = "Riempire almeno un campo di ricerca";
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							errore,errore));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, errore,
+							errore));
 			setVisibleMessageNoAnag(false);
 			return;
 		}
-		
-		if (anagrafiche!=null && !(anagrafiche.isEmpty()))
-		{
+
+		if (anagrafiche != null && !(anagrafiche.isEmpty())) {
 			setAnagrafiche(anagrafiche);
 			setVisibleMessageNoAnag(false);
 		}
-		
-	
-		
 
 	}
 
 	public void rowSelectionListener(RowSelectorEvent e) throws IOException {
-		if (e!=null)
-		{
-		
-				Map<String, Object> atrs=e.getComponent().getAttributes();
-				anagSel=(AnagraficaDTO)FacesUtils.getValueExpression("idAnag",e);
-				HelperSession.putInRequest(Costante.SESSION_ANAG_DTO, anagSel);		
-				HelperSession.putInRequest(Costante.PARM_MOD_ANAG,"true");
-				FacesUtils.navigationToView("MODIFICA_ANAGRAFICA");
-				 
-			//setAnagrafica(idAnagSel);
+		if (e != null) {
+
+			Map<String, Object> atrs = e.getComponent().getAttributes();
+			anagSel = (AnagraficaDTO) FacesUtils
+					.getValueExpression("idAnag", e);
+			HelperSession.putInRequest(Costante.SESSION_ANAG_DTO, anagSel);
+			HelperSession.putInRequest(Costante.PARM_MOD_ANAG, "true");
+			FacesUtils.navigationToView("MODIFICA_ANAGRAFICA");
+
+			// setAnagrafica(idAnagSel);
 		}
 		/*
-		if (!e.getPhaseId().equals(PhaseId.UPDATE_MODEL_VALUES)) {
-			e.setPhaseId(PhaseId.UPDATE_MODEL_VALUES);
-			e.queue();
-		} else {
-			int row = e.getRow();
-			setAnagrafica(anagrafiche.get(row));
-		}*/
+		 * if (!e.getPhaseId().equals(PhaseId.UPDATE_MODEL_VALUES)) {
+		 * e.setPhaseId(PhaseId.UPDATE_MODEL_VALUES); e.queue(); } else { int
+		 * row = e.getRow(); setAnagrafica(anagrafiche.get(row)); }
+		 */
 	}
-	
-	public void selezionaAnagraficaOnClick(ActionEvent e) throws IOException
-	{
-		AnagraficaDTO anagrafica=(AnagraficaDTO)e.getComponent().getAttributes().get("anagrafica");
-		HelperSession.putInRequest(Costante.SESSION_ANAG_DTO, anagrafica);		
-		HelperSession.putInRequest(Costante.PARM_MOD_ANAG,"true");
-		
+
+	public void selezionaAnagraficaOnClick(ActionEvent e) throws IOException {
+		AnagraficaDTO anagrafica = (AnagraficaDTO) e.getComponent()
+				.getAttributes().get("anagrafica");
+		HelperSession.putInRequest(Costante.SESSION_ANAG_DTO, anagrafica);
+		HelperSession.putInRequest(Costante.PARM_MOD_ANAG, "true");
+
 		FacesUtils.navigationToView("MODIFICA_ANAGRAFICA");
-		//FacesUtils.redirectToUrl("InsAnagrafica.iface");
+		// FacesUtils.redirectToUrl("InsAnagrafica.iface");
 	}
-	
-		
-	public RicercaAnagrafica()
-	{
+
+	public RicercaAnagrafica() {
 		setNoDataFound(LoadBundleLanguage.getMessage("DATI_NON_PRESENTI"));
 		
+		
+
 	}
 }

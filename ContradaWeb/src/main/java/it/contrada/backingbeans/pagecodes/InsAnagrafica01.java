@@ -1884,14 +1884,15 @@ public class InsAnagrafica01 extends BaseView {
 	public String indietroOnClick() throws IOException {
 
 		if (isAggiornamento()) {
-			FacesUtils.redirectToUrl("RicercaAnagrafica.iface");
+			String url="RicercaAnagrafica.iface?indietro=true";
+			FacesUtils.redirectToUrl(url);
 			return null;
 		} else
 			return null;
 	}
 
 	public String annullaOnClick() throws Exception {
-		FacesUtils.redirectToUrl("RicercaAnagrafica.iface");
+		FacesUtils.redirectToUrl("RicercaAnagrafica.iface?indietro=true");
 		return null;
 	}
 

@@ -247,7 +247,7 @@ public class InterrogaEsitiIncassiRid {
 	
 	public void generaFlusso(ActionEvent e) throws ContradaExceptionNonBloccante, ContradaExceptionBloccante
 	{
-		FlussoIncassoRidDTO flusso=GestioneFlussoBD.generaFlussoIncassiRid(annoInt,meseInt,tipoIncassoInt);
+		FlussoIncassoRidDTO flusso=GestioneFlussoBD.generaFlussoIncassiRid(annoInt,meseInt,tipoIncassoInt,true);
 		PrintFile file = new PrintFile();
 		file.setNomeFileCompleto(flusso.getNomeFile());
 		file.setNomeFile(flusso.getNomeFileSemplice());

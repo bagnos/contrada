@@ -55,7 +55,16 @@ public class PreparaIncassiRid extends BaseView {
 	private String keyDownloadFile;
 	private String labelGeneraFlusso = null;
 	private static Log log = LogFactory.getLog(PreparaIncassiRid.class);
+	private boolean formatXml;
 	
+	public boolean isFormatXml() {
+		return formatXml;
+	}
+
+	public void setFormatXml(boolean formatXml) {
+		this.formatXml = formatXml;
+	}
+
 	public String getLabelGeneraFlusso() {
 		return labelGeneraFlusso;
 	}
@@ -180,7 +189,7 @@ public class PreparaIncassiRid extends BaseView {
 		setDtValuta(new java.util.Date(dtValuta.getTimeInMillis()));
 		hideInfoMessage();
 		note=null;
-		
+		formatXml=true;
 		
 	}
 
@@ -224,15 +233,17 @@ public class PreparaIncassiRid extends BaseView {
 		
 		hideInfoMessage();
 		try {
+			
 			if (flusso == null) {
 				flusso = GestioneFlussoBD.preparaFlussoIncassiRid(anno, mese,
 						getIncassoRid(), ConverterContrada
-								.valueOf(getDtValuta()));
+								.valueOf(getDtValuta()),formatXml);
+				
 
 			} else {
 				// ristampa
 				flusso = GestioneFlussoBD.generaFlussoIncassiRid(anno, mese,
-						getIncassoRid());
+						getIncassoRid(),formatXml);
 			}
 			rids = flusso.getIncassi();
 			if (rids == null || rids.isEmpty()) {
@@ -245,9 +256,11 @@ public class PreparaIncassiRid extends BaseView {
 				
 				note = String.format("Inviate %d diposizioni, importo %s",
 						flusso.getNrIncassi(), BaseUtil.formatImporto(flusso.getImFlusso()));				
+				
 				PrintFile file = new PrintFile();
 				file.setNomeFileCompleto(flusso.getNomeFile());
 				file.setNomeFile(flusso.getNomeFileSemplice());
+				file.setExtension(flusso.getExtension());
 				writeInfoMessage(TipoGravitaMessage.SUCCESS, note);
 
 				keyDownloadFile = file.getNomeFile();

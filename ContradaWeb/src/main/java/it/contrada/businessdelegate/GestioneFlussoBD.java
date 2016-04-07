@@ -54,11 +54,13 @@ public class GestioneFlussoBD {
 		return gestioneFlusso.riceviFlussoPreautorizzazioniRid(nomeFile);
 	}
 
+	
+	
 	public static FlussoIncassoRidDTO preparaFlussoIncassiRid(int anno,
-			int mese, int tipoIncasso, java.sql.Date dtValuta)
+			int mese, int tipoIncasso, java.sql.Date dtValuta,boolean xml)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 		return gestioneFlusso.preparaFlussoIncassiRid(anno, mese, tipoIncasso,
-				dtValuta);
+				dtValuta,xml);
 	}
 
 	public static List<RicezioneFlussoIncassoRidDTO> riceviFlussoIncassiRid(
@@ -73,10 +75,12 @@ public class GestioneFlussoBD {
 	}
 
 	public static FlussoIncassoRidDTO generaFlussoIncassiRid(int anno,
-			int mese, int tipoIncasso) throws ContradaExceptionNonBloccante,
+			int mese, int tipoIncasso,boolean xml) throws ContradaExceptionNonBloccante,
 			ContradaExceptionBloccante {
-		return gestioneFlusso.generaFlussoIncassiRid(anno, mese, tipoIncasso);
+		return gestioneFlusso.generaFlussoIncassiRid(anno, mese, tipoIncasso,xml);
 	}
+	
+	
 
 	public static FlussoPreautInviatoDTO generaFlussoPreautInviati(
 			List<RidDTO> rids) throws ContradaExceptionNonBloccante,

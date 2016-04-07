@@ -41,6 +41,8 @@
 
 
 						</ice:selectInputDate>
+						<ice:outputText value="Formato XML"></ice:outputText>
+						<ice:selectBooleanCheckbox value="#{preparaIncassiRid.formatXml}"></ice:selectBooleanCheckbox>
 					</ice:panelGrid>
 
 

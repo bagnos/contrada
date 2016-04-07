@@ -9,11 +9,17 @@ public class PrintFile implements Serializable {
 	 */
 	private static final long serialVersionUID = 1823036561999052727L;
 	private String nomeFile;
-	private String nomeFileCompleto;
+	private String nomeFileCompleto;	
 	private File file;
+	private String extension;
 	
 	
-	
+	public String getExtension() {
+		return extension;
+	}
+	public void setExtension(String extension) {
+		this.extension = extension;
+	}
 	public File getFile() {
 		return file;
 	}
