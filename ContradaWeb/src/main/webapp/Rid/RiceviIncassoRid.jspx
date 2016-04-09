@@ -189,12 +189,20 @@
 							</f:facet>
 							<ice:outputText value="#{rid.rec20.segmento1}" />
 						</ice:column>
+						
 
 						<ice:column id="causale">
 							<f:facet name="header">
 								<ice:outputText value="Causale"></ice:outputText>
 							</f:facet>
 							<ice:outputText value="#{rid.dsCausale}" />
+						</ice:column>
+						
+						<ice:column id="dtValuta">
+							<f:facet name="header">
+								<ice:outputText value="Dt Valuta"></ice:outputText>
+							</f:facet>
+							<ice:outputText value="#{rid.dtValuta}" />
 						</ice:column>
 
 						<ice:column id="cdRid">

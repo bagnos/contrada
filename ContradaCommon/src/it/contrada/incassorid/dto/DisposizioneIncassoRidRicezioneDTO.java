@@ -29,9 +29,15 @@ public class DisposizioneIncassoRidRicezioneDTO implements Serializable{
 	private String cab;
 	private String conto;
 	private boolean selezionato;
+	private String dtValuta;
 	
 	
-	
+	public String getDtValuta() {
+		return dtValuta;
+	}
+	public void setDtValuta(String dtValuta) {
+		this.dtValuta = dtValuta;
+	}
 	public boolean isSelezionato() {
 		return selezionato;
 	}
