@@ -5,7 +5,6 @@ import it.contrada.businessdelegate.GestioneFlussoBD;
 import it.contrada.businessdelegate.RicercaFlussoBD;
 import it.contrada.dominio.dto.TipoCasualiIncassoRidDTO;
 import it.contrada.dto.FlussoEsitoDTO;
-import it.contrada.dto.MembroRidDTO;
 import it.contrada.enumcontrada.TipoFlusso;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
@@ -22,6 +21,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EventObject;
 import java.util.List;
 
@@ -56,8 +56,25 @@ public class RiceviIncassoRid extends BaseView {
 	private FileInfo currentFile;
 	private int fileProgress;
 	private boolean selectAll;
+	private Date dtDa;
+	private Date dtA;
 	
-	
+
+	public Date getDtDa() {
+		return dtDa;
+	}
+
+	public void setDtDa(Date dtDa) {
+		this.dtDa = dtDa;
+	}
+
+	public Date getDtA() {
+		return dtA;
+	}
+
+	public void setDtA(Date dtA) {
+		this.dtA = dtA;
+	}
 
 	public boolean isSelectAll() {
 		return selectAll;
@@ -239,6 +256,7 @@ public class RiceviIncassoRid extends BaseView {
 		 * ContradaExceptionNonBloccante( Errori.DIR_INCASSO_RID_NON_CREATA); }
 		 * } setPathUpload(dir);
 		 */
+		dtA=new Date();
 
 		formatddMMyy = new SimpleDateFormat("dd/MM/yyyy");
 		formatddMMyyhhmm = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -295,10 +313,11 @@ public class RiceviIncassoRid extends BaseView {
 
 			if (inputFile.getFileInfo().isSaved()) {
 				currentFile = inputFile.getFileInfo();
+				
 
 				String file = currentFile.getPhysicalPath();
 				List<RicezioneFlussoIncassoRidDTO> flussi = GestioneFlussoBD
-						.riceviFlussoIncassiRid(file);
+						.riceviFlussoIncassiRid(file,dtDa,dtA);
 
 				List<DisposizioneIncassoRidRicezioneDTO> dispIncassi = new ArrayList<DisposizioneIncassoRidRicezioneDTO>();
 

@@ -11,6 +11,7 @@ import it.contrada.preautrid.dto.DisposizionePreautRicezioneDTO;
 import it.contrada.preautrid.dto.FlussoPreautInviatoDTO;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 public interface IGestioneFlusso {
@@ -26,7 +27,7 @@ public interface IGestioneFlusso {
 			ContradaExceptionNonBloccante;
 
 	public List<RicezioneFlussoIncassoRidDTO> riceviFlussoIncassiRid(
-			String nomeFile) throws ContradaExceptionBloccante,
+			String nomeFile,Date dtDA,Date dtA) throws ContradaExceptionBloccante,
 			ContradaExceptionNonBloccante;
 
 	public List<RidDTO> elencaRidDaAllineare()
@@ -57,5 +58,7 @@ public interface IGestioneFlusso {
 	public int eliminaFlussoPreautorizzazioni(java.util.Date dtInvio)
 			throws ContradaExceptionNonBloccante, ContradaExceptionBloccante;
 	
-	public FlussoEsitoDTO inserisciFlussoEsito(File file, TipoFlusso tipoFlusso) throws ContradaExceptionNonBloccante, ContradaExceptionBloccante;
+	public FlussoEsitoDTO inserisciFlussoEsito(File file, TipoFlusso tipoFlusso,Date dtDA,Date dtA) throws ContradaExceptionNonBloccante, ContradaExceptionBloccante;
+	
+	public FlussoEsitoDTO inserisciFlussoEsito(File file,TipoFlusso tipoFlusso) throws ContradaExceptionNonBloccante, ContradaExceptionBloccante;
 }

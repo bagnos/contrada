@@ -22,7 +22,7 @@
 						<f:facet name="header">
 							<ice:outputText value="#{riceviIncassoRid.intEsitiPrec}" />
 						</f:facet>
-						<ice:dataTable value="#{riceviIncassoRid.esiti}" var="esito">
+						<ice:dataTable rows="3" id="tblLastEsiti" value="#{riceviIncassoRid.esiti}" var="esito">
 
 
 
@@ -61,12 +61,69 @@
 							</ice:column>
 							 -->
 						</ice:dataTable>
+						<ice:dataPaginator immediate="true" id="tabEsitiPag" for="tblLastEsiti"
+						paginator="true"						
+						fastStep="#{styleBean.fastStep}"
+						paginatorMaxPages="3">
+						<f:facet name="first">
+							<ice:graphicImage url="#{styleBean.first}" style="border:none;"
+								title="First Page" />
+						</f:facet>
+
+						<f:facet name="last">
+							<ice:graphicImage url="#{styleBean.last}" style="border:none;"
+								title="Last Page" />
+						</f:facet>
+						<f:facet name="previous">
+							<ice:graphicImage url="#{styleBean.previous}"
+								style="border:none;" title="Previous Page" />
+						</f:facet>
+						<f:facet name="fastforward">
+							<ice:graphicImage url="#{styleBean.fastforward}"
+								style="border:none;" title="Fast Forward" />
+						</f:facet>
+						<f:facet name="fastrewind">
+							<ice:graphicImage url="#{styleBean.fastrewind}"
+								style="border:none;" title="Fast Backwards" />
+						</f:facet>
+						<f:facet name="next">
+							<ice:graphicImage url="#{styleBean.next}" style="border:none;"
+								title="Next Page" />
+						</f:facet>
+
+
+					</ice:dataPaginator>
 
 					</ice:panelGrid>
+					<div style="margin-top:10px">
+						<h3>Data Esito</h3>
+						<span style="display:block;float:left">Da:</span>
+						<ice:selectInputDate 
+							value="#{riceviIncassoRid.dtDa}"  renderAsPopup="true"
+							partialSubmit="false" id="dtDa"
+							popupDateFormat="dd/MM/yyyy" required="true" tabindex="5"
+							style="width: 262px;float:left">
+							<f:convertDateTime type="date"
+								timeZone="#{styleBean.generalTimeZone}" />
+
+						</ice:selectInputDate>
+						<ice:message id="errDtDa" for="dtDa" />
+						<span style="display:block;float:left">A:</span>
+						<ice:selectInputDate 
+							value="#{riceviIncassoRid.dtA}"  renderAsPopup="true"
+							partialSubmit="false" id="dtA"
+							popupDateFormat="dd/MM/yyyy" required="true" tabindex="5"
+							style="width: 262px;float:left">
+							<f:convertDateTime type="date"
+								timeZone="#{styleBean.generalTimeZone}" />
+
+						</ice:selectInputDate>
+						<ice:message id="errDtA" for="dtA" />
+					</div>
 					<ice:panelGrid>
 
 
-						<ice:inputFile label="Elabora" fileNamePattern=".+\.txt"
+						<ice:inputFile label="Elabora" fileNamePattern=".+\.cbi"
 							actionListener="#{riceviIncassoRid.eleboraOnClick}"
 							progressListener="#{riceviIncassoRid.progressListener}"
 							id="inputFileComponent" immediate="false"

@@ -353,7 +353,7 @@ public class GestioneFlusso implements IGestioneFlusso {
 
 			// inserisco il file nella tabella flussi esito
 			FlussoEsitoDTO flussoEsito = inserisciFlussoEsito(file,
-					TipoFlusso.PREAUTORIZZAZIONE);
+					TipoFlusso.PREAUTORIZZAZIONE,new java.util.Date(),new java.util.Date());
 
 			ParametriContradaDTO params = parametriContradaDAO.getParametri();
 			if (params == null || params.getCdSia() == null
@@ -521,9 +521,9 @@ public class GestioneFlusso implements IGestioneFlusso {
 	}
 
 	public List<RicezioneFlussoIncassoRidDTO> riceviFlussoIncassiRid(
-			String nomeFile) throws ContradaExceptionBloccante {
+			String nomeFile,java.util.Date dtDa,java.util.Date dtA) throws ContradaExceptionBloccante {
 		// TODO Auto-generated method stub
-		try {
+		try { 
 			File file = new File(nomeFile);
 			List<TipoCasualiIncassoRidDTO> causali;
 			int causale;
@@ -553,7 +553,7 @@ public class GestioneFlusso implements IGestioneFlusso {
 
 			// inserisco il file nella tabella flussi esito
 			FlussoEsitoDTO flussoEsito = inserisciFlussoEsito(file,
-					TipoFlusso.RID);
+					TipoFlusso.RID,dtDa,dtA);
 
 			ParametriContradaDTO params = parametriContradaDAO.getParametri();
 			if (params == null || params.getCdSia() == null
@@ -618,7 +618,7 @@ public class GestioneFlusso implements IGestioneFlusso {
 					 */
 
 					dtValuta = new java.sql.Date(formatddMMyy.parse(
-							disp.getRec10().getDtScadenzaEffettiva()).getTime());
+							disp.getRec10().getDtScadenzaOriginaria()).getTime());
 
 					log.info("Elaborato dt valuta");
 
@@ -823,13 +823,43 @@ public class GestioneFlusso implements IGestioneFlusso {
 		}
 
 	}
-
+	
 	public FlussoEsitoDTO inserisciFlussoEsito(File file, TipoFlusso tipoFlusso)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 		// TODO Auto-generated method stub
 		try {
 			FlussoEsitoDTO flussoEsito = FlussoUtil.getFromNomeFile(
 					file.getName(), tipoFlusso);
+
+			// verifica se alcuni esiti sono già stati scaricati
+			/*
+			 * java.sql.Date maxData =
+			 * flussoEsitoDAO.getMaxDataFlusso(tipoFlusso);
+			 * 
+			 * if (maxData != null && maxData.after(flussoEsito.getDtDa())) {
+			 * throw new ContradaExceptionNonBloccante(DecodificaErrore
+			 * .getError("30")); }
+			 */
+			flussoEsito = flussoEsitoDAO.insertFlussoEsito(flussoEsito);
+
+			return flussoEsito;
+		} catch (ContradaExceptionNonBloccante ex) {
+			log.error(ex);
+			throw ex;
+		} catch (Exception ex) {
+			log.error(ex);
+			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
+		}
+
+	}
+
+
+	public FlussoEsitoDTO inserisciFlussoEsito(File file, TipoFlusso tipoFlusso,java.util.Date dtDa,java.util.Date dtA)
+			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
+		// TODO Auto-generated method stub
+		try {
+			FlussoEsitoDTO flussoEsito = FlussoUtil.getFromNomeFile(
+					file.getName(), tipoFlusso,dtDa,dtA);
 
 			// verifica se alcuni esiti sono già stati scaricati
 			/*
@@ -993,5 +1023,13 @@ public class GestioneFlusso implements IGestioneFlusso {
 			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
 		}
 	}
+
+	
+
+	
+
+	
+
+	
 
 }

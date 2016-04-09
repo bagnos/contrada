@@ -9,10 +9,9 @@ import it.contrada.incassorid.dto.RicezioneFlussoIncassoRidDTO;
 import it.contrada.interfaces.IGestioneFlusso;
 import it.contrada.preautrid.dto.DisposizionePreautRicezioneDTO;
 import it.contrada.preautrid.dto.FlussoPreautInviatoDTO;
-import java.util.List;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -64,9 +63,9 @@ public class GestioneFlussoBD {
 	}
 
 	public static List<RicezioneFlussoIncassoRidDTO> riceviFlussoIncassiRid(
-			String nomeFile) throws ContradaExceptionBloccante,
+			String nomeFile,Date dtDa,Date dtA) throws ContradaExceptionBloccante,
 			ContradaExceptionNonBloccante {
-		return gestioneFlusso.riceviFlussoIncassiRid(nomeFile);
+		return gestioneFlusso.riceviFlussoIncassiRid(nomeFile,dtDa,dtA);
 	}
 
 	public static void eliminaFlussoIncassiRid(int anno, int mese, int incasso)

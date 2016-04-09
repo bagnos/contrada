@@ -80,9 +80,10 @@
 
 						<ice:outputText value="Data di Nascita:"></ice:outputText>
 						<ice:panelGroup>
-							<ice:selectInputDate id="dtNascita" renderAsPopup="true"
+							<ice:selectInputDate id="dtNascita" value="#{insAnagrafica01.dtNascita}" renderAsPopup="true"
+								
 								partialSubmit="false" popupDateFormat="dd/MM/yyyy"
-								required="true" value="#{insAnagrafica01.dtNascita}"
+								required="true" 
 								tabindex="5" style="width: 262px">
 								<f:convertDateTime type="date"
 									timeZone="#{styleBean.generalTimeZone}" />
