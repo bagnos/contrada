@@ -43,6 +43,10 @@
 							tabindex="4">
 
 						</ice:commandButton>
+						<ice:commandButton value="Reset" partialSubmit="true" style="float:left;" actionListener="#{ricercaAnagrafica.reset}" tabindex="4">
+
+						</ice:commandButton>
+						
 						<ice:commandButton value="Modifica" partialSubmit="true"
 							style="float:right;" tabindex="5"
 							rendered="#{ricercaAnagrafica.visibleModifica}"

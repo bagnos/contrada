@@ -136,6 +136,18 @@ public class RicercaAnagrafica {
 		return "MODIFICA_ANAGRAFICA";
 	}
 
+	public void reset(ActionEvent e)
+	{
+		setAnagrafiche(null);
+		setVisibleMessageNoAnag(false);
+		visibleModifica=false;
+		nrAnag=0;
+		nrFam=0;
+		cognome=null;
+		nome=null;
+		
+	}
+	
 	public void ricecaAnagraficaOnClick(ActionEvent e)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
 		AnagraficaDTO anagrafica = null;
