@@ -109,7 +109,7 @@
 						<LMSG:DrctDbtTx>
 							<LMSG:MndtRltdInf>
 								<LMSG:MndtId><xsl:value-of select="idRid" /></LMSG:MndtId>
-								<LMSG:DtOfSgntr>2013-31-12</LMSG:DtOfSgntr>								
+								<LMSG:DtOfSgntr>2013-12-31</LMSG:DtOfSgntr>								
 							</LMSG:MndtRltdInf>
 						</LMSG:DrctDbtTx>
 						<LMSG:Dbtr>

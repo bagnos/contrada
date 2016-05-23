@@ -172,7 +172,7 @@ public class FlussoRidXml {
 		String isoDATE = formatDate.substring(0, 22) + ":"
 				+ formatDate.substring(22);
 
-		String msgId = "DistintaXml-" + isoDATE;
+		String msgId = "DistXml-" + isoDATE;
 
 		int somma = 0;
 		for (IncassoRidDTO inc : rids) {
@@ -186,7 +186,7 @@ public class FlussoRidXml {
 		sb.append("<ctrlSum>" + sommaBD.toString() + "</ctrlSum>\n");
 		sb.append("<nomeAzienda>" + parms.getTxIntestazione()
 				+ "</nomeAzienda>\n");
-		sb.append("<codiceUnicoAzienda>" + parms.getCdSia()
+		sb.append("<codiceUnicoAzienda>" + "SIA"+parms.getCdSia()
 				+ "</codiceUnicoAzienda>\n");
 
 	}
@@ -210,6 +210,8 @@ public class FlussoRidXml {
 					Integer.toString(parms.getCdCab()), parms.getNrConto());
 		}
 		sb.append("<ibanAccredito>" + iban + "</ibanAccredito>\n");
+		sb.append("<abiBancaAccredito>" + String.format("%5s",Integer.toString(parms.getCdAbi())).replace(" ", "0") + "</abiBancaAccredito>\n");
+		
 		sb.append("<identificativoCreditore>" + parms.getIdSeda()
 				+ "</identificativoCreditore>\n");
 	}
