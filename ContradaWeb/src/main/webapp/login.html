@@ -23,21 +23,36 @@
 			style="text-align: center; position: absolute; top: 50%; left: 50%; display: none;">
 			<img src="./images/portlet/loading_animation.gif" alt="Loading" />
 		</div>
-		<table>
+		<table class="credenziali">
+		<caption><img width="120px" src="./images/stemma-nicchio.png" style="margin-right: 5px" /></caption>
 			<tr>
-				<td>User:</td>
-				<td><input class="iceInpTxt" maxlength="10" size="12"
-					type="text" name="j_username" id="j_username" /></td>
+				<td>User</td>
 			</tr>
 			<tr>
-				<td>Password:</td>
+				<td><input class="iceInpTxt" maxlength="10" size="12"
+					type="text" name="j_username" id="j_username" /></td>
+			<tr>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+			</tr>
+			<tr>
+
+				<td>Password</td>
+			</tr>
+			<tr>
 				<td><input class="iceInpTxt" maxlength="10" size="12"
 					type="password" id="j_password" name="j_password" /></td>
 			</tr>
+			<tr>
+				<td colspan="2"><input class="cmdBtn" type="submit"
+					value="Login" id="login"
+					onclick="document.getElementById('loading').style.display = 'block';" />
+				</td>
 		</table>
 
-		<input class="iceCmdBtn" type="submit" value="Login" id="login"
-			onclick="document.getElementById('loading').style.display = 'block';" />
+
 
 	</form>
 

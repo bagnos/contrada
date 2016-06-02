@@ -1,5 +1,6 @@
 package it.contrada.backingbeans.pagecodes;
 
+import it.contrada.backingbeans.model.RicercaAnagraficheBean;
 import it.contrada.businessdelegate.GestioneAnagraficaBD;
 import it.contrada.businessdelegate.GestioneGestoreBD;
 import it.contrada.businessdelegate.RicercaAnagraficaBD;
@@ -217,6 +218,12 @@ public class InsAnagrafica01 extends BaseView {
 	private boolean visibleIndietro;
 	private String urlIndietro;
 	private boolean renderPopFamiglia;
+	private RicercaAnagraficheBean ricercaAnagraficheBean;
+
+	public void setRicercaAnagraficheBean(
+			RicercaAnagraficheBean ricercaAnagraficheBean) {
+		this.ricercaAnagraficheBean = ricercaAnagraficheBean;
+	}
 
 	public boolean isRenderPopFamiglia() {
 		return renderPopFamiglia;
@@ -1915,7 +1922,8 @@ public class InsAnagrafica01 extends BaseView {
 			if (isAggiornamento()) {
 				// invocare Aggiornamento Anagrafica
 				GestioneAnagraficaBD.aggiornaAnagrafica(anagrafica, false);
-				FacesUtils.redirectToUrl("RicercaAnagrafica.iface");
+				ricercaAnagraficheBean.ricercaAnagrafiche();
+				FacesUtils.redirectToUrl("RicercaAnagrafica.iface?indietro=true");
 				return null;
 
 			} else {
@@ -1924,8 +1932,8 @@ public class InsAnagrafica01 extends BaseView {
 						.inserisciAnagrafica(anagrafica);
 				popupAnag = true;
 
-			}
-
+			}			
+			
 		} catch (ContradaExceptionNonBloccante e) {
 			// TODO: handle exception
 			messaggio = e.getMessage();

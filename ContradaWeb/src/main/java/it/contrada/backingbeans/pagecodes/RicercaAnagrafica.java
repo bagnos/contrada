@@ -23,11 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 import com.icesoft.faces.component.ext.RowSelectorEvent;
 
 public class RicercaAnagrafica {
-	private int nrAnag;
-	private int nrAnagSel;
-	private int nrFam;
-	private String nome;
-	private String cognome;
 
 	private boolean visibleAnagrafiche;
 	private boolean visibleModifica;
@@ -36,14 +31,20 @@ public class RicercaAnagrafica {
 	private String noDataFound;
 	private AnagraficaDTO anagSel;
 	private RicercaAnagraficheBean ricercaAnagraficheBean;
+	private boolean indietro = false;
+	private int nrAnagSel;
 
 	public RicercaAnagraficheBean getRicercaAnagraficheBean() {
+
 		return ricercaAnagraficheBean;
 	}
 
 	public void setRicercaAnagraficheBean(
 			RicercaAnagraficheBean ricercaAnagraficheBean) {
 		this.ricercaAnagraficheBean = ricercaAnagraficheBean;
+		if (indietro == false) {
+			reset(null);
+		}
 	}
 
 	public String getNoDataFound() {
@@ -89,44 +90,14 @@ public class RicercaAnagrafica {
 		return visibleAnagrafiche;
 	}
 
-	public int getNrAnag() {
-		return nrAnag;
-	}
-
-	public void setNrAnag(int nrAnag) {
-		this.nrAnag = nrAnag;
-	}
-
-	public int getNrFam() {
-		return nrFam;
-	}
-
-	public void setNrFam(int nrFam) {
-		this.nrFam = nrFam;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getCognome() {
-		return cognome;
-	}
-
-	public void setCognome(String cognome) {
-		this.cognome = cognome;
-	}
-
 	public List<AnagraficaDTO> getAnagrafiche() {
 		return ricercaAnagraficheBean.getAnagrafiche();
 	}
 
 	public void setAnagrafiche(List<AnagraficaDTO> anagrafcihe) {
-		ricercaAnagraficheBean.setAnagrafiche(anagrafcihe);
+		if (ricercaAnagraficheBean != null) {
+			ricercaAnagraficheBean.setAnagrafiche(anagrafcihe);
+		}
 	}
 
 	public String modificaAnagraficaOnClick() {
@@ -136,56 +107,25 @@ public class RicercaAnagrafica {
 		return "MODIFICA_ANAGRAFICA";
 	}
 
-	public void reset(ActionEvent e)
-	{
+	public void reset(ActionEvent e) {
 		setAnagrafiche(null);
 		setVisibleMessageNoAnag(false);
-		visibleModifica=false;
-		nrAnag=0;
-		nrFam=0;
-		cognome=null;
-		nome=null;
-		
+		visibleModifica = false;
+		ricercaAnagraficheBean.setNrAnag(0);
+		ricercaAnagraficheBean.setNrFam(0);
+		ricercaAnagraficheBean.setCognome(null);
+		ricercaAnagraficheBean.setNome(null);
+
 	}
-	
+
 	public void ricecaAnagraficaOnClick(ActionEvent e)
 			throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {
-		AnagraficaDTO anagrafica = null;
+		
 		List<AnagraficaDTO> anagrafiche = null;
 		setAnagrafiche(null);
 		setVisibleMessageNoAnag(true);
 
-		if (getNrAnag() != 0) {
-
-			anagrafica = RicercaAnagraficaBD.ricercaAnagrafica(getNrAnag());
-			if (anagrafica != null) {
-				anagrafiche = new ArrayList<AnagraficaDTO>();
-				anagrafiche.add(anagrafica);
-			}
-
-		} else if (getNrFam() != 0) {
-			anagrafiche = RicercaAnagraficaBD
-					.ricercaAnagraficaPerFamiglia(getNrFam());
-		} else if ((getCognome() != null && getCognome().trim() != "")
-				&& (getNome() != null && getNome().trim() != "")) {
-			anagrafiche = RicercaAnagraficaBD.ricercaAnagraficaPerCognomeNome(
-					cognome.trim(), nome.trim());
-
-		} else if (cognome != null && !cognome.isEmpty()) {
-
-			anagrafiche = RicercaAnagraficaBD
-					.ricercaAnagraficaPerCognome(cognome.trim());
-		} else {
-			// nessuna ricerca selezionata
-			String errore = "Riempire almeno un campo di ricerca";
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, errore,
-							errore));
-			setVisibleMessageNoAnag(false);
-			return;
-		}
-
+		anagrafiche = ricercaAnagraficheBean.ricercaAnagrafiche();
 		if (anagrafiche != null && !(anagrafiche.isEmpty())) {
 			setAnagrafiche(anagrafiche);
 			setVisibleMessageNoAnag(false);
@@ -224,8 +164,11 @@ public class RicercaAnagrafica {
 
 	public RicercaAnagrafica() {
 		setNoDataFound(LoadBundleLanguage.getMessage("DATI_NON_PRESENTI"));
-		
-		
+		indietro = false;
+		if (FacesUtils.getExternalContext().getRequestParameterMap()
+				.containsKey("indietro")) {
+			indietro = true;
+		}
 
 	}
 }

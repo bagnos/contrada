@@ -236,6 +236,9 @@ margin-top: 10px;">
 					<ice:menuItem id="InserisciGestore" value="Inserisci Gestore"
 						onclick="loadIFrame('./Rete/InserisciGestore.iface'); ">
 					</ice:menuItem>
+					<ice:menuItem id="ProtettoriNonAssegnati" value="Protettori Non Assegnati"
+						onclick="loadIFrame('./Rete/ProtettoriDaAssegnare.iface'); ">
+					</ice:menuItem>
 				</ice:menuItem>
 
 				<!-- liste -->

@@ -328,8 +328,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 						#{item}
 				</foreach>
 				</when>
-				<when test="idGestore!=null">
+				<when test="idGestore!=null and idGestore!=0">
 					AND A.ID_GESTORE=#{idGestore}
+					AND A.ID_STATO_ANAGRAFICA=1
+				</when>
+				<when test="idGestore!=null and idGestore==0">
+					AND A.ID_GESTORE is null
 					AND A.ID_STATO_ANAGRAFICA=1
 				</when>
 				

@@ -18,35 +18,36 @@
 						<ice:outputText value="Numero Anagrafica:"></ice:outputText>
 						<ice:inputText id="txtNrAnag" size="8" tabindex="0"
 							converter="IntegerConverter" style="width: 50px"
-							value="#{ricercaAnagrafica.nrAnag}"></ice:inputText>
+							value="#{ricercaAnagrafica.ricercaAnagraficheBean.nrAnag}"></ice:inputText>
 						<ice:outputText value="Numero Famiglia:"></ice:outputText>
 						<ice:inputText id="txtNrFam" size="45" tabindex="1"
 							converter="IntegerConverter" style="width: 50px"
-							value="#{ricercaAnagrafica.nrFam}"></ice:inputText>
+							value="#{ricercaAnagrafica.ricercaAnagraficheBean.nrFam}"></ice:inputText>
 
 						<ice:outputText value="Cognome:"></ice:outputText>
 						<ice:inputText id="txtCognome" size="45" tabindex="2"
-							style="width: 200px" value="#{ricercaAnagrafica.cognome}"></ice:inputText>
+							style="width: 200px" value="#{ricercaAnagrafica.ricercaAnagraficheBean.cognome}"></ice:inputText>
 
 						<ice:outputText value="Nome:"></ice:outputText>
 						<ice:inputText id="txtNome" size="45" tabindex="3"
-							style="width: 160px" value="#{ricercaAnagrafica.nome}"></ice:inputText>
+							style="width: 160px" value="#{ricercaAnagrafica.ricercaAnagraficheBean.nome}"></ice:inputText>
 
 
 
 					</ice:panelGrid>
 
 					<ice:panelGroup styleClass="bottoniera">
+						<ice:commandButton value="Reset" partialSubmit="true" style="float:left;" actionListener="#{ricercaAnagrafica.reset}" tabindex="4">
+
+						</ice:commandButton>
+						
+						
 						<ice:commandButton value="Cerca" partialSubmit="true"
 							style="float:left;"
 							actionListener="#{ricercaAnagrafica.ricecaAnagraficaOnClick}"
 							tabindex="4">
 
 						</ice:commandButton>
-						<ice:commandButton value="Reset" partialSubmit="true" style="float:left;" actionListener="#{ricercaAnagrafica.reset}" tabindex="4">
-
-						</ice:commandButton>
-						
 						<ice:commandButton value="Modifica" partialSubmit="true"
 							style="float:right;" tabindex="5"
 							rendered="#{ricercaAnagrafica.visibleModifica}"

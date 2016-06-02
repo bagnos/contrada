@@ -43,6 +43,53 @@ body,table {
 	color: #000000;
 }
 
+.credenziali
+{
+	margin:auto;
+	width:320px;
+	margin-top:20px;
+	font-size: 14px;
+	padding: 26px 24px 46px;
+    background-color: #f1f1f1;
+    border: 1px solid #C8C9CA;
+
+}
+
+.credenziali tr
+{
+	margin-top: 10px;
+}
+
+.credenziali .iceInpTxt
+{
+	font-size: 24px;
+    width: 100%;
+    padding: 3px;
+    margin: 2px 6px 16px 0;
+}
+
+.credenziali caption
+{
+	margin-bottom: 20px;
+}
+.credenziali .cmdBtn
+{
+	
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-radius: 3px;
+    border-width: 1px;
+    border-style: solid;
+    background: #0085ba;
+    border-color: #0073aa #006799 #006799;
+    -webkit-box-shadow: 0 1px 0 #006799;
+    box-shadow: 0 1px 0 #006799;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: 0 -1px 1px #006799,1px 0 1px #006799,0 1px 1px #006799,-1px 0 1px #006799;
+}
+
+
 /*
 =================== HTML Form Element Appearence ==============
 */ /* set the style elements for any of the textarea form elements   */

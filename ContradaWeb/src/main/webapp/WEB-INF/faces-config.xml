@@ -23,6 +23,11 @@
   <managed-bean-name>insAnagrafica01</managed-bean-name>
   <managed-bean-class>it.contrada.backingbeans.pagecodes.InsAnagrafica01</managed-bean-class>
   <managed-bean-scope>request</managed-bean-scope>
+  <managed-property> 
+   <property-name>ricercaAnagraficheBean</property-name>
+   <value>#{ricercaAnagraficaBean}</value>
+  </managed-property> 
+
  </managed-bean>
  <managed-bean>
   <managed-bean-name>cercaFamiglia</managed-bean-name>
@@ -274,6 +279,14 @@
   <managed-bean-class>it.contrada.backingbeans.pagecodes.InvioMailView</managed-bean-class>
   <managed-bean-scope>request</managed-bean-scope>
  </managed-bean>
+ <managed-bean>
+  <managed-bean-name>protettoriDaAssegnareView</managed-bean-name>
+  <managed-bean-class>it.contrada.backingbeans.pagecodes.ProtettoriDaAssegnareView</managed-bean-class>
+  <managed-bean-scope>request</managed-bean-scope>
+ </managed-bean>
+ 
+ 
+ 
  <managed-bean>
   <managed-bean-name>inserisciGestoreView</managed-bean-name>
   <managed-bean-class>it.contrada.backingbeans.pagecodes.InserisciGestoreView</managed-bean-class>
