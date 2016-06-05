@@ -911,6 +911,7 @@ public class GestioneFlusso implements IGestioneFlusso {
 						params.setIdSeda(inc.getIdSeda());
 						params.setTxIntestazione(inc.getDenominazione());
 						params.setCdIban(inc.getCdIbanAccredito());
+						params.setCdSia(inc.getCdSIA());
 
 					}
 				}

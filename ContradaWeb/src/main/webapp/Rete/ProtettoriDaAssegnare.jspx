@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
+	xmlns:nicchio="http://taglib.contradanicchio.it">
+
+	<f:view>
+
+		<ice:portlet>
+			<ice:form>
+				<ice:outputStyle href="#{styleBean.activeCss}" />
+				<ice:panelGroup>
+					<ice:panelGroup styleClass="portletContainer">
+						<ice:outputText value="#{msgs.GESTIONE_RETE}"
+							styleClass="labelPortletContainer"></ice:outputText>
+					</ice:panelGroup>
+					<!-- INFO MESSAGE -->
+					<nicchio:serviceInfoMessage bbean="#{protettoriDaAssegnareView}" />
+			
+
+					<!-- ASSEGNAZIONE MANUALE -->
+			
+						<!-- tabella anagrafiche -->
+					
+
+							<div style="overflow-y:hidden;margin-top:15px;">
+								<ice:dataExporter for="anagrafiche" includeColumns="1,2,3,4,5,6,7,8"
+									style="float:left !important;margin-right:10px" image="#{styleBean.imgExcel}"
+									label="#{styleBean.labelExcel}" type="excel"
+									ignorePagination="true" />
+								<ice:outputText
+									value="Nr. Anagrafiche #{protettoriDaAssegnareView.nrAnags}"></ice:outputText>
+							</div>
+
+							<ice:dataTable border="0" rows="#{styleBean.maxRowsTables}"
+								id="anagrafiche"
+								value="#{protettoriDaAssegnareView.anags}"
+								var="anagrafica">
+
+								<ice:column id="column0">
+									<f:facet name="header">
+									</f:facet>
+								</ice:column>
+
+								<ice:column id="column1">
+									<f:facet name="header">
+										<ice:outputText value="Nr. Anagrafica"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{anagrafica.idAnagrafica}" />
+								</ice:column>
+								
+								<ice:column id="columnFam">
+									<f:facet name="header">
+										<ice:outputText value="Nr. Famiglia"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{anagrafica.idFamiglia}" />
+								</ice:column>
+
+								<ice:column id="column3">
+									<f:facet name="header">
+										<ice:outputText value="Nome"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{anagrafica.intestatario}" />
+								</ice:column>
+								<ice:column id="column5">
+									<f:facet name="header">
+										<ice:outputText value="Mail"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{anagrafica.txMail}" />
+								</ice:column>
+								<ice:column id="column6">
+									<f:facet name="header">
+										<ice:outputText value="Tel"></ice:outputText>
+									</f:facet>
+									<ice:outputText
+										value="#{anagrafica.txCell} #{anagrafica.txFisso}" />
+								</ice:column>
+								<ice:column id="column8">
+									<f:facet name="header">
+										<ice:outputText value="Quota"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{anagrafica.quota}"
+										converter="ImportoConverter" />
+								</ice:column>
+								<ice:column id="column9">
+									<f:facet name="header">
+										<ice:outputText value="#{anagrafica.quota}"
+											converter="ImportoConverter" />
+										<ice:outputText value="Tessera"></ice:outputText>
+									</f:facet>
+									<ice:outputText value="#{anagrafica.tessera}" />
+								</ice:column>
+								<ice:column id="column10">
+									<f:facet name="header">
+										<ice:outputText value="Indirizzo"></ice:outputText>
+									</f:facet>
+									<ice:outputText
+										value="#{anagrafica.indirizzo}, #{anagrafica.capProvincia }" />
+								</ice:column>
+							</ice:dataTable>
+							<ice:dataPaginator for="anagrafiche" paginator="true"
+								fastStep="#{styleBean.fastStep}"
+								paginatorMaxPages="#{StyleBean.paginatorMaxPages}">
+								<f:facet name="first">
+									<ice:graphicImage url="#{styleBean.first}" style="border:none;"
+										title="First Page" />
+								</f:facet>
+
+								<f:facet name="last">
+									<ice:graphicImage url="#{styleBean.last}" style="border:none;"
+										title="Last Page" />
+								</f:facet>
+								<f:facet name="previous">
+									<ice:graphicImage url="#{styleBean.previous}"
+										style="border:none;" title="Previous Page" />
+								</f:facet>
+								<f:facet name="fastforward">
+									<ice:graphicImage url="#{styleBean.fastforward}"
+										style="border:none;" title="Fast Forward" />
+								</f:facet>
+								<f:facet name="fastrewind">
+									<ice:graphicImage url="#{styleBean.fastrewind}"
+										style="border:none;" title="Fast Backwards" />
+								</f:facet>
+								<f:facet name="next">
+									<ice:graphicImage url="#{styleBean.next}" style="border:none;"
+										title="Next Page" />
+								</f:facet>
+
+
+							</ice:dataPaginator>
+
+						</ice:panelGroup>
+			
+
+				
+				<!-- BOTTONIERA -->
+			</ice:form>
+
+
+		</ice:portlet>
+	</f:view>
+</jsp:root>
