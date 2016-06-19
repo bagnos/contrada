@@ -9,7 +9,7 @@ public class TipoStatoRidDTO implements Serializable {
 	private static final long serialVersionUID = 1031859976897507229L;
 	private int idStatoRid;
 	private String dsStatoRid;
-
+	
 	public int getIdStatoRid() {
 		return idStatoRid;
 	}

@@ -11,6 +11,15 @@ public class TipoCasualiIncassoRidDTO implements Serializable {
 	private String dsCausale;
 	private Integer idStatoRidSucc;
 	private Integer idStatoRataSucc;
+	private String cdCausaleAlias;
+
+	public String getCdCausaleAlias() {
+		return cdCausaleAlias;
+	}
+
+	public void setCdCausaleAlias(String cdCausaleAlias) {
+		this.cdCausaleAlias = cdCausaleAlias;
+	}
 
 	public Integer getIdStatoRataSucc() {
 		return idStatoRataSucc;

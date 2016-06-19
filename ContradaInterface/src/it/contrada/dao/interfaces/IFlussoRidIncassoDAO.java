@@ -33,9 +33,9 @@ public interface IFlussoRidIncassoDAO {
 
 	public List<TipoCasualiIncassoRidDTO> elencoCausaliIncassoRid()  throws Exception;;
 	
-	public int aggiornaEsitoRid(long idFlussoAddebito, java.sql.Date dtEsito, int idRidEsito, int idFlussoEsito)  throws Exception;
+	public int aggiornaEsitoRid(long idFlussoAddebito, java.sql.Date dtEsito, int idRidEsito, Integer idFlussoEsito)  throws Exception;
 	
-	public int aggiornaEsitoRid(long idRid, java.sql.Date dtValuta,java.sql.Date dtEsito, int idRidEsito, int idFlussoEsito)  throws Exception;
+	public int aggiornaEsitoRid(long idRid, java.sql.Date dtValuta,java.sql.Date dtEsito, int idRidEsito, Integer idFlussoEsito)  throws Exception;
 	
 	
 	public long getIdFlussoAddebito(long idRid, java.sql.Date dtValuta) throws Exception;

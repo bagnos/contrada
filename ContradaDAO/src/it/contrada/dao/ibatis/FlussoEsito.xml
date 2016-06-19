@@ -17,8 +17,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		TX_NOME_FILE as txNomeFile,
 		CONCAT(cast(TRE.ID_RID_ESITO as char),'-',TRE.DS_RID_ESITO)AS dsEsitoRid,
 		ds_incasso as dsIncassoRid,
-		tx_intestatario as txIntestatario
-
+		tx_intestatario as txIntestatario,
+		dt_valuta as dtValuta,
+		id_flusso_addebito as idFlussoAddebito
 		FROM ${database.schema}incasso_rid IR
 		LEFT JOIN
 		${database.schema}FLUSSO_ESITI FE ON

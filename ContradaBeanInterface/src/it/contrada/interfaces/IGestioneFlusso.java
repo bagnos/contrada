@@ -1,5 +1,6 @@
 package it.contrada.interfaces;
 
+import it.contrada.dominio.dto.TipoCasualiIncassoRidDTO;
 import it.contrada.dto.FlussoEsitoDTO;
 import it.contrada.dto.RidDTO;
 import it.contrada.enumcontrada.TipoFlusso;
@@ -61,4 +62,6 @@ public interface IGestioneFlusso {
 	public FlussoEsitoDTO inserisciFlussoEsito(File file, TipoFlusso tipoFlusso,Date dtDA,Date dtA) throws ContradaExceptionNonBloccante, ContradaExceptionBloccante;
 	
 	public FlussoEsitoDTO inserisciFlussoEsito(File file,TipoFlusso tipoFlusso) throws ContradaExceptionNonBloccante, ContradaExceptionBloccante;
+	
+	public void rendicontazioneManualeIncasso(Long idFlussoAddebito,TipoCasualiIncassoRidDTO causaleDisp) throws ContradaExceptionNonBloccante, ContradaExceptionBloccante; 
 }

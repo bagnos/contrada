@@ -9,12 +9,12 @@
 		<ice:portlet>
 			<ice:outputStyle href="#{styleBean.activeCss}" />
 			<ice:form>
-			<ice:panelGroup styleClass="portletContainer">
-						<ice:outputText value="Ricerca Incassi Rid"
-							styleClass="labelPortletContainer"></ice:outputText>
-					</ice:panelGroup>
+				<ice:panelGroup styleClass="portletContainer">
+					<ice:outputText value="Ricerca Incassi Rid"
+						styleClass="labelPortletContainer"></ice:outputText>
+				</ice:panelGroup>
 				<ice:panelGrid>
-					
+
 					<ice:panelGrid columns="6">
 						<ice:outputText value="Anno" />
 
@@ -52,13 +52,16 @@
 						rendered="#{interrogaEsitiIncassiRid.visibleEsiti==true}">
 
 						<ice:panelGrid columns="3">
-							<ice:commandButton image="#{styleBean.imgLetter}" title="Genera Flusso" value="Genera Flusso" rendered="#{interrogaEsitiIncassiRid.renderFlusso}" actionListener="#{interrogaEsitiIncassiRid.generaFlusso}"></ice:commandButton>
-							
-							
+							<ice:commandButton image="#{styleBean.imgLetter}"
+								title="Genera Flusso" value="Genera Flusso"
+								rendered="#{interrogaEsitiIncassiRid.renderFlusso}"
+								actionListener="#{interrogaEsitiIncassiRid.generaFlusso}"></ice:commandButton>
+
+
 							<ice:dataExporter for="tableEsiti" image="#{styleBean.imgExcel}"
-								label="#{styleBean.labelExcel}" type="excel" 
+								label="#{styleBean.labelExcel}" type="excel"
 								ignorePagination="true" />
-								
+
 						</ice:panelGrid>
 						<ice:panelGrid columns="6"
 							rendered="#{interrogaEsitiIncassiRid.visibleEsiti==true}">
@@ -84,6 +87,16 @@
 						<ice:dataTable id="tableEsiti" rows="10"
 							value="#{interrogaEsitiIncassiRid.esiti}" var="esito">
 
+							<ice:column id="aggiornamento">
+								<f:facet name="header">
+								</f:facet>
+								<ice:commandButton value="modifica" partialSubmit="true"
+									title="modifica" image="#{styleBean.modifica}" tabindex="19"
+									actionListener="#{interrogaEsitiIncassiRid.modificaStatoIncasso}">
+									<f:attribute name="idFlussoAddebito" value="#{esito}" />
+								</ice:commandButton>
+							</ice:column>
+
 							<ice:column id="Rid">
 								<f:facet name="header">
 									<ice:outputText value="Rid" />
@@ -91,7 +104,7 @@
 								<ice:outputText value="#{esito.idRid}">
 								</ice:outputText>
 							</ice:column>
-							
+
 							<ice:column id="Int">
 								<f:facet name="header">
 									<ice:outputText value="Intestatario" />
@@ -117,7 +130,26 @@
 								<f:facet name="header">
 									<ice:outputText value="Esito" />
 								</f:facet>
-								<ice:outputText value="#{esito.dsEsitoRid}" />
+								<ice:outputText rendered="#{esito.fgModified==false}" value="#{esito.dsEsitoRid}" />
+
+								<h:panelGroup rendered="#{esito.fgModified}">
+									<span>Elenco Esiti</span>
+									<ice:selectOneMenu
+										value="#{interrogaEsitiIncassiRid.idTipoStatoRid}">
+										<f:selectItems
+											value="#{interrogaEsitiIncassiRid.tipoStatoRid}" />
+									</ice:selectOneMenu>
+									<br/>
+									<ice:commandButton partialSubmit="true"
+										actionListener="#{interrogaEsitiIncassiRid.salvaStatoIncasso}"
+										value="Salva">
+										<f:attribute name="idFlussoAddebito" value="#{esito}" />
+									</ice:commandButton>
+									<ice:commandButton partialSubmit="true"
+										actionListener="#{interrogaEsitiIncassiRid.annullaStatoIncasso}"
+										value="Annulla">
+									</ice:commandButton>
+								</h:panelGroup>
 							</ice:column>
 							<ice:column id="dsIncassoRid">
 								<f:facet name="header">
@@ -131,10 +163,20 @@
 								<f:facet name="header">
 									<ice:outputText value="Importo" />
 								</f:facet>
-								<ice:outputText value="#{esito.imRichiesto}" converter="ImportoConverter" />
+								<ice:outputText value="#{esito.imRichiesto}"
+									converter="ImportoConverter" />
+							</ice:column>
+							<ice:column id="Data Valuto">
+								<f:facet name="header">
+									<ice:outputText value="Data Valuta" />
+								</f:facet>
+								<ice:outputText value="#{esito.dtValuta}">
+									<f:convertDateTime timeZone="#{styleBean.generalTimeZone}"
+										pattern="dd/MM/yyyy" />
+								</ice:outputText>
 							</ice:column>
 						</ice:dataTable>
-						 
+
 						<ice:dataPaginator id="tabAnag" for="tableEsiti" paginator="true"
 							fastStep="#{styleBean.fastStep}"
 							paginatorMaxPages="#{StyleBean.paginatorMaxPages}">
@@ -166,7 +208,7 @@
 
 
 						</ice:dataPaginator>
- 
+
 
 					</ice:panelGrid>
 

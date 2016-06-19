@@ -46,6 +46,8 @@ import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
@@ -659,7 +661,7 @@ public class GestioneFlusso implements IGestioneFlusso {
 								idFlussoAddebito, dtEsito, causale,
 								flussoEsito.getIdFlussoEsito());
 						if (rowRids == 0) {
-							idFlussoAddebito=0;
+							idFlussoAddebito = 0;
 							log.info("Aggiorno esito rid per data valuta");
 							rowRids = flussoRidAddebitoDAO.aggiornaEsitoRid(
 									idRid, dtValuta, dtEsito, causale,
@@ -907,10 +909,12 @@ public class GestioneFlusso implements IGestioneFlusso {
 						// per questo flusso si utilizza un iban di accredito
 						// diverso rispetto a quello standard
 						params = new ParametriContradaDTO();
-						params.setIdSeda(inc.getIdSeda());
+
 						params.setIdSeda(inc.getIdSeda());
 						params.setTxIntestazione(inc.getDenominazione());
 						params.setCdIban(inc.getCdIbanAccredito());
+						params.setCdAbi(Integer.valueOf(inc
+								.getCdIbanAccredito().substring(5, 10)));
 						params.setCdSia(inc.getCdSIA());
 
 					}
@@ -1032,6 +1036,37 @@ public class GestioneFlusso implements IGestioneFlusso {
 		} catch (Throwable ex) {
 			log.error(ex);
 			throw new ContradaExceptionBloccante(DecodificaErrore.get5018(), ex);
+		}
+	}
+
+	public void rendicontazioneManualeIncasso(Long idFlussoAddebito,
+			TipoCasualiIncassoRidDTO causaleDisp)
+			throws ContradaExceptionNonBloccante, ContradaExceptionBloccante {
+		// TODO Auto-generated method stub
+
+		try {
+			//aggiorno la tabella Rid  in funzione della causale
+			int idTipoStatoRid=TipoStatoRid.Attiva.getStatoRid();
+			if (causaleDisp.getIdStatoRidSucc()!=null)
+			{
+				idTipoStatoRid=causaleDisp.getIdStatoRidSucc();
+			}
+			ridDAO.aggiornaStatoRidPerIdFlussoAddebito(
+					idTipoStatoRid, idFlussoAddebito, "Rendicontazione Manuale");
+			
+			//aggiorno la tabella rateizzazione
+			rateizzazioneDAO.aggiornaStatoRata(
+					causaleDisp.getIdStatoRataSucc(), idFlussoAddebito);
+			
+			//aggiorno esito Flusso
+			Integer idFlussoEsito=null;
+			Date dtEsito=new Date(Calendar.getInstance().getTimeInMillis());
+			 flussoRidAddebitoDAO.aggiornaEsitoRid(
+						idFlussoAddebito, dtEsito, causaleDisp.getCdCausale(),
+						idFlussoEsito);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			throw new ContradaExceptionNonBloccante("", e);
 		}
 	}
 

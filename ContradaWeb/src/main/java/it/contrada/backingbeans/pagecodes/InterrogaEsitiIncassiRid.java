@@ -8,6 +8,7 @@ import it.contrada.businessdelegate.RicercaRidBD;
 import it.contrada.dominio.dto.TipoCasualiIncassoRidDTO;
 import it.contrada.dominio.dto.TipoIncassoDTO;
 import it.contrada.dominio.dto.TipoMeseDTO;
+import it.contrada.dominio.dto.TipoStatoRidDTO;
 import it.contrada.enumcontrada.TipoIncassoRid;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
@@ -49,8 +50,27 @@ public class InterrogaEsitiIncassiRid {
 	private Integer annoInt;
 	private Integer meseInt;
 	private Integer tipoIncassoInt;
+	private List<SelectItem> tipoStatoRid;
+	private int idTipoStatoRid;
+	List<TipoCasualiIncassoRidDTO> causali;
 	
 	
+
+	public int getIdTipoStatoRid() {
+		return idTipoStatoRid;
+	}
+
+	public void setIdTipoStatoRid(int idTipoStatoRid) {
+		this.idTipoStatoRid = idTipoStatoRid;
+	}
+
+	public List<SelectItem> getTipoStatoRid() {
+		return tipoStatoRid;
+	}
+
+	public void setTipoStatoRid(List<SelectItem> tipoStatoRid) {
+		this.tipoStatoRid = tipoStatoRid;
+	}
 
 	public boolean isRenderFlusso() {
 		return renderFlusso;
@@ -195,15 +215,65 @@ public class InterrogaEsitiIncassiRid {
 		
 		
 		causaliItem=new ArrayList<SelectItem>();
-		List<TipoCasualiIncassoRidDTO> causali=RicercaFlussoBD.elencaCausaliIncassiRid();
+		causali=RicercaFlussoBD.elencaCausaliIncassiRid();
 		causaliItem.add(new SelectItem(0,""));
 		for (TipoCasualiIncassoRidDTO causale:causali)
 		{
 			causaliItem.add(new SelectItem(causale.getCdCausale(),causale.getCdCausale()+"-"+causale.getDsCausale()));
 		}
 		
+		List<TipoCasualiIncassoRidDTO> statiRd=RicercaFlussoBD.elencaCausaliIncassiRid();
+		tipoStatoRid=new ArrayList<SelectItem>();
+		tipoStatoRid.add(new SelectItem(0,""));
+		for (TipoCasualiIncassoRidDTO tsr:statiRd)
+		{
+			tipoStatoRid.add(new SelectItem(tsr.getCdCausale(), tsr.getCdCausaleAlias()+" - "+tsr.getDsCausale()));
+		}
 		
 		
+		
+	}
+	
+	public void modificaStatoIncasso(ActionEvent e)
+	{
+		IncassoRidDTO idFlussoAddebito= (IncassoRidDTO) e.getComponent().getAttributes().get("idFlussoAddebito");
+		for (IncassoRidDTO ir:esiti)
+		{
+			ir.setFgModified(true);
+			if (ir.getIdFlussoAddebito()==idFlussoAddebito.getIdFlussoAddebito())
+			{
+				ir.setFgModified(true);
+				idTipoStatoRid=idFlussoAddebito.getIdRidEsito();
+			}
+		
+		}
+	}
+	
+	public void annullaStatoIncasso(ActionEvent e)
+	{
+		
+		for (IncassoRidDTO ir:esiti)
+		{
+			ir.setFgModified(false);			
+		
+		}
+	}
+	
+	public void salvaStatoIncasso(ActionEvent e) throws ContradaExceptionNonBloccante, ContradaExceptionBloccante
+	{
+		IncassoRidDTO   idFlussoAddebito= (IncassoRidDTO) e.getComponent().getAttributes().get("idFlussoAddebito");
+		TipoCasualiIncassoRidDTO causaleDisp=null;
+		for (TipoCasualiIncassoRidDTO causale:causali)
+		{
+			if (causale.getCdCausale()==idTipoStatoRid)
+			{
+				causaleDisp=causale;
+				break;
+			}
+		}
+		GestioneFlussoBD.rendicontazioneManualeIncasso(idFlussoAddebito.getIdFlussoAddebito(), causaleDisp);
+		cercaClick(null);
+		annullaStatoIncasso(null);
 	}
 
 	public void cercaClick(ActionEvent ev) throws ContradaExceptionBloccante, ContradaExceptionNonBloccante {

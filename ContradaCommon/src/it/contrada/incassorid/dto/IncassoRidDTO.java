@@ -37,8 +37,15 @@ public class IncassoRidDTO implements Serializable{
 	private String cin;
 	private String checkDigit;
 	private int nrMovimenti;
+	private boolean fgModified;
 	
 	
+	public boolean isFgModified() {
+		return fgModified;
+	}
+	public void setFgModified(boolean fgModified) {
+		this.fgModified = fgModified;
+	}
 	public int getNrMovimenti() {
 		return nrMovimenti;
 	}

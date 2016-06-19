@@ -1,6 +1,7 @@
 package it.contrada.businessdelegate;
 
 import it.contrada.bean.factory.ContradaPojoFactory;
+import it.contrada.dominio.dto.TipoCasualiIncassoRidDTO;
 import it.contrada.dto.RidDTO;
 import it.contrada.exceptions.ContradaExceptionBloccante;
 import it.contrada.exceptions.ContradaExceptionNonBloccante;
@@ -101,6 +102,11 @@ public class GestioneFlussoBD {
 	public static int eliminaFlussoPreautorizzazioni(java.util.Date dtInvio)
 			throws ContradaExceptionNonBloccante, ContradaExceptionBloccante {
 		return gestioneFlusso.eliminaFlussoPreautorizzazioni(dtInvio);
+	}
+	
+	public static void rendicontazioneManualeIncasso(Long idFlussoAddebito,TipoCasualiIncassoRidDTO causaleDisp) throws ContradaExceptionNonBloccante, ContradaExceptionBloccante
+	{
+		 gestioneFlusso.rendicontazioneManualeIncasso(idFlussoAddebito, causaleDisp);
 	}
 
 }

@@ -116,7 +116,7 @@ public class FlussoRidIncassoDAO extends SqlSessionDaoSupport implements
 
 	@Override
 	public int aggiornaEsitoRid(long idFlussoAddebito, Date dtEsito,
-			int idRidEsito,int idFlussoEsito) throws Exception {
+			int idRidEsito,Integer idFlussoEsito) throws Exception {
 		// TODO Auto-generated method stub
 		HashMap<String,Object> map=new HashMap<String,Object>();
 		map.put("idFlussoAddebito", idFlussoAddebito);
@@ -128,7 +128,7 @@ public class FlussoRidIncassoDAO extends SqlSessionDaoSupport implements
 
 	@Override
 	public int aggiornaEsitoRid(long idRid, Date dtValuta,
-			Date dtEsito, int idRidEsito, int idFlussoEsito) throws Exception {
+			Date dtEsito, int idRidEsito, Integer idFlussoEsito) throws Exception {
 		// TODO Auto-generated method stub
 		HashMap<String,Object> map=new HashMap<String,Object>();
 		map.put("idRid", idRid);

@@ -15,6 +15,7 @@ public class TipoIncassoDTO implements Serializable {
 	private String denominazione;
 	
 	
+	
 
 	public String getCdSIA() {
 		return cdSIA;

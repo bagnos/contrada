@@ -163,9 +163,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getTipoCausaliIncassiRid" resultType="it.contrada.dominio.dto.TipoCasualiIncassoRidDTO">
 		SELECT
 		ID_RID_ESITO as cdCausale,
-		DS_RID_ESITO as dsCausale,
-		ID_STATO_RID_SUCC
-		as idStatoRidSucc,
+		DS_RID_ESITO as dsCausale,		
+		CD_RID_ESITO as cdCausaleAlias,
+		ID_STATO_RID_SUCC as idStatoRidSucc,
 		ID_TIPO_STATO_RATA_SUCC as idStatoRataSucc
 		FROM
 		${database.schema}tipo_rid_esito
